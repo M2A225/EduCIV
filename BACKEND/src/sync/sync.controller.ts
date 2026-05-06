@@ -1,22 +1,14 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Req } from '@nestjs/common';
 import { SyncService } from './sync.service';
-import { PushDto } from './dto/push.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('sync')
-@UseGuards(JwtAuthGuard)
 export class SyncController {
-	constructor(private readonly syncService: SyncService) {}
+  constructor(private readonly syncService: SyncService) {}
 
-	@Post('push')
-	async push(@Body() body: PushDto) {
-		const r = await this.syncService.push(body);
-		return { success: true, data: r, error: null };
-	}
-
-	@Get('pull')
-	async pull() {
-		const r = await this.syncService.pull();
-		return { success: true, data: r, error: null };
-	}
+  @Post()
+  async sync(@Body() body: { operations: any[] }, @Req() req: any) {
+    // Supposons que le school_id est extrait du JWT par un guard
+    const schoolId = req.user?.school_id || 'default-school';
+    return this.syncService.processOperations(schoolId, body.operations);
+  }
 }

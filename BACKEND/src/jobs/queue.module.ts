@@ -13,7 +13,7 @@ const BULL_QUEUE = 'BULL_QUEUE';
       provide: BULL_QUEUE,
       useFactory: () => {
         const url = process.env.UPSTASH_REDIS_REST_URL;
-        if (!url) throw new Error('UPSTASH_REDIS_REST_URL is not defined');
+        if (!url) throw new Error('REDIS_URL is not defined');
 
         const token = process.env.UPSTASH_REDIS_REST_TOKEN;
         if (!token) throw new Error('UPSTASH_REDIS_REST_TOKEN is not defined');

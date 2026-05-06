@@ -21,6 +21,7 @@ dist-ssr/
 # OS files
 .DS_Store
 Thumbs.db
+skills-lock.json
 
 # Build artifacts
 build/

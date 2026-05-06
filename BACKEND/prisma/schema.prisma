@@ -4,8 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
 model School {
@@ -37,6 +35,29 @@ model Student {
   updated_at DateTime @updatedAt
 
   @@map("students")
+}
+
+model Subject {
+  id         Int      @id @default(autoincrement())
+  name       String
+  group      String   // ex: Lettres, Sciences
+  coefficient Int
+  school_id  String
+  grades     Grade[]
+
+  @@map("subjects")
+}
+
+model Grade {
+  id         Int      @id @default(autoincrement())
+  value      Float
+  student_id Int
+  subject_id Int
+  trimester  Int      // 1, 2, 3
+  school_id  String
+  subject    Subject  @relation(fields: [subject_id], references: [id])
+
+  @@map("grades")
 }
 
 model TeacherSubject {

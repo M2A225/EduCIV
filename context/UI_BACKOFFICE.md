@@ -35,18 +35,12 @@ Form :
 - nom
 - email admin
 - mot de passe
-- plan (light / complet)
 
 ---
 
 ### 4. Utilisateurs globaux
 - rechercher utilisateur
 - voir écoles associées
-
----
-
-### 5. Abonnements (option)
-- statut paiement SaaS
 
 ---
 
