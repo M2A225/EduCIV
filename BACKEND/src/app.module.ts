@@ -12,8 +12,7 @@ import { AttendanceModule } from './attendance/attendance.module';
 import { TimetablesModule } from './timetables/timetables.module';
 import { SyncModule } from './sync/sync.module';
 import { QueueModule } from './jobs/queue.module';
-import { R2Service } from './storage/r2.service';
-import { RedisModule } from './common/redis.module';
+import { StorageService } from './storage/storage.service';
 import { PrismaService } from './core/prisma.service';
 
 @Global()
@@ -33,7 +32,7 @@ import { PrismaService } from './core/prisma.service';
     SyncModule,
   ],
   controllers: [AppController],
-  providers: [PrismaService, AppService, R2Service],
+  providers: [PrismaService, AppService, StorageService],
   exports: [PrismaService],
 })
 export class AppModule {}

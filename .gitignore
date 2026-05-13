@@ -12,6 +12,8 @@ node_modules/
 dist/
 dist-ssr/
 *.local
+.agents/
+context/
 
 # Environment variables
 .env

@@ -6,7 +6,7 @@ export class SyncService {
   constructor(private prisma: PrismaService) {}
 
   async processOperations(schoolId: string, operations: any[]) {
-    const results = [];
+    const results: { id: string; status: string }[] = [];
     
     for (const op of operations) {
       // Vérifier idempotence

@@ -10,7 +10,7 @@ export class BulletinController {
   async getBulletin(
     @Param('studentId') studentId: string,
     @Param('trimester') trimester: string,
-    @Res() res: Response
+    @Res({ passthrough: true }) res: Response
   ) {
     const pdf = await this.bulletinService.generateBulletin(parseInt(studentId), parseInt(trimester));
     res.set({
@@ -18,6 +18,6 @@ export class BulletinController {
       'Content-Disposition': `attachment; filename=bulletin_${studentId}.pdf`,
       'Content-Length': pdf.length,
     });
-    res.end(pdf);
+    return pdf;
   }
 }
