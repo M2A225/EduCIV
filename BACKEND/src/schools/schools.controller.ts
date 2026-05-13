@@ -15,6 +15,13 @@ export class SchoolsController {
 		return { success: true, data: s, error: null };
 	}
 
+	@Get('stats')
+	async getStats(@Query('school_id') schoolId: string) {
+        // Dans une implémentation réelle, nous devrions récupérer le school_id depuis le contexte de sécurité JWT
+        const s = await this.schoolsService.getStats(Number(schoolId));
+		return { success: true, data: s, error: null };
+	}
+
 	@Get()
 	async list(@Query() q: PaginationDto) {
 		const schools = await this.schoolsService.listAll(q.page, q.pageSize);

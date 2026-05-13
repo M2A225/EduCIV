@@ -1,9 +1,7 @@
 import { Injectable, UnauthorizedException, Inject, ForbiddenException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { RefreshToken } from '../entities/refresh_token.entity';
+import { RefreshTokenRepository } from './refresh-token.repository';
 import { REDIS_CLIENT } from '../common/redis.provider';
 import { Redis } from '@upstash/redis';
 
@@ -17,8 +15,7 @@ export class AuthService {
 	constructor(
 		private readonly jwtService: JwtService,
 		private readonly usersService: UsersService,
-		@InjectRepository(RefreshToken)
-		private readonly refreshRepo: Repository<RefreshToken>,
+		private readonly refreshRepo: RefreshTokenRepository,
 		@Inject(REDIS_CLIENT)
 		private readonly redis: Redis,
 	) {}
@@ -54,15 +51,15 @@ export class AuthService {
 
 		await this.redis.del(attemptKey);
 
-		const payload = { sub: user.id, school_id: user.school_id };
+		const payload = { sub: user.id, school_id: user.school_id, role: user.role };
 		const accessToken = this.jwtService.sign(payload);
-		const refreshToken = this.jwtService.sign({ sub: user.id }, { expiresIn: '7d' });
+		const refreshToken = this.jwtService.sign({ sub: user.id, role: user.role }, { expiresIn: '7d' });
 
-		const existing = await this.refreshRepo.find({ where: { user_id: user.id }, order: { created_at: 'ASC' } });
+		const existing = await this.refreshRepo.find({ where: { user_id: user.id }, orderBy: { created_at: 'asc' } });
 		if (existing.length >= 5) {
 			const toDelete = existing.slice(0, existing.length - 4);
 			const ids = toDelete.map((t) => t.id);
-			if (ids.length) await this.refreshRepo.delete(ids);
+			if (ids.length) await this.refreshRepo.delete({ id: { in: ids } });
 		}
 
 		const expiresAt = new Date(Date.now() + this.getRefreshTTLMs());
@@ -79,9 +76,9 @@ export class AuthService {
 			const user = await this.usersService.findById(decoded.sub);
 			if (!user) throw new UnauthorizedException('Invalid token user');
 
-			const payload = { sub: user.id, school_id: user.school_id };
+			const payload = { sub: user.id, school_id: user.school_id, role: user.role };
 			const accessToken = this.jwtService.sign(payload);
-			const newRefresh = this.jwtService.sign({ sub: user.id }, { expiresIn: '7d' });
+			const newRefresh = this.jwtService.sign({ sub: user.id, role: user.role }, { expiresIn: '7d' });
 
 			await this.refreshRepo.delete({ token: refreshToken });
 			const expiresAt = new Date(Date.now() + this.getRefreshTTLMs());

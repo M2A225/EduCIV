@@ -1,11 +1,10 @@
-import { IsNotEmpty, IsString, IsIn } from 'class-validator';
+import { IsNotEmpty, IsInt, IsIn } from 'class-validator';
 
 export class MarkAttendanceDto {
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  student_id: string;
+  student_id: number;
 
-  @IsString()
   @IsNotEmpty()
   @IsIn(['PRESENT', 'ABSENT', 'LATE'])
   status: 'PRESENT' | 'ABSENT' | 'LATE';

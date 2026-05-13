@@ -1,19 +1,19 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, IsDateString } from 'class-validator';
 
 export class CreateSessionDto {
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  class_id: string;
+  class_id: number;
 
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  subject_id: string;
+  subject_id: number;
 
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  timetable_id: string;
+  timetable_id: number;
 
-  @IsString()
+  @IsDateString()
   @IsNotEmpty()
   date: string;
 }

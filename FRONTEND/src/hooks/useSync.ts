@@ -4,6 +4,7 @@ import { api } from '../services/api';
 
 interface SyncStore {
   queue: any[];
+  isSyncing: boolean;
   addToQueue: (operation: any) => void;
   sync: () => Promise<void>;
 }
@@ -12,16 +13,19 @@ export const useSyncStore = create<SyncStore>()(
   persist(
     (set, get) => ({
       queue: [],
-      addToQueue: (operation) => set((state) => ({ queue: [...state.queue, operation] })),
+      isSyncing: false,
+      addToQueue: (operation) => set((state) => ({ queue: [...state.queue, { ...operation, timestamp: Date.now() }] })),
       sync: async () => {
-        const { queue } = get();
-        if (queue.length === 0) return;
+        const { queue, isSyncing } = get();
+        if (queue.length === 0 || isSyncing) return;
 
+        set({ isSyncing: true });
         try {
-          await api.post('/sync', { operations: queue });
-          set({ queue: [] }); // Clear queue on success
+          await api.post('/sync/push', { operations: queue });
+          set({ queue: [], isSyncing: false });
         } catch (error) {
           console.error('Sync failed', error);
+          set({ isSyncing: false });
         }
       },
     }),

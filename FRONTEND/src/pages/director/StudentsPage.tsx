@@ -1,17 +1,29 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Card } from '../../components/ui/Card';
 import { LoadingState } from '../../components/ui/LoadingState';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
-
-// Mock data
-const studentsData = [
-  { id: 1, name: 'Jean Dupont', class: '6ème A', parent: 'M. Dupont', payment: 'À jour' },
-  { id: 2, name: 'Marie Keita', class: '6ème A', parent: 'Mme. Keita', payment: 'Retard' },
-  { id: 3, name: 'Ousmane Sow', class: '5ème A', parent: 'M. Sow', payment: 'À jour' },
-];
+import { Table } from '../../components/ui/Table';
+import { api } from '../../services/api';
+import { Student } from '../../types';
+import { AddStudentModal } from '../../components/director/AddStudentModal';
 
 export const StudentsPage = () => {
-  const isLoading = false;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data, isLoading } = useQuery({
+    queryKey: ['students'],
+    queryFn: () => api.get('/students').then(res => res.data.data),
+  });
+
+  const columns = [
+    { header: 'Nom', accessor: (row: Student) => row.name },
+    { header: 'Classe', accessor: (row: Student) => row.class_id || 'N/A' },
+    { 
+      header: 'Actions', 
+      accessor: (row: Student) => <Button variant="outline" className="text-xs">Voir</Button>
+    },
+  ];
 
   if (isLoading) return <LoadingState type="list" count={10} />;
 
@@ -19,46 +31,18 @@ export const StudentsPage = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Gestion des Élèves</h1>
-        <Button>+ Ajouter Élève</Button>
+        <Button onClick={() => setIsModalOpen(true)}>+ Ajouter Élève</Button>
       </div>
 
       <div className="flex gap-4">
         <Input placeholder="Rechercher par nom..." className="w-64" />
-        <Input placeholder="Classe..." className="w-48" />
       </div>
 
       <Card>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b">
-                <th className="p-3">Nom</th>
-                <th className="p-3">Classe</th>
-                <th className="p-3">Parent</th>
-                <th className="p-3">Paiement</th>
-                <th className="p-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {studentsData.map((student) => (
-                <tr key={student.id} className="border-b hover:bg-gray-50">
-                  <td className="p-3">{student.name}</td>
-                  <td className="p-3">{student.class}</td>
-                  <td className="p-3">{student.parent}</td>
-                  <td className="p-3">
-                    <span className={student.payment === 'À jour' ? 'text-green-600' : 'text-red-600'}>
-                      {student.payment}
-                    </span>
-                  </td>
-                  <td className="p-3 flex gap-2">
-                    <Button variant="outline" className="text-xs">Voir</Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table data={data || []} columns={columns} />
       </Card>
+
+      {isModalOpen && <AddStudentModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 };

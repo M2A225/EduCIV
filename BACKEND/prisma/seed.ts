@@ -14,7 +14,7 @@ async function main() {
     create: {
       email,
       password,
-      school_id: 'SYSTEM_ADMIN', // Identifiant spécial pour le super admin
+      school_id: 1, // ID numérique conforme au nouveau schéma
     },
   });
 

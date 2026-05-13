@@ -1,34 +1,30 @@
+import { useQuery } from '@tanstack/react-query';
 import { Card } from '../../components/ui/Card';
+import { Table } from '../../components/ui/Table';
+import { LoadingState } from '../../components/ui/LoadingState';
+import { api } from '../../services/api';
+import { Payment } from '../../types';
 
-const paymentsData = [
-  { id: 1, student: 'Jean Dupont', amount: '25,000 FCFA', date: '05/05/2026', mode: 'Mobile Money' },
-  { id: 2, student: 'Marie Keita', amount: '25,000 FCFA', date: '04/05/2026', mode: 'Espèces' },
-];
+export const PaymentsPage = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ['payments'],
+    queryFn: () => api.get('/payments').then(res => res.data.data),
+  });
 
-export const PaymentsPage = () => (
-  <div className="space-y-6">
-    <h1 className="text-2xl font-bold text-gray-800">Suivi des Paiements</h1>
-    <Card>
-      <table className="w-full text-left">
-        <thead>
-          <tr className="border-b">
-            <th className="p-3">Élève</th>
-            <th className="p-3">Montant</th>
-            <th className="p-3">Date</th>
-            <th className="p-3">Mode</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paymentsData.map(p => (
-            <tr key={p.id} className="border-b">
-              <td className="p-3">{p.student}</td>
-              <td className="p-3 font-bold text-green-700">{p.amount}</td>
-              <td className="p-3">{p.date}</td>
-              <td className="p-3">{p.mode}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Card>
-  </div>
-);
+  const columns = [
+    { header: 'Numéro Reçu', accessor: (row: Payment) => row.receipt_number },
+    { header: 'Montant', accessor: (row: Payment) => <span className="font-bold text-green-700">{row.amount_fcfa} FCFA</span> },
+    { header: 'Statut', accessor: (row: Payment) => row.status },
+  ];
+
+  if (isLoading) return <LoadingState type="list" count={5} />;
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-gray-800">Suivi des Paiements</h1>
+      <Card>
+        <Table data={data || []} columns={columns} />
+      </Card>
+    </div>
+  );
+};

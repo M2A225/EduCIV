@@ -13,11 +13,6 @@ import { PaymentsPage } from './pages/director/PaymentsPage';
 import { PlaceholderPage } from './pages/director/PlaceholderPage';
 import { BackofficeDashboard } from './pages/backoffice/BackofficeDashboard';
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { token } = useAuth();
-  return token ? children : <Navigate to="/login" />;
-};
-
 export const AppRouter = () => {
   return (
     <QueryProvider>
@@ -25,14 +20,7 @@ export const AppRouter = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
-            <Route 
-              path="/" 
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              } 
-            >
+            <Route path="/" element={<MainLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="absences" element={<AttendancePage />} />
               <Route path="students" element={<StudentsPage />} />

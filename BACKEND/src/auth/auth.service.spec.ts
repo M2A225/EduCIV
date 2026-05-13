@@ -2,8 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { RefreshToken } from '../entities/refresh_token.entity';
+import { RefreshTokenRepository } from './refresh-token.repository';
 import { REDIS_CLIENT } from '../common/redis.provider';
 
 const mockJwt = { 
@@ -38,7 +37,7 @@ describe('AuthService', () => {
         AuthService,
         { provide: JwtService, useValue: mockJwt },
         { provide: UsersService, useValue: mockUsers },
-        { provide: getRepositoryToken(RefreshToken), useValue: mockRefreshRepo },
+        { provide: RefreshTokenRepository, useValue: mockRefreshRepo },
         { provide: REDIS_CLIENT, useValue: mockRedis },
       ],
     }).compile();

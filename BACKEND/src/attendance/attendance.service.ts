@@ -1,27 +1,24 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { MarkAttendanceDto } from './dto/mark-attendance.dto';
 import { AttendanceSessionRepository } from './attendance-session.repository';
 import { AttendanceRepository } from './attendance.repository';
-import { DataSource } from 'typeorm';
-import { Timetable } from '../entities/timetable.entity';
+import { TimetablesRepository } from '../timetables/timetables.repository';
 
 @Injectable()
 export class AttendanceService {
 	constructor(
 		private readonly sessionsRepo: AttendanceSessionRepository,
 		private readonly attendanceRepo: AttendanceRepository,
-		private readonly dataSource: DataSource,
+		private readonly timetableRepo: TimetablesRepository,
 	) {}
 
 	async createSession(dto: CreateSessionDto) {
-		// 1. Verify timetable exists
-		const timetable = await this.dataSource.getRepository(Timetable).findOne({
-			where: { id: Number(dto.timetable_id), school_id: this.sessionsRepo.currentSchoolId }
+		const timetable = await this.timetableRepo.findOne({
+			where: { id: dto.timetable_id }
 		});
 		if (!timetable) throw new NotFoundException('Timetable slot not found');
 
-		// 2. Check for duplicate session on same date/class/subject
 		const existing = await this.sessionsRepo.findOne({
 			where: {
 				class_id: dto.class_id,
@@ -29,11 +26,12 @@ export class AttendanceService {
 				date: dto.date,
 			} as any
 		});
-		if (existing) return existing; // Idempotence: return existing session if already created for this day
+		if (existing) return existing;
 
 		return this.sessionsRepo.create({
 			...dto,
-			teacher_id: timetable.teacher_id, // Force teacher from timetable
+			date: dto.date,
+			teacher_id: timetable.teacher_id,
 		});
 	}
 
@@ -41,7 +39,6 @@ export class AttendanceService {
 		const session = await this.sessionsRepo.findOne({ where: { id: sessionId } as any });
 		if (!session) throw new NotFoundException('Session not found');
 
-		// Check for existing mark to update version
 		const existing = await this.attendanceRepo.findOne({
 			where: { session_id: sessionId, student_id: dto.student_id } as any
 		});

@@ -1,15 +1,15 @@
 export interface MultiTenantEntity {
-  school_id: string;
+  school_id: number;
   id?: any;
 }
 
 export abstract class BaseRepository<T extends MultiTenantEntity> {
   constructor(
     protected readonly model: any, // Prisma model delegate
-    protected readonly schoolId?: string,
+    protected readonly schoolId?: number,
   ) {}
 
-  get currentSchoolId(): string | undefined {
+  get currentSchoolId(): number | undefined {
     return this.schoolId;
   }
 

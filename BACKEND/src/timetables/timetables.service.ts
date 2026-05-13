@@ -8,7 +8,7 @@ export class TimetablesService {
 
 	async create(dto: CreateTimetableDto) {
 		const conflict = await this.timetablesRepo.findOne({ where: { slot: dto.slot } as any });
-		if (conflict && (conflict.teacher_id === dto.teacher_id || conflict.class_id === dto.class_id)) {
+		if (conflict && (Number(conflict.teacher_id) === Number(dto.teacher_id) || Number(conflict.class_id) === Number(dto.class_id))) {
 			throw new ConflictException('Timetable conflict');
 		}
 		return this.timetablesRepo.create(dto);

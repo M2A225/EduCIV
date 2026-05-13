@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from '../entities/user.entity';
 import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcryptjs';
 
@@ -25,7 +24,7 @@ export class UsersService {
 		return this.usersRepo.find({ skip: (page - 1) * pageSize, take: pageSize });
 	}
 
-	async verifyPassword(user: User, password: string) {
+	async verifyPassword(user: any, password: string) {
 		return bcrypt.compare(password, user.password);
 	}
 }

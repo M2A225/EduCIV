@@ -27,9 +27,8 @@
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
-    "@nestjs/typeorm": "^11.0.1",
     "@prisma/client": "^7.8.0",
-    "@supabase/supabase-js": "^2.105.3",
+    "@supabase/supabase-js": "^2.105.4",
     "@types/bcrypt": "^6.0.0",
     "@upstash/redis": "^1.37.0",
     "bcrypt": "^6.0.0",
@@ -42,11 +41,9 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pdfmake": "^0.3.7",
-    "pg": "^8.20.0",
     "redis": "^5.12.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.28",
     "uuid": "^14.0.0"
   },
   "devDependencies": {

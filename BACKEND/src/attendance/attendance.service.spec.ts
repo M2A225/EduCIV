@@ -1,9 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
 import { AttendanceService } from './attendance.service';
-import { AttendanceSession } from '../entities/attendance_session.entity';
-import { Attendance } from '../entities/attendance.entity';
 import { AttendanceSessionRepository } from './attendance-session.repository';
 import { AttendanceRepository } from './attendance.repository';
 
@@ -16,7 +12,6 @@ describe('AttendanceService', () => {
         AttendanceService,
         { provide: AttendanceSessionRepository, useValue: { findOne: jest.fn(), create: jest.fn(), save: jest.fn() } },
         { provide: AttendanceRepository, useValue: { findOne: jest.fn(), create: jest.fn(), save: jest.fn(), update: jest.fn(), find: jest.fn() } },
-        { provide: DataSource, useValue: { getRepository: jest.fn(() => ({ findOne: jest.fn() })) } },
       ],
     }).compile();
 

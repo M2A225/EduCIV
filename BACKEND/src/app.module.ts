@@ -1,6 +1,7 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
+import { RedisModule } from './common/redis.module';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -10,6 +11,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { NotesModule } from './notes/notes.module';
 import { AttendanceModule } from './attendance/attendance.module';
 import { TimetablesModule } from './timetables/timetables.module';
+import { BulletinModule } from './bulletins/bulletin.module';
 import { SyncModule } from './sync/sync.module';
 import { QueueModule } from './jobs/queue.module';
 import { StorageService } from './storage/storage.service';
@@ -29,6 +31,7 @@ import { PrismaService } from './core/prisma.service';
     NotesModule,
     AttendanceModule,
     TimetablesModule,
+    BulletinModule,
     SyncModule,
   ],
   controllers: [AppController],
