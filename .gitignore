@@ -13,7 +13,15 @@ dist/
 dist-ssr/
 *.local
 .agents/
-context/
+context/    
+.gemini/
+template/
+.antigravitycli
+GEMINI.md
+AGENTS.md
+multi_role_implementation_plan.md
+pr.txt
+opencode.json
 
 # Environment variables
 .env

@@ -11,6 +11,6 @@ export class SchoolsRepository extends BaseRepository<School> {
     @Inject(REQUEST)
     request: any,
   ) {
-    super(prisma.school, request.user?.school_id ? Number(request.user.school_id) : undefined);
+    super(prisma.school, request);
   }
 }

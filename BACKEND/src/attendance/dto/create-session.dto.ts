@@ -1,4 +1,10 @@
-import { IsInt, IsNotEmpty, IsString, IsDateString } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  IsDateString,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateSessionDto {
   @IsInt()
@@ -16,4 +22,8 @@ export class CreateSessionDto {
   @IsDateString()
   @IsNotEmpty()
   date: string;
+
+  @IsInt()
+  @IsOptional()
+  school_id?: number;
 }

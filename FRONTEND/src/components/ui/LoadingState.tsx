@@ -1,3 +1,4 @@
+import React from 'react';
 import { Skeleton } from './Feedback';
 
 interface LoadingStateProps {
@@ -5,7 +6,7 @@ interface LoadingStateProps {
   count?: number;
 }
 
-export const LoadingState = ({ type = 'text', count = 3 }: LoadingStateProps) => {
+export function LoadingState({ type = 'text', count = 3 }: LoadingStateProps) {
   if (type === 'card') {
     return (
       <div className="space-y-4">
@@ -27,4 +28,4 @@ export const LoadingState = ({ type = 'text', count = 3 }: LoadingStateProps) =>
   }
 
   return <Skeleton className="h-4 w-full" />;
-};
+}

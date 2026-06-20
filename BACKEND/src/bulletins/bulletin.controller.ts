@@ -1,23 +1,48 @@
-import { Controller, Get, Param, Res } from '@nestjs/common';
-import type { Response } from 'express';
+import {
+  Controller,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { BulletinService } from './bulletin.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('bulletins')
+@UseGuards(JwtAuthGuard)
 export class BulletinController {
   constructor(private readonly bulletinService: BulletinService) {}
 
-  @Get(':studentId/:trimester')
-  async getBulletin(
+  @HttpCode(HttpStatus.CREATED)
+  @Post(':studentId')
+  async generateBulletin(
     @Param('studentId') studentId: string,
-    @Param('trimester') trimester: string,
-    @Res({ passthrough: true }) res: Response
+    @Body('periodId') periodId: number,
+    @Body('year') year: string,
   ) {
-    const pdf = await this.bulletinService.generateBulletin(parseInt(studentId), parseInt(trimester));
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=bulletin_${studentId}.pdf`,
-      'Content-Length': pdf.length,
-    });
-    return pdf;
+    const url = await this.bulletinService.generateBulletin(
+      Number(studentId),
+      periodId,
+      year,
+    );
+    return { success: true, data: { url }, error: null };
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Post('batch/:classId')
+  async generateBatchBulletins(
+    @Param('classId') classId: string,
+    @Body('periodId') periodId: number,
+    @Body('year') year: string,
+  ) {
+    const urls = await this.bulletinService.generateBatchBulletins(
+      Number(classId),
+      periodId,
+      year,
+    );
+    return { success: true, data: { urls, count: urls.length }, error: null };
   }
 }

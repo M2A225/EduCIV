@@ -43,11 +43,35 @@
       "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
       "computedHash": "8e41c7417894e6f394614ee7ca3ee5322b1e58d890255d441f42dea98732597f"
     },
+    "systematic-debugging": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/systematic-debugging/SKILL.md",
+      "computedHash": "7246fdd3a795fc3daff0af72044ca99bf836e4e6a46844742858786fdfb86488"
+    },
     "upstash": {
       "source": "upstash/skills",
       "sourceType": "github",
       "skillPath": "skills/upstash/SKILL.md",
       "computedHash": "e239c3109f82b87820d0cd6ee7b4f6d0da4d71519995e7e2ee80f594ea2a6131"
+    },
+    "upstash-cli": {
+      "source": "upstash/skills",
+      "sourceType": "github",
+      "skillPath": "skills/upstash-cli/SKILL.md",
+      "computedHash": "84b0a7d6ff02c7a516084c5959f9135dde262c0801cf403059cac21f21ab87ce"
+    },
+    "upstash-redis-js": {
+      "source": "upstash/skills",
+      "sourceType": "github",
+      "skillPath": "skills/upstash-redis-js/SKILL.md",
+      "computedHash": "1113bd28d27c5cb25e23893f7b69fefa232601770ec912026006fde24c8b1703"
+    },
+    "upstash-redis-start": {
+      "source": "upstash/skills",
+      "sourceType": "github",
+      "skillPath": "skills/upstash-redis-start/SKILL.md",
+      "computedHash": "15a1695e7de4097c7c4518f47e080f7d76fe77fc76de3fbf7f002fbf5ab6fedc"
     },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",

@@ -1,0 +1,116 @@
+﻿<UserControl x:Class="EduCIV.App.Views.DashboardPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="900"
+             Background="{DynamicResource ColorBg}">
+    <ScrollViewer Padding="32" VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <!-- Header -->
+            <TextBlock Text="{Binding WelcomeMessage}" FontSize="28" FontWeight="Bold"
+                       FontFamily="{DynamicResource FontHeading}"
+                       Foreground="{DynamicResource ColorText}" Margin="0,0,0,4"/>
+            <TextBlock Text="{Binding SchoolInfo}" FontSize="15"
+                       Foreground="{DynamicResource ColorTextSecondary}" Margin="0,0,0,32"/>
+
+            <!-- Stat Cards -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="12"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Students Card -->
+                <Border Grid.Column="0" Style="{StaticResource ModernCard}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="8"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Width="44" Height="44" CornerRadius="12"
+                                Background="{DynamicResource ColorPrimaryBgBrush}">
+                            <TextBlock Text="&#x1F393;" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Grid.Row="2" Text="{Binding TotalStudents}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{DynamicResource ColorText}"/>
+                        <TextBlock Grid.Row="4" Text="Eleves inscrits" FontSize="13"
+                                   Foreground="{DynamicResource ColorTextMuted}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Teachers Card -->
+                <Border Grid.Column="2" Style="{StaticResource ModernCard}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="8"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Width="44" Height="44" CornerRadius="12"
+                                Background="{DynamicResource ColorSuccessBgBrush}">
+                            <TextBlock Text="&#x1F468;&#x200D;&#x1F3EB;" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Grid.Row="2" Text="{Binding TotalTeachers}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{DynamicResource ColorText}"/>
+                        <TextBlock Grid.Row="4" Text="Enseignants" FontSize="13"
+                                   Foreground="{DynamicResource ColorTextMuted}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Classes Card -->
+                <Border Grid.Column="4" Style="{StaticResource ModernCard}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="8"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Width="44" Height="44" CornerRadius="12"
+                                Background="{DynamicResource ColorCtaBgBrush}">
+                            <TextBlock Text="&#x1F3EB;" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Grid.Row="2" Text="{Binding TotalClasses}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{DynamicResource ColorText}"/>
+                        <TextBlock Grid.Row="4" Text="Classes" FontSize="13"
+                                   Foreground="{DynamicResource ColorTextMuted}"/>
+                    </Grid>
+                </Border>
+
+                <!-- Subjects Card -->
+                <Border Grid.Column="6" Style="{StaticResource ModernCard}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="8"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Width="44" Height="44" CornerRadius="12"
+                                Background="{DynamicResource ColorInfoBgBrush}">
+                            <TextBlock Text="&#x1F4D6;" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Grid.Row="2" Text="{Binding TotalSubjects}" FontSize="32" FontWeight="Bold"
+                                   Foreground="{DynamicResource ColorText}"/>
+                        <TextBlock Grid.Row="4" Text="Matieres" FontSize="13"
+                                   Foreground="{DynamicResource ColorTextMuted}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

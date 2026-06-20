@@ -1,5 +1,6 @@
 import { useSyncStore } from '../../hooks/useSync';
 import { useEffect, useState } from 'react';
+import { Wifi, WifiOff, RefreshCw } from 'lucide-react';
 
 export const SyncStatusIndicator = () => {
   const { queue, isSyncing } = useSyncStore();
@@ -16,9 +17,32 @@ export const SyncStatusIndicator = () => {
     };
   }, []);
 
-  if (isSyncing) return <div className="fixed bottom-4 right-4 bg-blue-500 text-white p-2 rounded shadow">Synchronisation en cours...</div>;
-  if (!isOnline) return <div className="fixed bottom-4 right-4 bg-yellow-500 text-white p-2 rounded shadow">Mode Hors-ligne ({queue.length} ops en attente)</div>;
-  if (queue.length > 0) return <div className="fixed bottom-4 right-4 bg-green-500 text-white p-2 rounded shadow">Prêt à synchroniser ({queue.length} ops)</div>;
-  
+  if (!isOnline) {
+    return (
+      <div className="fixed bottom-4 right-4 flex items-center gap-2 bg-error text-white px-4 py-2.5 rounded-xl shadow-3 text-sm font-medium animate-slide-up">
+        <WifiOff className="w-4 h-4" />
+        Hors-ligne
+      </div>
+    );
+  }
+
+  if (isSyncing) {
+    return (
+      <div className="fixed bottom-4 right-4 flex items-center gap-2 bg-info text-white px-4 py-2.5 rounded-xl shadow-3 text-sm font-medium animate-slide-up">
+        <RefreshCw className="w-4 h-4 animate-spin" />
+        Synchronisation...
+      </div>
+    );
+  }
+
+  if (queue > 0) {
+    return (
+      <div className="fixed bottom-4 right-4 flex items-center gap-2 bg-warning text-white px-4 py-2.5 rounded-xl shadow-3 text-sm font-medium animate-slide-up">
+        <Wifi className="w-4 h-4" />
+        {queue} opération{queue > 1 ? 's' : ''} en attente
+      </div>
+    );
+  }
+
   return null;
 };

@@ -6,165 +6,580 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UserRole {
+  PARENT
+  TEACHER
+  DIRECTOR
+  BACKOFFICE
+  ACCOUNTANT
+  CASHIER
+  EDUCATOR
+  STUDENT
+
+  @@map("user_role")
+}
+
+enum UserSchoolScope {
+  SCHOOL
+  GROUP
+  PRIMARY
+
+  @@map("user_school_scope")
+}
+
+enum GradeStatus {
+  EN_ATTENTE
+  VALIDE
+  REJETE
+
+  @@map("grade_status")
+}
+
+enum GradeType {
+  INTERROGATION
+  DEVOIR
+  EXAMEN
+
+  @@map("grade_type")
+}
+
+enum PaymentStatus {
+  VALIDE
+  ANNULE
+
+  @@map("payment_status")
+}
+
+enum PaymentType {
+  SCOLARITE
+  CANTINE
+  INSCRIPTION
+  TRANSPORT
+  AUTRE
+
+  @@map("payment_type")
+}
+
+enum IncidentStatus {
+  EN_COURS
+  RESOLU
+  IGNORE
+
+  @@map("incident_status")
+}
+
+enum IncidentType {
+  RETARD
+  ABSENCE_NON_JUSTIFIEE
+  COMPORTEMENT
+  AUTRE
+
+  @@map("incident_type")
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+
+  @@map("attendance_status")
+}
+
+enum Sexe {
+  M
+  F
+
+  @@map("sexe")
+}
+
+enum DecisionVote {
+  ADMIS
+  REDOUBLE
+  ABSTENTION
+
+  @@map("decision_vote")
+}
+
+enum DecisionFinale {
+  ADMIS
+  REDOUBLE
+  TRANSFERE
+  EXCLU
+  ABANDON
+
+  @@map("decision_finale")
+}
+
+enum TargetType {
+  PARENT
+  TEACHER
+
+  @@map("target_type")
+}
+
+enum PeriodType {
+  TRIMESTRE_1
+  TRIMESTRE_2
+  TRIMESTRE_3
+  SEMESTRE_1
+  SEMESTRE_2
+  COMPOSITION_1
+  COMPOSITION_2
+  COMPOSITION_3
+  COMPOSITION_4
+  PASSAGE
+  EXAMEN_BLANC
+
+  @@map("period_type")
+}
+
+enum SchoolType {
+  PRIMAIRE
+  SECONDAIRE
+  LYCEE_TECHNIQUE
+  LYCEE_PROFESSIONNEL
+  GROUPE_SCOLAIRE
+
+  @@map("school_type")
+}
+
+enum SyncEntity {
+  STUDENT
+  GRADE
+  PAYMENT
+  ATTENDANCE
+  INCIDENT
+  TEACHER
+  CLASS
+  SUBJECT
+  TIMETABLE
+
+  @@map("sync_entity")
+}
+
+model City {
+  id       Int       @id @default(autoincrement())
+  name     String
+  communes Commune[]
+
+  @@unique([name])
+  @@map("cities")
+}
+
+model Commune {
+  id      Int    @id @default(autoincrement())
+  name    String
+  city_id Int
+  city    City   @relation(fields: [city_id], references: [id], onDelete: Cascade)
+
+  @@unique([name, city_id])
+  @@index([city_id])
+  @@map("communes")
+}
+
+model SchoolGroup {
+  id           Int      @id @default(autoincrement())
+  name         String
+  abbreviation String?
+  city         String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  schools      School[]
+
+  @@unique([name])
+  @@map("school_groups")
+}
+
 model School {
-  id         Int      @id @default(autoincrement())
-  name       String
-  school_id  Int      @unique
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  name          String
+  logo_url      String?
+  address       String?
+  phone         String?
+  email         String?
+  city          String?
+  type          String?
+  school_type   SchoolType?
+  school_group_id Int?
+  school_group    SchoolGroup?     @relation(fields: [school_group_id], references: [id], onDelete: SetNull)
+  school_id     Int      @unique
+  director_setup_at   DateTime?
+  accountant_setup_at DateTime?
+  setup_completed_at  DateTime?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
 
-  users    User[]
-  students Student[]
+  users      User[]
+  userSchools UserSchool[]
+  students   Student[]
+  classes    Class[]
+  teachers   Teacher[]
+  teacherSubjects TeacherSubject[]
+  subjects   Subject[]
+  schoolYears SchoolYear[]
+  periods    AcademicPeriod[]
+  paymentPlans PaymentPlan[]
+  payments   Payment[]
+  timetables Timetable[]
+  attendanceSessions AttendanceSession[]
+  invitations Invitation[]
+  filieres   SchoolFiliere[]
+  schoolLevels SchoolLevel[]
+  levelTuitions LevelTuition[]
+  studentProgressions StudentProgression[]
+  progressionVotes    TeacherProgressionVote[]
 
+  @@index([school_group_id])
   @@map("schools")
 }
 
 model User {
   id         Int      @id @default(autoincrement())
-  email      String   @unique
+  email      String?  @unique
+  phone      String?  @unique
   password   String
-  role       String   @default("STUDENT")
-  school_id  Int
+  name       String?
+  avatar_url String?
+  role       UserRole @default(PARENT)
+  school_id  Int?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  school School @relation(fields: [school_id], references: [id])
+  school      School?   @relation(fields: [school_id], references: [id], onDelete: SetNull)
+  userSchools UserSchool[]
+  parentLinks StudentParent[] @relation("user_parent_links")
+  students    Student[]  @relation("user_student_link")
+  refreshTokens RefreshToken[]
+  passwordResetTokens PasswordResetToken[]
 
   @@index([school_id])
   @@map("users")
 }
 
-model Student {
-  id         Int      @id @default(autoincrement())
-  name       String
-  dob        DateTime?
-  class_id   Int?
-  school_id  Int
+model UserSchool {
+  id        Int    @id @default(autoincrement())
+  user_id   Int
+  school_id Int
+  scope     UserSchoolScope @default(SCHOOL)
+  role      UserRole
+
+  user   User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  school School @relation(fields: [school_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, school_id, role])
+  @@index([school_id])
+  @@index([user_id])
+  @@map("user_schools")
+}
+
+model Class {
+  id              Int      @id @default(autoincrement())
+  name            String
+  level           String?
+  section         String?
+  capacity        Int?
+  classroom       String?
+  grade_total_max Float?
+  grade_avg_scale Float?
+  school_id       Int
+  school          School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  next_class_id   Int?
+  next_class      Class?   @relation("ClassProgressionSelf", fields: [next_class_id], references: [id], onDelete: SetNull)
+  prev_classes    Class[]  @relation("ClassProgressionSelf")
+  students        Student[]
+  studentProgressions StudentProgression[] @relation("StudentProgressionClass")
+  timetables      Timetable[]
+  attendanceSessions AttendanceSession[]
+  teacherSubjects TeacherSubject[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  school School @relation(fields: [school_id], references: [id])
+  @@unique([school_id, name])
+  @@index([school_id])
+  @@index([next_class_id])
+  @@index([level])
+  @@index([section])
+  @@map("classes")
+}
+
+model Student {
+  id          Int       @id @default(autoincrement())
+  name        String
+  matricule   String?
+  dob         DateTime?
+  place_birth String?
+  sexe        Sexe?
+  nationality String?
+  is_repeater Boolean   @default(false)
+  regime      String?
+  is_internal Boolean   @default(false)
+  is_affected Boolean   @default(true)
+  avatar_url  String?
+  parent_name   String?
+  parent_phone  String?
+
+  user_id     Int?
+  user        User?     @relation("user_student_link", fields: [user_id], references: [id], onDelete: SetNull)
+
+  class_id    Int?
+  class       Class?    @relation(fields: [class_id], references: [id], onDelete: SetNull)
+  school_id   Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  school      School    @relation(fields: [school_id], references: [id], onDelete: Cascade)
+
+  grades      Grade[]
+  reportCards ReportCard[]
+  payments    Payment[]
+  parentLinks StudentParent[] @relation("StudentToParentLink")
+  progressions StudentProgression[]
+  incidents   Incident[]
+
+  @@index([user_id])
+  @@unique([school_id, matricule])
+  @@index([school_id])
+  @@index([class_id])
+  @@index([school_id, name])
+  @@index([class_id, is_affected])
+  @@map("students")
+}
+
+model Teacher {
+  id         Int      @id @default(autoincrement())
+  name       String
+  phone      String?
+  email      String?
+  grade      String?
+  specialty  String?
+  hire_date  DateTime?
+  address    String?
+  school_id  Int
+  school     School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  assignments TeacherSubject[]
+  timetables Timetable[]
+  attendanceSessions AttendanceSession[]
+  progressionVotes TeacherProgressionVote[]
+  incidents       Incident[]
 
   @@index([school_id])
-  @@map("students")
+  @@index([school_id, name])
+  @@map("teachers")
 }
 
 model Subject {
   id          Int      @id @default(autoincrement())
   name        String
-  group       String
   coefficient Int
+  max_score   Float?
+  level_group String   @default("")
   school_id   Int
-  grades      Grade[]
+  school      School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
+  grades      Grade[]
+  assignments TeacherSubject[]
+  timetables  Timetable[]
+  attendanceSessions AttendanceSession[]
+
+  @@unique([school_id, name, level_group])
   @@index([school_id])
   @@map("subjects")
-}
-
-model Grade {
-  id         Int      @id @default(autoincrement())
-  value      Float
-  student_id Int
-  subject_id Int
-  trimester  Int
-  school_id  Int
-  
-  subject    Subject  @relation(fields: [subject_id], references: [id])
-
-  @@index([school_id])
-  @@index([student_id])
-  @@index([subject_id])
-  @@map("grades")
 }
 
 model TeacherSubject {
   id         Int      @id @default(autoincrement())
   teacher_id Int
+  teacher    Teacher  @relation(fields: [teacher_id], references: [id], onDelete: Cascade)
   subject_id Int
+  subject    Subject  @relation(fields: [subject_id], references: [id], onDelete: Cascade)
   class_id   Int
+  class      Class    @relation(fields: [class_id], references: [id], onDelete: Cascade)
   school_id  Int
+  school     School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  @@unique([teacher_id, class_id, subject_id])
+  @@index([teacher_id, class_id, subject_id, school_id])
   @@index([school_id])
   @@map("teacher_subjects")
 }
 
-model AttendanceSession {
-  id           Int      @id @default(autoincrement())
-  class_id     Int
-  subject_id   Int
-  teacher_id   Int
-  timetable_id Int
-  date         DateTime
-  school_id    Int
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+model SchoolYear {
+  id         Int      @id @default(autoincrement())
+  year_range String
+  closed     Boolean  @default(false)
+  closed_at  DateTime?
+  closed_by  Int?
+  school_id  Int
+  school     School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  periods    AcademicPeriod[]
+  votes      TeacherProgressionVote[]
+  progressions StudentProgression[]
 
+  @@unique([school_id, year_range])
   @@index([school_id])
-  @@map("attendance_sessions")
+  @@map("school_years")
 }
 
-model Attendance {
+model AcademicPeriod {
   id         Int      @id @default(autoincrement())
+  name       String
+  period_type PeriodType?
+  start_date DateTime
+  end_date   DateTime
+  school_year_id Int?
+  school_year SchoolYear? @relation(fields: [school_year_id], references: [id], onDelete: SetNull)
+  school_id  Int
+  school     School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+
+  grades      Grade[]
+  reportCards ReportCard[]
+
+  @@unique([school_year_id, period_type])
+  @@index([school_id])
+  @@index([school_year_id])
+  @@map("academic_periods")
+}
+
+model Grade {
+  id         Int      @id @default(autoincrement())
+  value      Float
+  type       GradeType
+  comment    String?
+  max_score  Float?
+  status     GradeStatus @default(EN_ATTENTE)
+  validated_by Int?
+  validated_at DateTime?
+  rejection_reason String?
+  archived    Boolean   @default(false)
+  archived_at DateTime?
+  period_id  Int
+  period     AcademicPeriod @relation(fields: [period_id], references: [id], onDelete: Cascade)
   student_id Int
-  status     String
-  session_id Int
-  version    Int      @default(1)
+  student    Student  @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  subject_id Int
+  subject    Subject  @relation(fields: [subject_id], references: [id], onDelete: Cascade)
   school_id  Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  @@unique([student_id, subject_id, period_id])
+  @@index([student_id])
+  @@index([subject_id])
+  @@index([period_id])
+  @@index([student_id, period_id])
+  @@index([school_id, student_id, period_id])
+  @@index([status])
   @@index([school_id])
-  @@index([session_id])
-  @@map("attendances")
+  @@index([school_id, status])
+  @@index([student_id, subject_id])
+  @@map("grades")
+}
+
+model ReportCard {
+  id               Int      @id @default(autoincrement())
+  student_id       Int
+  student          Student  @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  period_id        Int
+  period           AcademicPeriod @relation(fields: [period_id], references: [id], onDelete: Cascade)
+  year             String
+  average          Float
+  rank             Int
+  total_points     Float
+  total_coef       Float
+  appreciation     String?
+  decision         String?
+  is_annual        Boolean  @default(false)
+  school_id        Int
+  created_at       DateTime @default(now())
+
+  @@unique([student_id, period_id, year])
+  @@index([student_id])
+  @@index([period_id])
+  @@index([school_id])
+  @@index([student_id, period_id, year])
+  @@map("report_cards")
+}
+
+model PaymentPlan {
+  id           Int      @id @default(autoincrement())
+  name         String
+  total_amount Int
+  school_id    Int
+  school     School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  payments   Payment[]
+
+  @@unique([school_id, name])
+  @@index([school_id])
+  @@map("payment_plans")
+}
+
+model LevelTuition {
+  id         Int      @id @default(autoincrement())
+  school_id  Int
+  school     School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  level      String
+  amount     Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([school_id, level])
+  @@index([school_id])
+  @@map("level_tuitions")
 }
 
 model Payment {
-  id             Int      @id @default(autoincrement())
-  amount_fcfa    Int
-  receipt_number String
-  receipt_hash   String
-  status         String
-  school_id      Int
-  created_at     DateTime @default(now())
-  updated_at     DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  amount_fcfa     Int
+  payment_type    PaymentType
+  payment_date    DateTime
+  receipt_number  String   @unique
+  receipt_hash    String?
+  status          PaymentStatus @default(VALIDE)
+  student_id      Int
+  student         Student  @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  plan_id         Int?
+  plan            PaymentPlan? @relation(fields: [plan_id], references: [id], onDelete: SetNull)
+  school_id       Int
+  school          School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  audit_logs      PaymentAuditLog[]
 
+  @@index([student_id])
   @@index([school_id])
+  @@index([plan_id])
+  @@index([payment_date])
+  @@index([student_id, payment_date])
+  @@index([school_id, payment_type])
+  @@index([school_id, status])
+  @@index([student_id, status])
   @@map("payments")
 }
 
-model AuditLog {
-  id         Int      @id @default(autoincrement())
-  action     String
-  data       Json?
-  school_id  Int
-  created_at DateTime @default(now())
+model PaymentAuditLog {
+  id           Int      @id @default(autoincrement())
+  payment_id   Int
+  payment      Payment  @relation(fields: [payment_id], references: [id], onDelete: Cascade)
+  action       String
+  data         Json?
+  old_data     Json?
+  new_data     Json?
+  performed_by Int?
+  school_id    Int
+  created_at   DateTime @default(now())
 
+  @@index([payment_id])
   @@index([school_id])
-  @@map("audit_logs")
-}
-
-model Note {
-  id         Int      @id @default(autoincrement())
-  content    String
-  version    Int      @default(1)
-  school_id  Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@index([school_id])
-  @@map("notes")
-}
-
-model RefreshToken {
-  id         Int       @id @default(autoincrement())
-  token      String    @unique
-  user_id    Int
-  expires_at DateTime?
-  created_at DateTime  @default(now())
-
-  @@map("refresh_tokens")
+  @@map("payment_audit_logs")
 }
 
 model Timetable {
@@ -177,19 +592,268 @@ model Timetable {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  class      Class    @relation(fields: [class_id], references: [id], onDelete: Cascade)
+  teacher    Teacher  @relation(fields: [teacher_id], references: [id], onDelete: Cascade)
+  subject    Subject  @relation(fields: [subject_id], references: [id], onDelete: Cascade)
+  school     School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+
+  attendanceSessions AttendanceSession[]
+
+  @@unique([class_id, slot])
   @@index([school_id])
+  @@index([class_id])
+  @@index([teacher_id])
+  @@index([subject_id])
+  @@index([school_id, slot])
+  @@index([teacher_id, school_id])
   @@map("timetables")
 }
 
+model AttendanceSession {
+  id           Int      @id @default(autoincrement())
+  class_id     Int
+  subject_id   Int
+  timetable_id Int
+  teacher_id   Int
+  date         DateTime
+  school_id    Int
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  class        Class    @relation(fields: [class_id], references: [id], onDelete: Cascade)
+  subject      Subject  @relation(fields: [subject_id], references: [id], onDelete: Cascade)
+  timetable    Timetable @relation(fields: [timetable_id], references: [id], onDelete: Cascade)
+  teacher      Teacher  @relation(fields: [teacher_id], references: [id], onDelete: Cascade)
+  school       School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+
+  attendances  Attendance[]
+
+  @@unique([class_id, timetable_id, date])
+  @@index([school_id])
+  @@index([class_id])
+  @@index([subject_id])
+  @@index([timetable_id])
+  @@index([date])
+  @@index([date, school_id])
+  @@index([teacher_id, date])
+  @@map("attendance_sessions")
+}
+
+model Attendance {
+  id         Int      @id @default(autoincrement())
+  session_id Int
+  student_id Int
+  status     AttendanceStatus
+  version    Int      @default(1)
+  archived   Boolean  @default(false)
+  archived_at DateTime?
+  school_id  Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  session    AttendanceSession @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@unique([session_id, student_id])
+  @@index([session_id])
+  @@index([session_id, student_id])
+  @@index([student_id])
+  @@index([school_id])
+  @@index([school_id, student_id])
+  @@map("attendances")
+}
+
+model Incident {
+  id          Int      @id @default(autoincrement())
+  student_id  Int
+  student     Student  @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  teacher_id  Int?
+  teacher     Teacher? @relation(fields: [teacher_id], references: [id], onDelete: SetNull)
+  type        IncidentType
+  description String
+  date        DateTime @default(now())
+  status      IncidentStatus @default(EN_COURS)
+  school_id   Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@index([student_id])
+  @@index([teacher_id])
+  @@index([type])
+  @@index([status])
+  @@index([school_id])
+  @@index([student_id, date])
+  @@map("incidents")
+}
+
 model SyncOperation {
-  id                  Int      @id @default(autoincrement())
-  client_operation_id String   @unique
-  entity              String
-  entity_id           Int
-  payload             Json
-  school_id           Int
-  created_at          DateTime @default(now())
+  id                    Int      @id @default(autoincrement())
+  client_operation_id   String   @unique
+  entity                SyncEntity
+  entity_id             String
+  payload               String
+  school_id             Int
+  created_at            DateTime @default(now())
 
   @@index([school_id])
+  @@index([client_operation_id])
   @@map("sync_operations")
+}
+
+model StudentParent {
+  student_id     Int
+  parent_user_id Int
+  relation       String?
+  school_id      Int
+  created_at DateTime @default(now())
+
+  student Student @relation("StudentToParentLink", fields: [student_id], references: [id], onDelete: Cascade)
+  parent  User    @relation("user_parent_links", fields: [parent_user_id], references: [id], onDelete: Cascade)
+
+  @@id([student_id, parent_user_id])
+  @@index([student_id])
+  @@index([parent_user_id])
+  @@index([school_id])
+  @@map("student_parents")
+}
+
+model RefreshToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  user_id    Int
+  school_id  Int?
+  expires_at DateTime?
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([school_id])
+  @@index([expires_at])
+  @@map("refresh_tokens")
+}
+
+model PasswordResetToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  user_id    Int
+  email      String
+  expires_at DateTime
+  used_at    DateTime?
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([token])
+  @@index([expires_at])
+  @@map("password_reset_tokens")
+}
+
+model Invitation {
+  id            Int      @id @default(autoincrement())
+  code          String   @unique
+  token         String?  @unique
+  target_type   TargetType
+  target_ids    String
+  school_id     Int
+  school        School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  max_uses      Int      @default(2)
+  current_uses  Int      @default(0)
+  expires_at    DateTime?
+  created_by    Int?
+  created_at    DateTime @default(now())
+
+  @@index([code])
+  @@index([school_id])
+  @@map("invitations")
+}
+
+model SchoolFiliere {
+  id         Int      @id @default(autoincrement())
+  school_id  Int
+  filiere    String
+  school     School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+
+  @@unique([school_id, filiere])
+  @@index([school_id])
+  @@map("school_filieres")
+}
+
+model SchoolLevel {
+  id         Int      @id @default(autoincrement())
+  school_id  Int
+  level      String
+  school     School   @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+
+  @@unique([school_id, level])
+  @@index([school_id])
+  @@map("school_levels")
+}
+
+model ClassProgressionOption {
+  id              Int   @id @default(autoincrement())
+  from_class_level String
+  from_section    String?
+  to_class_level  String
+  to_section      String?
+
+  @@index([from_class_level, from_section])
+  @@map("class_progression_options")
+}
+
+model TeacherProgressionVote {
+  id             Int      @id @default(autoincrement())
+  student_id     Int
+  teacher_id     Int
+  class_id       Int
+  school_year_id Int
+  school_id      Int
+  decision       DecisionVote
+  comment        String?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  teacher    Teacher    @relation(fields: [teacher_id], references: [id], onDelete: Cascade)
+  school     School     @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  school_year SchoolYear @relation(fields: [school_year_id], references: [id], onDelete: Cascade)
+
+  @@unique([student_id, teacher_id, school_year_id])
+  @@index([teacher_id])
+  @@index([school_year_id])
+  @@index([class_id])
+  @@index([school_id])
+  @@map("teacher_progression_votes")
+}
+
+model StudentProgression {
+  id             Int      @id @default(autoincrement())
+  student_id     Int
+  school_year_id Int
+  class_id       Int?
+  average        Float?
+  rank           Int?
+  final_decision DecisionFinale
+  next_class_id  Int?
+  next_class     Class?   @relation("StudentProgressionClass", fields: [next_class_id], references: [id], onDelete: SetNull)
+  decided_by     Int?
+  comment        String?
+  applied_at     DateTime?
+  decided_at     DateTime @default(now())
+  school_id      Int
+  created_at     DateTime @default(now())
+
+  student    Student    @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  school     School     @relation(fields: [school_id], references: [id], onDelete: Cascade)
+  school_year SchoolYear @relation(fields: [school_year_id], references: [id], onDelete: Cascade)
+
+  @@unique([student_id, school_year_id])
+  @@index([student_id])
+  @@index([school_year_id])
+  @@index([school_id])
+  @@index([class_id])
+  @@index([next_class_id])
+  @@index([applied_at])
+  @@map("student_progressions")
 }

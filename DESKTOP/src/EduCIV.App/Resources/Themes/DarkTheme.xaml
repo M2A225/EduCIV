@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Backgrounds -->
+  <SolidColorBrush x:Key="ColorBg" Color="#0F172A" />
+  <SolidColorBrush x:Key="ColorBgElevated" Color="#1E293B" />
+  <SolidColorBrush x:Key="ColorSurface" Color="#334155" />
+  <SolidColorBrush x:Key="ColorSurfaceHover" Color="#475569" />
+
+  <!-- Borders -->
+  <SolidColorBrush x:Key="ColorBorder" Color="#475569" />
+  <SolidColorBrush x:Key="ColorBorderStrong" Color="#64748B" />
+  <SolidColorBrush x:Key="ColorBorderFocus" Color="#A78BFA" />
+
+  <!-- Text -->
+  <SolidColorBrush x:Key="ColorText" Color="#F8FAFC" />
+  <SolidColorBrush x:Key="ColorTextSecondary" Color="#CBD5E1" />
+  <SolidColorBrush x:Key="ColorTextMuted" Color="#94A3B8" />
+  <SolidColorBrush x:Key="ColorTextInverse" Color="#0F172A" />
+
+  <!-- Brand Brushes -->
+  <SolidColorBrush x:Key="ColorPrimaryBrush" Color="#A78BFA" />
+  <SolidColorBrush x:Key="ColorPrimaryHoverBrush" Color="#7C3AED" />
+  <SolidColorBrush x:Key="ColorPrimaryLightBrush" Color="#7C3AED" />
+  <SolidColorBrush x:Key="ColorPrimaryBgBrush" Color="#2E1065" />
+
+  <SolidColorBrush x:Key="ColorCtaBrush" Color="#FB923C" />
+  <SolidColorBrush x:Key="ColorCtaHoverBrush" Color="#F97316" />
+  <SolidColorBrush x:Key="ColorCtaLightBrush" Color="#F97316" />
+  <SolidColorBrush x:Key="ColorCtaBgBrush" Color="#431E03" />
+
+  <!-- Semantic Brushes -->
+  <SolidColorBrush x:Key="ColorSuccessBrush" Color="#10B981" />
+  <SolidColorBrush x:Key="ColorSuccessBgBrush" Color="#022C22" />
+  <SolidColorBrush x:Key="ColorSuccessTextBrush" Color="#6EE7B7" />
+  <SolidColorBrush x:Key="ColorWarningBrush" Color="#F59E0B" />
+  <SolidColorBrush x:Key="ColorWarningBgBrush" Color="#422006" />
+  <SolidColorBrush x:Key="ColorWarningTextBrush" Color="#FCD34D" />
+  <SolidColorBrush x:Key="ColorErrorBrush" Color="#EF4444" />
+  <SolidColorBrush x:Key="ColorErrorBgBrush" Color="#450A0A" />
+  <SolidColorBrush x:Key="ColorErrorTextBrush" Color="#FCA5A5" />
+  <SolidColorBrush x:Key="ColorInfoBrush" Color="#3B82F6" />
+  <SolidColorBrush x:Key="ColorInfoBgBrush" Color="#1E3A5F" />
+  <SolidColorBrush x:Key="ColorInfoTextBrush" Color="#93C5FD" />
+
+  <!-- Overlay -->
+  <SolidColorBrush x:Key="ColorOverlay" Color="#000000" Opacity="0.6" />
+
+</ResourceDictionary>

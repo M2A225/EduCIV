@@ -11,6 +11,6 @@ export class TimetablesRepository extends BaseRepository<Timetable> {
     @Inject(REQUEST)
     request: any,
   ) {
-    super(prisma.timetable, request.user?.school_id);
+    super(prisma.timetable, request);
   }
 }

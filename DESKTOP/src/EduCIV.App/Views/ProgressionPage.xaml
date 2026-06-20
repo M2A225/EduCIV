@@ -1,0 +1,41 @@
+<UserControl x:Class="EduCIV.App.Views.ProgressionPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="900"
+             Background="{DynamicResource ColorBg}">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Progression" FontSize="28" FontWeight="Bold" FontFamily="{DynamicResource FontHeading}" Foreground="{DynamicResource ColorText}" Margin="0,0,0,16"/>
+        <Border Grid.Row="1" Style="{StaticResource ModernCard}" Margin="0,0,0,16" Padding="16">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Classe ID:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBox Text="{Binding SelectedClassId, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Tag="Classe ID" Width="150" Margin="0,0,16,0"/>
+                <TextBlock Text="Annee ID:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBox Text="{Binding SelectedYearId, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Tag="Annee ID" Width="150" Margin="0,0,16,0"/>
+                <Button Content="Charger" Command="{Binding LoadItemsCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        <Border Grid.Row="2" Style="{StaticResource ModernCard}" Padding="0">
+            <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" IsReadOnly="True"
+                      HeadersVisibility="Column" CanUserSortColumns="True" RowHeaderWidth="0"
+                      GridLinesVisibility="Horizontal" Background="Transparent" BorderThickness="0"
+                      VerticalGridLinesBrush="{DynamicResource ColorBorder}"
+                      HorizontalGridLinesBrush="{DynamicResource ColorBorder}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60" FontSize="12"/>
+                    <DataGridTextColumn Header="Eleve" Binding="{Binding StudentId}" Width="150"/>
+                    <DataGridTextColumn Header="Decision" Binding="{Binding FinalDecision}" Width="150"/>
+                    <DataGridTextColumn Header="Classe Suiv." Binding="{Binding NextClassId}" Width="120"/>
+                    <DataGridTextColumn Header="Commentaire" Binding="{Binding Comment}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</UserControl>

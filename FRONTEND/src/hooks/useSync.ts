@@ -1,39 +1,37 @@
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { syncService } from '../services/sync';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { api } from '../services/api';
 
-interface SyncStore {
-  queue: any[];
+interface SyncState {
   isSyncing: boolean;
-  addToQueue: (operation: any) => void;
-  sync: () => Promise<void>;
+  lastSync: string | null;
+  queue: number;
+  setSyncing: (syncing: boolean) => void;
+  setLastSync: (date: string) => void;
+  setQueue: (count: number) => void;
 }
 
-export const useSyncStore = create<SyncStore>()(
-  persist(
-    (set, get) => ({
-      queue: [],
-      isSyncing: false,
-      addToQueue: (operation) => set((state) => ({ queue: [...state.queue, { ...operation, timestamp: Date.now() }] })),
-      sync: async () => {
-        const { queue, isSyncing } = get();
-        if (queue.length === 0 || isSyncing) return;
+export const useSyncStore = create<SyncState>((set) => ({
+  isSyncing: false,
+  lastSync: null,
+  queue: 0,
+  setSyncing: (isSyncing) => set({ isSyncing }),
+  setLastSync: (lastSync) => set({ lastSync }),
+  setQueue: (queue) => set({ queue }),
+}));
 
-        set({ isSyncing: true });
-        try {
-          await api.post('/sync/push', { operations: queue });
-          set({ queue: [], isSyncing: false });
-        } catch (error) {
-          console.error('Sync failed', error);
-          set({ isSyncing: false });
-        }
-      },
-    }),
-    { name: 'sync-storage' }
-  )
-);
+export const useSyncPush = () => {
+  return useMutation({
+    mutationFn: (data: Record<string, unknown>) => syncService.pushData(data)
+  });
+};
 
-// Auto-sync on online
-window.addEventListener('online', () => {
-  useSyncStore.getState().sync();
-});
+export const useSyncPull = () => {
+  return useQuery({
+    queryKey: ['latest-sync'],
+    queryFn: () => syncService.pullData().then(res => {
+      const body = res.data as Record<string, unknown>;
+      return (body?.data ?? body) as Record<string, unknown>;
+    })
+  });
+};

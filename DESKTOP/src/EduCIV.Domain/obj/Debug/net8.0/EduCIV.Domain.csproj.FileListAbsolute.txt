@@ -1,0 +1,13 @@
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\bin\Debug\net8.0\EduCIV.Domain.deps.json
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\bin\Debug\net8.0\EduCIV.Domain.dll
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\bin\Debug\net8.0\EduCIV.Domain.pdb
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\EduCIV.Domain.csproj.AssemblyReference.cache
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\EduCIV.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\EduCIV.Domain.AssemblyInfoInputs.cache
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\EduCIV.Domain.AssemblyInfo.cs
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\EduCIV.Domain.csproj.CoreCompileInputs.cache
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\EduCIV.Domain.sourcelink.json
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\EduCIV.Domain.dll
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\refint\EduCIV.Domain.dll
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\EduCIV.Domain.pdb
+C:\Users\ANICE\Documents\Education\EduCIV\DESKTOP\src\EduCIV.Domain\obj\Debug\net8.0\ref\EduCIV.Domain.dll

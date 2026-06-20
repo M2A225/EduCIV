@@ -1,13 +1,27 @@
 export interface MultiTenantEntity {
-  school_id: number;
+  school_id: number | null;
   id?: any;
 }
 
 export abstract class BaseRepository<T extends MultiTenantEntity> {
   constructor(
-    protected readonly model: any, // Prisma model delegate
-    protected readonly schoolId?: number,
+    protected readonly model: any,
+    protected readonly request?: any,
   ) {}
+
+  protected get schoolId(): number | undefined {
+    const user = this.request?.user;
+    if (!user) return undefined;
+
+    const headerId = this.request?.headers?.['x-school-id'];
+    if (headerId) {
+      const sid = Number(headerId);
+      if (!isNaN(sid) && user.school_ids?.includes(sid)) {
+        return sid;
+      }
+    }
+    return user.currentSchoolId ?? user.primary_school_id ?? user.school_id;
+  }
 
   get currentSchoolId(): number | undefined {
     return this.schoolId;
@@ -15,7 +29,9 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
 
   protected ensureSchoolId() {
     if (!this.schoolId) {
-      throw new Error('BaseRepository: schoolId is required for this operation.');
+      throw new Error(
+        'BaseRepository: schoolId is required for this operation.',
+      );
     }
   }
 
@@ -28,6 +44,10 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
         school_id: this.schoolId,
       },
     });
+  }
+
+  async findMany(args: any = {}): Promise<T[]> {
+    return this.find(args);
   }
 
   async findOne(args: any): Promise<T | null> {
@@ -53,13 +73,6 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
 
   async update(id: any, data: any): Promise<T> {
     this.ensureSchoolId();
-    // Prisma update requires a unique input for 'where'
-    // We assume 'id' is unique, but we also check school_id for safety
-    // However, Prisma doesn't support non-unique fields in 'where' for 'update' directly
-    // unless it's a compound unique. 
-    // For now, we update by id and trust the tenant check (or we could use updateMany)
-    
-    // Safety check: ensure the item belongs to the school
     const item = await this.findOne({ where: { id } });
     if (!item) throw new Error('Item not found or access denied');
 

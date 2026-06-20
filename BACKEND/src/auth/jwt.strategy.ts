@@ -9,14 +9,26 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET', 'dev-secret'),
+      secretOrKey: configService.getOrThrow<string>('JWT_SECRET'),
     });
   }
 
   async validate(payload: any) {
-    if (!payload.school_id) {
-      throw new UnauthorizedException('Invalid token: missing school_id');
+    const systemRoles = ['BACKOFFICE'];
+    const isSystemRole = systemRoles.includes(payload.role);
+    if (
+      !isSystemRole &&
+      (!payload.school_ids || payload.school_ids.length === 0)
+    ) {
+      throw new UnauthorizedException('Invalid token: no schools assigned');
     }
-    return { userId: payload.sub, school_id: payload.school_id };
+    return {
+      userId: payload.sub,
+      school_ids: payload.school_ids,
+      primary_school_id: payload.primary_school_id,
+      role: payload.role,
+      roles: payload.roles || [payload.role],
+      scope_by_role: payload.scope_by_role || { [payload.role]: 'SCHOOL' },
+    };
   }
 }

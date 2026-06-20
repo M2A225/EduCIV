@@ -11,6 +11,6 @@ export class AttendanceSessionRepository extends BaseRepository<AttendanceSessio
     @Inject(REQUEST)
     request: any,
   ) {
-    super(prisma.attendanceSession, request.user?.school_id);
+    super(prisma.attendanceSession, request);
   }
 }

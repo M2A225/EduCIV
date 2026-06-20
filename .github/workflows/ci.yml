@@ -1,0 +1,298 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22'
+  UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+  UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: |
+            BACKEND/package-lock.json
+            FRONTEND/package-lock.json
+
+      - name: Install BACKEND dependencies
+        run: npm ci
+        working-directory: ./BACKEND
+
+      - name: Install FRONTEND dependencies
+        run: npm ci
+        working-directory: ./FRONTEND
+
+      - name: Run BACKEND lint
+        run: npm run lint
+        working-directory: ./BACKEND
+
+      - name: Run FRONTEND lint
+        run: npm run lint
+        working-directory: ./FRONTEND
+
+  test-backend:
+    name: Test Backend
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: BACKEND/package-lock.json
+
+      - name: Install BACKEND dependencies
+        run: npm ci
+        working-directory: ./BACKEND
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: ./BACKEND
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Run BACKEND tests with coverage
+        run: npm run test:cov
+        working-directory: ./BACKEND
+        env:
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Upload BACKEND coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: BACKEND/coverage
+          retention-days: 7
+
+  test-frontend:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: FRONTEND/package-lock.json
+
+      - name: Install FRONTEND dependencies
+        run: npm ci
+        working-directory: ./FRONTEND
+
+      - name: Run FRONTEND unit tests
+        run: npm run test
+        working-directory: ./FRONTEND
+
+      - name: Upload FRONTEND coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: FRONTEND/coverage
+          retention-days: 7
+
+  test-e2e:
+    name: Test E2E
+    runs-on: ubuntu-latest
+    needs: test-frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: FRONTEND/package-lock.json
+
+      - name: Install FRONTEND dependencies
+        run: npm ci
+        working-directory: ./FRONTEND
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('FRONTEND/package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+        working-directory: ./FRONTEND
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+        working-directory: ./FRONTEND
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: FRONTEND/test-results
+          retention-days: 7
+
+  build-backend:
+    name: Build Backend
+    runs-on: ubuntu-latest
+    needs: test-backend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: BACKEND/package-lock.json
+
+      - name: Install BACKEND dependencies
+        run: npm ci
+        working-directory: ./BACKEND
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: ./BACKEND
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Build BACKEND
+        run: npm run build
+        working-directory: ./BACKEND
+
+      - name: Upload BACKEND build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dist
+          path: BACKEND/dist
+          retention-days: 7
+
+  build-frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    needs: test-frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: FRONTEND/package-lock.json
+
+      - name: Install FRONTEND dependencies
+        run: npm ci
+        working-directory: ./FRONTEND
+
+      - name: Build FRONTEND
+        run: npm run build
+        working-directory: ./FRONTEND
+
+      - name: Upload FRONTEND build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: FRONTEND/dist
+          retention-days: 7
+
+  deploy-staging:
+    name: Deploy Staging
+    runs-on: ubuntu-latest
+    needs: [build-backend, build-frontend, test-e2e]
+    environment: staging
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download BACKEND artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-dist
+          path: BACKEND/dist
+
+      - name: Download FRONTEND artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: FRONTEND/dist
+
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying to staging environment..."
+          # Add your staging deployment commands here
+          # Example: npm run deploy:staging
+        env:
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  deploy-production:
+    name: Deploy Production
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    environment: production
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download BACKEND artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-dist
+          path: BACKEND/dist
+
+      - name: Download FRONTEND artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: FRONTEND/dist
+
+      - name: Deploy to Production
+        run: |
+          echo "Deploying to production environment..."
+          # Add your production deployment commands here
+          # Example: npm run deploy:production
+        env:
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}

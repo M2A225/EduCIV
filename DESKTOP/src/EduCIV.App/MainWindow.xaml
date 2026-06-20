@@ -1,0 +1,400 @@
+﻿<Window x:Class="EduCIV.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:EduCIV.App.Views"
+        xmlns:viewmodels="clr-namespace:EduCIV.App.ViewModels"
+        xmlns:local="clr-namespace:EduCIV.App"
+        xmlns:converters="clr-namespace:EduCIV.App.Converters"
+        mc:Ignorable="d"
+        Title="EduCIV" Height="700" Width="1100" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource ColorBg}"
+        FontFamily="{DynamicResource FontSans}"
+        FontSize="{DynamicResource TextBody}">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}"><views:LoginPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:DashboardViewModel}"><views:DashboardPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:SetupWizardViewModel}"><views:SetupWizardPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:StudentViewModel}"><views:StudentPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:TeacherViewModel}"><views:TeacherPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:NotesViewModel}"><views:NotesPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:AttendanceViewModel}"><views:AttendancePage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:PaymentsViewModel}"><views:PaymentsPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:ClassViewModel}"><views:ClassesPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:SubjectViewModel}"><views:SubjectsPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:TimetableViewModel}"><views:TimetablesPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:IncidentViewModel}"><views:IncidentsPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:SchoolYearViewModel}"><views:SchoolYearsPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:PeriodViewModel}"><views:PeriodsPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:ProgressionViewModel}"><views:ProgressionPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:InvitationViewModel}"><views:InvitationsPage/></DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:UserViewModel}"><views:UsersPage/></DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ============ TOP BAR ============ -->
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Height="{StaticResource TopbarHeight}"
+                Background="{DynamicResource ColorBgElevated}"
+                BorderBrush="{DynamicResource ColorBorder}" BorderThickness="0,0,0,1"
+                Padding="0,0,16,0" SnapsToDevicePixels="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: hamburger + breadcrumb -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
+                            Margin="12,0,0,0"
+                            Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Button Command="{Binding ToggleSidebarCommand}" Style="{StaticResource IconButton}"
+                            Width="36" Height="36" FontSize="18" Margin="0,0,8,0"
+                            ToolTip="Replier le menu">
+                        <TextBlock Text="&#x2630;" FontSize="16"/>
+                    </Button>
+                    <TextBlock Text="{Binding CurrentPageTitle}" FontSize="16" FontWeight="SemiBold"
+                               FontFamily="{DynamicResource FontHeading}"
+                               Foreground="{DynamicResource ColorText}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Left: brand when not logged in -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0"
+                            Visibility="{Binding IsLoggedIn, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                    <TextBlock Text="EduCIV" FontSize="20" FontWeight="Bold"
+                               FontFamily="{DynamicResource FontHeading}"
+                               Foreground="{DynamicResource ColorPrimaryBrush}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Right: theme toggle + sync + user avatar + logout -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
+                            Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <!-- Sync status -->
+                    <Border Background="{DynamicResource ColorWarningBgBrush}" CornerRadius="9999"
+                            Padding="10,4" Margin="0,0,8,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding SyncStatusText}" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ColorWarningBrush}"/>
+                    </Border>
+
+                    <!-- Theme toggle -->
+                    <Button Command="{Binding ToggleThemeCommand}" Style="{StaticResource IconButton}"
+                            Width="36" Height="36" Margin="0,0,4,0" ToolTip="Changer de theme">
+                        <TextBlock FontSize="16">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="&#x263E;"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDarkMode}" Value="True">
+                                            <Setter Property="Text" Value="&#x2600;"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Button>
+
+                    <!-- User avatar -->
+                    <Border Background="{DynamicResource ColorPrimaryBrush}" CornerRadius="9999"
+                            Width="36" Height="36" Margin="8,0,0,0" Cursor="Hand">
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{Binding CurrentUserName}" IsEnabled="False" FontWeight="SemiBold"/>
+                                <MenuItem Header="{Binding CurrentUserRole}" IsEnabled="False" FontStyle="Italic" Foreground="{DynamicResource ColorTextMuted}"/>
+                                <Separator/>
+                                <MenuItem Header="Deconnexion" Command="{Binding LogoutCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="&#x274C;" FontSize="12"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                        <TextBlock Text="{Binding CurrentUserInitials}" FontSize="13" FontWeight="Bold"
+                                   Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ============ SIDEBAR ============ -->
+        <Border Grid.Row="1" Grid.Column="0"
+                Background="{DynamicResource ColorBgElevated}"
+                BorderBrush="{DynamicResource ColorBorder}" BorderThickness="0,0,1,0"
+                SnapsToDevicePixels="True"
+                Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border.Width>
+                <Binding Path="IsSidebarCollapsed">
+                    <Binding.Converter>
+                        <converters:InverseBoolToWidthConverter CollapsedWidth="64" ExpandedWidth="280"/>
+                    </Binding.Converter>
+                </Binding>
+            </Border.Width>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo area -->
+                <Border Grid.Row="0" Padding="16,16,16,12">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="{DynamicResource ColorPrimaryBrush}" CornerRadius="10"
+                                Width="32" Height="32" Margin="0,0,10,0">
+                            <TextBlock Text="E" FontSize="16" FontWeight="Bold" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="EduCIV" FontSize="18" FontWeight="Bold"
+                                   FontFamily="{DynamicResource FontHeading}"
+                                   Foreground="{DynamicResource ColorPrimaryBrush}"
+                                   VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- Navigation -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,4,0,0">
+                        <TextBlock Text="MENU" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+
+                        <Button Content="Tableau de bord" Command="{Binding NavigateToDashboardCommand}"
+                                Style="{StaticResource SidebarButton}" ToolTip="Tableau de bord"/>
+
+                        <Button Command="{Binding NavigateToStudentsCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavStudentsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Eleves">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Eleves" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToTeachersCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavTeachersVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Enseignants">
+                            <TextBlock Text="Enseignants">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToClassesCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavClassesVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Classes">
+                            <TextBlock Text="Classes">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToSubjectsCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavSubjectsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Matieres">
+                            <TextBlock Text="Matieres">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToNotesCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavNotesVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Notes">
+                            <TextBlock Text="Notes">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToAttendanceCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavAttendanceVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Presences">
+                            <TextBlock Text="Presences">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToTimetablesCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavTimetablesVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Emplois du temps">
+                            <TextBlock Text="Emplois du temps">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToPaymentsCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavPaymentsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Paiements">
+                            <TextBlock Text="Paiements">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToIncidentsCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavIncidentsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Incidents">
+                            <TextBlock Text="Incidents">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <TextBlock Text="ADMIN" Style="{StaticResource SidebarSectionHeader}"
+                                   Visibility="{Binding IsSidebarCollapsed, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+
+                        <Button Command="{Binding NavigateToSchoolYearsCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavSchoolYearsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Annees scolaires">
+                            <TextBlock Text="Annees scolaires">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToPeriodsCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavPeriodsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Periodes">
+                            <TextBlock Text="Periodes">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToProgressionCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavProgressionVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Progression">
+                            <TextBlock Text="Progression">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToInvitationsCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavInvitationsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Invitations">
+                            <TextBlock Text="Invitations">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+
+                        <Button Command="{Binding NavigateToUsersCommand}" Style="{StaticResource SidebarButton}"
+                                Visibility="{Binding IsNavUsersVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                ToolTip="Utilisateurs">
+                            <TextBlock Text="Utilisateurs">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Visible"/><Style.Triggers><DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- User info at bottom -->
+                <Border Grid.Row="2" Padding="12,12" BorderBrush="{DynamicResource ColorBorder}"
+                        BorderThickness="0,1,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="{DynamicResource ColorPrimaryLightBrush}" CornerRadius="9999"
+                                Width="32" Height="32" Margin="0,0,10,0">
+                            <TextBlock Text="{Binding CurrentUserInitials}" FontSize="12" FontWeight="Bold"
+                                       Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding CurrentUserName}" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource ColorText}" TextTrimming="CharacterEllipsis"
+                                       MaxWidth="180">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBlock Text="{Binding CurrentUserRole}" FontSize="11"
+                                       Foreground="{DynamicResource ColorTextMuted}" TextTrimming="CharacterEllipsis"
+                                       MaxWidth="180">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ============ MAIN CONTENT ============ -->
+        <Border Grid.Row="1" Grid.Column="1">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="ContentControl.ContentChanged">
+                            <BeginStoryboard Storyboard="{StaticResource PageEnterAnimation}"/>
+                        </EventTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <Border.RenderTransform>
+                <TranslateTransform Y="0"/>
+            </Border.RenderTransform>
+            <ContentControl x:Name="MainContent" Content="{Binding CurrentPage}">
+                <ContentControl.RenderTransform>
+                    <TranslateTransform Y="0"/>
+                </ContentControl.RenderTransform>
+            </ContentControl>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,265 @@
+@layer utilities {
+  /* ===========================================
+     KEYFRAMES
+     =========================================== */
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slide-down {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slide-left {
+    from { opacity: 0; transform: translateX(16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slide-right {
+    from { opacity: 0; transform: translateX(-16px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes scale-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  @keyframes bounce-subtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    75% { transform: rotate(3deg); }
+  }
+
+  @keyframes progress-indeterminate {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* ===========================================
+     ANIMATION UTILITIES
+     =========================================== */
+
+  .animate-fade-in {
+    animation: fade-in var(--duration-normal) var(--ease-standard) forwards;
+  }
+
+  .animate-fade-out {
+    animation: fade-out var(--duration-fast) var(--ease-standard) forwards;
+  }
+
+  .animate-slide-up {
+    animation: slide-up var(--duration-normal) var(--ease-emphasized) forwards;
+  }
+
+  .animate-slide-down {
+    animation: slide-down var(--duration-normal) var(--ease-emphasized) forwards;
+  }
+
+  .animate-slide-left {
+    animation: slide-left var(--duration-normal) var(--ease-emphasized) forwards;
+  }
+
+  .animate-slide-right {
+    animation: slide-right var(--duration-normal) var(--ease-emphasized) forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in var(--duration-normal) var(--ease-spring) forwards;
+  }
+
+  .animate-scale-out {
+    animation: scale-out var(--duration-fast) var(--ease-standard) forwards;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite linear;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background-size: 200% 100%;
+  }
+
+  .dark .animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    background-size: 200% 100%;
+  }
+
+  .animate-spin { animation: spin 1s linear infinite; }
+  .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+  .animate-bounce-subtle { animation: bounce-subtle 2s ease-in-out infinite; }
+  .animate-wiggle { animation: wiggle 0.5s ease-in-out; }
+
+  /* ===========================================
+     TRANSITION UTILITIES
+     =========================================== */
+
+  .transition-all-standard {
+    transition: all var(--duration-normal) var(--ease-standard);
+  }
+
+  .transition-colors-standard {
+    transition: color var(--duration-fast) var(--ease-standard),
+                background-color var(--duration-fast) var(--ease-standard),
+                border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .transition-transform-standard {
+    transition: transform var(--duration-fast) var(--ease-emphasized);
+  }
+
+  .transition-shadow-standard {
+    transition: box-shadow var(--duration-normal) var(--ease-standard);
+  }
+
+  .transition-opacity-standard {
+    transition: opacity var(--duration-fast) var(--ease-standard);
+  }
+
+  /* ===========================================
+     HOVER / FOCUS / ACTIVE STATES
+     =========================================== */
+
+  .hover-lift {
+    transition: transform var(--duration-fast) var(--ease-emphasized),
+                box-shadow var(--duration-normal) var(--ease-standard);
+  }
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-3);
+  }
+
+  .hover-lift-lg:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-4);
+  }
+
+  .hover-scale:hover { transform: scale(1.02); }
+  .hover-scale-sm:hover { transform: scale(1.01); }
+
+  .active-scale:active { transform: scale(0.97); }
+  .active-scale-sm:active { transform: scale(0.99); }
+
+  .focus-ring:focus-visible {
+    outline: none;
+    ring: 2px;
+    ring-color: var(--color-primary);
+    ring-offset: 2px;
+  }
+
+  /* ===========================================
+     STAGGER CHILDREN
+     =========================================== */
+
+  .stagger-children > * {
+    opacity: 0;
+    animation: slide-up var(--duration-normal) var(--ease-emphasized) forwards;
+  }
+
+  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+  .stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+  .stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+  .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+  .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+  .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+  .stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+  .stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+
+  /* ===========================================
+     PAGE TRANSITIONS
+     =========================================== */
+
+  .page-enter {
+    animation: fade-in var(--duration-normal) var(--ease-standard),
+               slide-up var(--duration-normal) var(--ease-emphasized);
+  }
+
+  .page-exit {
+    animation: fade-out var(--duration-fast) var(--ease-standard),
+               slide-down var(--duration-fast) var(--ease-standard);
+  }
+
+  /* ===========================================
+     MODAL / DRAWER / TOAST
+     =========================================== */
+
+  .modal-overlay-enter { animation: fade-in var(--duration-normal) var(--ease-standard); }
+  .modal-overlay-exit { animation: fade-out var(--duration-fast) var(--ease-standard); }
+
+  .modal-content-enter { animation: scale-in var(--duration-normal) var(--ease-spring); }
+  .modal-content-exit { animation: scale-out var(--duration-fast) var(--ease-standard); }
+
+  .drawer-enter { animation: slide-right var(--duration-slow) var(--ease-emphasized); }
+  .drawer-exit { animation: slide-left var(--duration-normal) var(--ease-standard); }
+
+  .toast-enter { animation: slide-right var(--duration-normal) var(--ease-spring); }
+  .toast-exit { animation: slide-left var(--duration-fast) var(--ease-standard); }
+
+  /* ===========================================
+     SKELETON LOADING
+     =========================================== */
+
+  .skeleton {
+    background: linear-gradient(90deg,
+      var(--color-surface) 25%,
+      var(--color-surface-hover) 50%,
+      var(--color-surface) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+    border-radius: var(--radius-md);
+  }
+
+  .dark .skeleton {
+    background: linear-gradient(90deg,
+      var(--color-surface) 25%,
+      var(--color-surface-hover) 50%,
+      var(--color-surface) 75%
+    );
+    background-size: 200% 100%;
+  }
+
+  /* Skeleton shapes */
+  .skeleton-text { height: 1rem; width: 100%; }
+  .skeleton-text:last-child { width: 70%; }
+  .skeleton-title { height: 1.5rem; width: 50%; }
+  .skeleton-avatar { width: 40px; height: 40px; border-radius: var(--radius-full); }
+  .skeleton-card { height: 200px; border-radius: var(--radius-xl); }
+  .skeleton-button { height: 44px; width: 120px; border-radius: var(--radius-lg); }
+}

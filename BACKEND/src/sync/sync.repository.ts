@@ -11,10 +11,12 @@ export class SyncRepository extends BaseRepository<SyncOperation> {
     @Inject(REQUEST)
     request: any,
   ) {
-    super(prisma.syncOperation, request.user?.school_id);
+    super(prisma.syncOperation, request);
   }
 
-  async findByClientId(client_operation_id: string): Promise<SyncOperation | null> {
+  async findByClientId(
+    client_operation_id: string,
+  ): Promise<SyncOperation | null> {
     return this.prisma.syncOperation.findFirst({
       where: { client_operation_id, school_id: this.schoolId },
     });

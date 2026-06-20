@@ -6,6 +6,6 @@ import { TimetablesRepository } from './timetables.repository';
 @Module({
   controllers: [TimetablesController],
   providers: [TimetablesService, TimetablesRepository],
-  exports: [TimetablesService],
+  exports: [TimetablesService, TimetablesRepository],
 })
 export class TimetablesModule {}

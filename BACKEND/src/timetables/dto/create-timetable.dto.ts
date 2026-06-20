@@ -1,19 +1,19 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsInt } from 'class-validator';
 
 export class CreateTimetableDto {
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  class_id: string;
+  class_id: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  teacher_id: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  subject_id: number;
 
   @IsString()
   @IsNotEmpty()
-  teacher_id: string;
-
-  @IsString()
-  @IsNotEmpty()
-  subject_id: string;
-
-  @IsString()
-  @IsNotEmpty()
-  slot: string; // e.g., 'Mon-9:00'
+  slot: string;
 }

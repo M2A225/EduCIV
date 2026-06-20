@@ -1,48 +1,52 @@
-import { Outlet, useNavigate, Link } from 'react-router-dom';
+import { useState, useCallback } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { NAV_CONFIG } from '../../config/navigation';
+import { Sidebar } from './Sidebar';
+import { TopBar } from './TopBar';
 import { SyncStatusIndicator } from '../sync/SyncStatusIndicator';
+import { ErrorBoundary } from '../error/ErrorBoundary';
+import { LoadingState } from '../ui/LoadingState';
+import { PageTransition } from '../ui/PageTransition';
 
 export const MainLayout = () => {
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     navigate('/login');
-  };
+  }, [logout, navigate]);
 
-  const role = user?.role || 'STUDENT';
-  const filteredNav = NAV_CONFIG.filter(item => item.roles.includes(role));
+  const handleToggleSidebar = useCallback(() => {
+    setSidebarCollapsed(prev => !prev);
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
-      {/* Sidebar / Mobile Nav */}
-      <nav className="bg-blue-900 text-white w-full md:w-64 p-4 flex flex-col">
-        <div className="text-xl font-bold mb-8">EduCIV</div>
-        <div className="flex-grow space-y-2">
-          {filteredNav.map(item => (
-            <Link key={item.path} to={item.path} className="block p-2 hover:bg-blue-800 rounded transition">
-              {item.label}
-            </Link>
-          ))}
-          <div className="text-sm opacity-70 mt-4 mb-4 border-t border-blue-800 pt-4">
-            Rôle: {role}
-          </div>
-        </div>
-        <button 
-          onClick={handleLogout}
-          className="bg-red-800 hover:bg-red-700 p-2 rounded transition w-full text-left"
-        >
-          Déconnexion
-        </button>
-      </nav>
+    <div className="min-h-screen flex bg-bg">
+      <Sidebar
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={handleToggleSidebar}
+        onLogout={handleLogout}
+      />
 
-      {/* Main Content */}
-      <main className="flex-grow p-4 md:p-8">
-        <Outlet />
-        <SyncStatusIndicator />
-      </main>
+      <div className="flex flex-col flex-1 min-w-0">
+        <TopBar
+          onToggleSidebar={handleToggleSidebar}
+          collapsed={sidebarCollapsed}
+        />
+
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+          <div className="mx-auto" style={{ maxWidth: 'var(--container-max)' }}>
+            <ErrorBoundary fallback={<LoadingState type="card" count={3} />}>
+              <PageTransition>
+                <Outlet />
+              </PageTransition>
+            </ErrorBoundary>
+          </div>
+          <SyncStatusIndicator />
+        </main>
+      </div>
     </div>
   );
 };

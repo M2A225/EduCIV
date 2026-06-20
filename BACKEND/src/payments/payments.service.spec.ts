@@ -3,11 +3,33 @@ import { PaymentsService } from './payments.service';
 import { PaymentsRepository } from './payments.repository';
 import { AuditRepository } from './audit.repository';
 import { PrismaService } from '../core/prisma.service';
-import { mockPrismaService } from '../../test/prisma-mock';
 
 describe('PaymentsService', () => {
   let service: PaymentsService;
   let paymentsRepo: PaymentsRepository;
+
+  const mockTx = {
+    payment: {
+      create: jest.fn().mockResolvedValue({
+        id: 1,
+        amount_fcfa: 1000,
+        receipt_number: 'R123',
+        receipt_hash: 'hash123',
+        payment_type: 'SCOLARITE',
+        payment_date: new Date(),
+        student_id: 1,
+        status: 'VALIDE',
+        school_id: 1,
+      }),
+    },
+    paymentAuditLog: {
+      create: jest.fn().mockResolvedValue({ id: 1 }),
+    },
+  };
+
+  const mockPrismaService = {
+    $transaction: jest.fn().mockImplementation(async (cb) => cb(mockTx)),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -17,7 +39,7 @@ describe('PaymentsService', () => {
           provide: PaymentsRepository,
           useValue: {
             findByReceiptNumber: jest.fn(),
-            currentSchoolId: 'school_1',
+            currentSchoolId: 1,
           },
         },
         {
@@ -40,13 +62,18 @@ describe('PaymentsService', () => {
 
   it('should create a payment and log audit', async () => {
     (paymentsRepo.findByReceiptNumber as jest.Mock).mockResolvedValue(null);
-    mockPrismaService.payment.create.mockResolvedValue({ id: 1, amount_fcfa: 1000 });
 
-    const dto = { amount_fcfa: 1000, receipt_number: 'R123' };
+    const dto = {
+      amount_fcfa: 1000,
+      receipt_number: 'R123',
+      payment_type: 'SCOLARITE',
+      payment_date: '2025-01-15',
+      student_id: 1,
+    };
     const result = await service.createPayment(dto);
 
     expect(result).toBeDefined();
-    expect(mockPrismaService.payment.create).toHaveBeenCalled();
-    expect(mockPrismaService.auditLog.create).toHaveBeenCalled();
+    expect(mockTx.payment.create).toHaveBeenCalled();
+    expect(mockTx.paymentAuditLog.create).toHaveBeenCalled();
   });
 });

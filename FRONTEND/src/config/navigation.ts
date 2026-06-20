@@ -1,16 +1,29 @@
-export interface NavItem {
-  label: string;
-  path: string;
-  roles: string[];
-}
+import type { NavItem } from '../types';
 
 export const NAV_CONFIG: NavItem[] = [
-  { label: 'Dashboard', path: '/', roles: ['DIRECTOR', 'TEACHER', 'CASHIER', 'STUDENT'] },
-  { label: 'Absences', path: '/absences', roles: ['DIRECTOR', 'TEACHER'] },
-  { label: 'Élèves', path: '/students', roles: ['DIRECTOR', 'TEACHER'] },
-  { label: 'Classes', path: '/classes', roles: ['DIRECTOR'] },
-  { label: 'Emploi du temps', path: '/timetables', roles: ['DIRECTOR', 'TEACHER'] },
-  { label: 'Enseignants', path: '/teachers', roles: ['DIRECTOR'] },
-  { label: 'Paiements', path: '/payments', roles: ['DIRECTOR', 'CASHIER'] },
-  { label: 'Bulletins', path: '/bulletins', roles: ['DIRECTOR', 'TEACHER', 'STUDENT', 'PARENT'] },
+  { label: 'Dashboard', path: '/', roles: ['DIRECTOR', 'TEACHER', 'ACCOUNTANT', 'CASHIER', 'EDUCATOR', 'PARENT'], icon: 'LayoutDashboard' },
+  { label: 'Élèves', path: '/students', roles: ['DIRECTOR', 'TEACHER'], icon: 'Users' },
+  { label: 'Classes', path: '/classes', roles: ['DIRECTOR'], icon: 'School' },
+  { label: 'Enseignants', path: '/teachers', roles: ['DIRECTOR'], icon: 'UserCheck' },
+  { label: 'Périodes', path: '/periods', roles: ['DIRECTOR'], icon: 'CalendarDays' },
+  { label: 'Emploi du temps', path: '/timetables', roles: ['DIRECTOR'], icon: 'Calendar' },
+  { label: 'Emploi du temps', path: '/teacher/timetable', roles: ['TEACHER'], icon: 'Calendar' },
+  { label: 'Emploi du temps', path: '/parent/timetable', roles: ['PARENT'], icon: 'Calendar' },
+  { label: 'Absences', path: '/absences', roles: ['DIRECTOR', 'TEACHER', 'EDUCATOR', 'PARENT'], icon: 'UserX' },
+  { label: 'Notes', path: '/notes', roles: ['DIRECTOR', 'TEACHER', 'PARENT'], icon: 'FileText' },
+  { label: 'Bulletins', path: '/bulletins', roles: ['DIRECTOR', 'TEACHER', 'PARENT'], icon: 'Award' },
+  { label: 'Paiements', path: '/payments', roles: ['DIRECTOR', 'ACCOUNTANT', 'CASHIER', 'PARENT'], icon: 'CreditCard' },
+  { label: 'Appels', path: '/attendance', roles: ['TEACHER', 'EDUCATOR'], icon: 'ClipboardCheck' },
+  { label: 'Incidents', path: '/incidents', roles: ['DIRECTOR', 'EDUCATOR'], icon: 'AlertTriangle' },
+  { label: 'Parents', path: '/parents', roles: ['DIRECTOR'], icon: 'Heart' },
+  { label: 'Utilisateurs', path: '/users', roles: ['DIRECTOR'], icon: 'UserCog' },
+  { label: 'Paramètres', path: '/settings', roles: ['DIRECTOR'], icon: 'Settings' },
+  { label: 'Conseil de classe', path: '/teacher/progression', roles: ['TEACHER'], icon: 'ClipboardCheck' },
+  { label: 'Décisions fin d\'année', path: '/progression', roles: ['DIRECTOR'], icon: 'GraduationCap' },
+  { label: 'Paramètres', path: '/accountant/settings', roles: ['ACCOUNTANT'], icon: 'Settings' },
+  { label: 'Dashboard', path: '/backoffice', roles: ['BACKOFFICE'], icon: 'LayoutDashboard' },
+  { label: 'Utilisateurs', path: '/backoffice/users', roles: ['BACKOFFICE'], icon: 'Users' },
+  { label: 'Écoles', path: '/backoffice/schools', roles: ['BACKOFFICE'], icon: 'Building' },
+  { label: 'Groupes scolaires', path: '/backoffice/school-groups', roles: ['BACKOFFICE'], icon: 'Building' },
+  { label: 'Audit', path: '/backoffice/audit', roles: ['BACKOFFICE'], icon: 'ClipboardCheck' },
 ];

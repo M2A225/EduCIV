@@ -1,0 +1,394 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+  <!-- ============================================
+       MODERN BUTTON STYLES
+       ============================================ -->
+
+  <Style x:Key="PrimaryButton" TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource ColorPrimaryBrush}" />
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="Padding" Value="20,0" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="Border" Background="{TemplateBinding Background}"
+                  CornerRadius="10" SnapsToDevicePixels="True">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                              RecognizesAccessKey="True" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Border" Property="Background" Value="{StaticResource ColorPrimaryHoverBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="Border" Property="Opacity" Value="0.9" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="Border" Property="Opacity" Value="0.5" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="CtaButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+    <Setter Property="Background" Value="{StaticResource ColorCtaBrush}" />
+  </Style>
+
+  <Style x:Key="SecondaryButton" TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource ColorSurface}" />
+    <Setter Property="Foreground" Value="{StaticResource ColorText}" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="Padding" Value="20,0" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="Border" Background="{TemplateBinding Background}"
+                  BorderBrush="{StaticResource ColorBorder}" BorderThickness="1"
+                  CornerRadius="10" SnapsToDevicePixels="True">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                              RecognizesAccessKey="True" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Border" Property="Background" Value="{StaticResource ColorSurfaceHover}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="Border" Property="Opacity" Value="0.9" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="Border" Property="Opacity" Value="0.5" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="GhostButton" TargetType="Button">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{StaticResource ColorTextSecondary}" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="FontWeight" Value="Medium" />
+    <Setter Property="Height" Value="36" />
+    <Setter Property="Padding" Value="12,0" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="Border" Background="{TemplateBinding Background}"
+                  CornerRadius="8" SnapsToDevicePixels="True">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                              RecognizesAccessKey="True" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Border" Property="Background" Value="{StaticResource ColorSurface}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="Border" Property="Opacity" Value="0.8" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+    <Setter Property="Background" Value="{StaticResource ColorErrorBrush}" />
+  </Style>
+
+  <Style x:Key="IconButton" TargetType="Button">
+    <Setter Property="Background" Value="Transparent" />
+    <Setter Property="Foreground" Value="{StaticResource ColorTextSecondary}" />
+    <Setter Property="Width" Value="40" />
+    <Setter Property="Height" Value="40" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border x:Name="Border" Background="{TemplateBinding Background}"
+                  CornerRadius="10" SnapsToDevicePixels="True">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Border" Property="Background" Value="{StaticResource ColorSurface}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="Border" Property="Opacity" Value="0.8" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- ============================================
+       MODERN TEXTBOX STYLES
+       ============================================ -->
+
+  <Style x:Key="ModernTextBox" TargetType="TextBox">
+    <Setter Property="Background" Value="{StaticResource ColorBgElevated}" />
+    <Setter Property="Foreground" Value="{StaticResource ColorText}" />
+    <Setter Property="BorderBrush" Value="{StaticResource ColorBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Padding" Value="14,8" />
+    <Setter Property="Height" Value="42" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="TextBox">
+          <Border x:Name="Border" Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="10" SnapsToDevicePixels="True">
+            <ScrollViewer x:Name="PART_ContentHost" Padding="{TemplateBinding Padding}"
+                          VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ColorBorderStrong}" />
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+              <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ColorPrimaryBrush}" />
+              <Setter TargetName="Border" Property="BorderThickness" Value="2" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
+    <Setter Property="Background" Value="{StaticResource ColorBgElevated}" />
+    <Setter Property="Foreground" Value="{StaticResource ColorText}" />
+    <Setter Property="BorderBrush" Value="{StaticResource ColorBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Padding" Value="14,8" />
+    <Setter Property="Height" Value="42" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="PasswordBox">
+          <Border x:Name="Border" Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="10" SnapsToDevicePixels="True">
+            <ScrollViewer x:Name="PART_ContentHost" Padding="{TemplateBinding Padding}"
+                          VerticalAlignment="Center" />
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ColorBorderStrong}" />
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+              <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ColorPrimaryBrush}" />
+              <Setter TargetName="Border" Property="BorderThickness" Value="2" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="ModernComboBox" TargetType="ComboBox">
+    <Setter Property="Background" Value="{StaticResource ColorBgElevated}" />
+    <Setter Property="Foreground" Value="{StaticResource ColorText}" />
+    <Setter Property="BorderBrush" Value="{StaticResource ColorBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Padding" Value="14,8" />
+    <Setter Property="Height" Value="42" />
+    <Setter Property="VerticalContentAlignment" Value="Center" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ComboBox">
+          <Border x:Name="Border" Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="10" SnapsToDevicePixels="True">
+            <Grid>
+              <ContentPresenter x:Name="PART_ContentPresenter"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center" />
+              <ToggleButton x:Name="ToggleButton" Focusable="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            ClickMode="Press" HorizontalAlignment="Right" Width="32" Background="Transparent">
+                <TextBlock Text="&#x25BC;" FontSize="10" Foreground="{StaticResource ColorTextMuted}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" />
+              </ToggleButton>
+            </Grid>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ColorBorderStrong}" />
+            </Trigger>
+            <Trigger Property="IsFocused" Value="True">
+              <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource ColorPrimaryBrush}" />
+              <Setter TargetName="Border" Property="BorderThickness" Value="2" />
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- ============================================
+       CARD / FRAME STYLE
+       ============================================ -->
+
+  <Style x:Key="ModernCard" TargetType="Border">
+    <Setter Property="Background" Value="{StaticResource ColorBgElevated}" />
+    <Setter Property="BorderBrush" Value="{StaticResource ColorBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="14" />
+    <Setter Property="Padding" Value="20" />
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="True">
+        <Setter Property="Effect">
+          <Setter.Value>
+            <DropShadowEffect BlurRadius="16" Opacity="0.08" ShadowDepth="4" Color="#000" />
+          </Setter.Value>
+        </Setter>
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
+  <!-- ============================================
+       BADGE STYLES
+       ============================================ -->
+
+  <Style x:Key="Badge" TargetType="Border">
+    <Setter Property="CornerRadius" Value="9999" />
+    <Setter Property="Padding" Value="10,4" />
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Setter Property="HorizontalAlignment" Value="Left" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style x:Key="BadgeText" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="11" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="FontFamily" Value="{StaticResource FontSans}" />
+  </Style>
+
+  <Style x:Key="BadgeSuccess" TargetType="Border" BasedOn="{StaticResource Badge}">
+    <Setter Property="Background" Value="{StaticResource ColorSuccessBgBrush}" />
+  </Style>
+  <Style x:Key="BadgeSuccessText" TargetType="TextBlock" BasedOn="{StaticResource BadgeText}">
+    <Setter Property="Foreground" Value="{StaticResource ColorSuccessTextBrush}" />
+  </Style>
+
+  <Style x:Key="BadgeError" TargetType="Border" BasedOn="{StaticResource Badge}">
+    <Setter Property="Background" Value="{StaticResource ColorErrorBgBrush}" />
+  </Style>
+  <Style x:Key="BadgeErrorText" TargetType="TextBlock" BasedOn="{StaticResource BadgeText}">
+    <Setter Property="Foreground" Value="{StaticResource ColorErrorTextBrush}" />
+  </Style>
+
+  <Style x:Key="BadgeWarning" TargetType="Border" BasedOn="{StaticResource Badge}">
+    <Setter Property="Background" Value="{StaticResource ColorWarningBgBrush}" />
+  </Style>
+  <Style x:Key="BadgeWarningText" TargetType="TextBlock" BasedOn="{StaticResource BadgeText}">
+    <Setter Property="Foreground" Value="{StaticResource ColorWarningTextBrush}" />
+  </Style>
+
+  <Style x:Key="BadgeInfo" TargetType="Border" BasedOn="{StaticResource Badge}">
+    <Setter Property="Background" Value="{StaticResource ColorInfoBgBrush}" />
+  </Style>
+  <Style x:Key="BadgeInfoText" TargetType="TextBlock" BasedOn="{StaticResource BadgeText}">
+    <Setter Property="Foreground" Value="{StaticResource ColorInfoTextBrush}" />
+  </Style>
+
+  <Style x:Key="BadgeDefault" TargetType="Border" BasedOn="{StaticResource Badge}">
+    <Setter Property="Background" Value="{StaticResource ColorSurface}" />
+  </Style>
+  <Style x:Key="BadgeDefaultText" TargetType="TextBlock" BasedOn="{StaticResource BadgeText}">
+    <Setter Property="Foreground" Value="{StaticResource ColorTextSecondary}" />
+  </Style>
+
+  <!-- ============================================
+       MODAL / DIALOG OVERLAY
+       ============================================ -->
+
+  <Style x:Key="ModalOverlay" TargetType="Border">
+    <Setter Property="Background" Value="{StaticResource ColorOverlay}" />
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+  </Style>
+
+  <Style x:Key="ModalContent" TargetType="Border">
+    <Setter Property="Background" Value="{StaticResource ColorBgElevated}" />
+    <Setter Property="BorderBrush" Value="{StaticResource ColorBorder}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="18" />
+    <Setter Property="Padding" Value="28" />
+    <Setter Property="MaxWidth" Value="480" />
+    <Setter Property="MinWidth" Value="320" />
+    <Setter Property="Effect">
+      <Setter.Value>
+        <DropShadowEffect BlurRadius="32" Opacity="0.2" ShadowDepth="8" Color="#000" />
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="ConfirmDialogContent" TargetType="StackPanel">
+    <Setter Property="Margin" Value="0" />
+  </Style>
+
+  <Style x:Key="ConfirmDialogTitle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="18" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="FontFamily" Value="{StaticResource FontHeading}" />
+    <Setter Property="Foreground" Value="{StaticResource ColorText}" />
+    <Setter Property="Margin" Value="0,0,0,8" />
+  </Style>
+
+  <Style x:Key="ConfirmDialogMessage" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Foreground" Value="{StaticResource ColorTextSecondary}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="Margin" Value="0,0,0,24" />
+  </Style>
+
+  <Style x:Key="ConfirmDialogButtons" TargetType="StackPanel">
+    <Setter Property="Orientation" Value="Horizontal" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+  </Style>
+
+  <!-- ============================================
+       SCROLLVIEWER STYLE
+       ============================================ -->
+
+  <Style TargetType="ScrollViewer">
+    <Setter Property="OverridesDefaultStyle" Value="True" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ScrollViewer">
+          <Grid>
+            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
+                                    CanContentScroll="{TemplateBinding CanContentScroll}"
+                                    Content="{TemplateBinding Content}" />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+</ResourceDictionary>

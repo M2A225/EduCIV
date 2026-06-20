@@ -11,7 +11,7 @@ export class PaymentsRepository extends BaseRepository<Payment> {
     @Inject(REQUEST)
     request: any,
   ) {
-    super(prisma.payment, request.user?.school_id);
+    super(prisma.payment, request);
   }
 
   async findByReceiptNumber(receipt_number: string): Promise<Payment | null> {

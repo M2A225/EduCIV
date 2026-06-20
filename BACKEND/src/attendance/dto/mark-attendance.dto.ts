@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsInt, IsIn } from 'class-validator';
+import { IsNotEmpty, IsInt, IsEnum } from 'class-validator';
 
 export class MarkAttendanceDto {
   @IsInt()
@@ -6,6 +6,6 @@ export class MarkAttendanceDto {
   student_id: number;
 
   @IsNotEmpty()
-  @IsIn(['PRESENT', 'ABSENT', 'LATE'])
+  @IsEnum(['PRESENT', 'ABSENT', 'LATE'])
   status: 'PRESENT' | 'ABSENT' | 'LATE';
 }

@@ -1,0 +1,119 @@
+<UserControl x:Class="EduCIV.App.Views.StudentPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:EduCIV.App.Views"
+             xmlns:viewmodels="clr-namespace:EduCIV.App.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="600" d:DesignWidth="900"
+             Background="{DynamicResource ColorBg}">
+    <UserControl.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Padding" Value="12,6"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+            <TextBlock Text="Élèves" FontSize="28" FontWeight="Bold" FontFamily="{DynamicResource FontHeading}" Foreground="{DynamicResource ColorText}" VerticalAlignment="Center"/>
+            <Button Content="➕ Ajouter" Command="{Binding AddStudentCommand}" Style="{StaticResource PrimaryButton}" Margin="16,0,0,0" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Search -->
+        <Border Grid.Row="1" Style="{StaticResource ModernCard}" Margin="0,0,0,16" Padding="16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" 
+                         Style="{StaticResource ModernTextBox}" 
+                         Tag="Rechercher un élève..."
+                         Width="300"/>
+                <Button Grid.Column="1" Content="🔍" Command="{Binding SearchCommand}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Data Grid -->
+        <Border Grid.Row="2" Style="{StaticResource ModernCard}" Padding="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Students}" 
+                          SelectedItem="{Binding SelectedStudent, Mode=TwoWay}"
+                          AutoGenerateColumns="False" IsReadOnly="True"
+                          HeadersVisibility="Column" CanUserSortColumns="True"
+                          CanUserResizeColumns="True" SelectionMode="Single"
+                          RowHeaderWidth="0" GridLinesVisibility="Horizontal"
+                          Background="Transparent" BorderThickness="0"
+                          VerticalGridLinesBrush="{DynamicResource ColorBorder}"
+                          HorizontalGridLinesBrush="{DynamicResource ColorBorder}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60" FontSize="12"/>
+                        <DataGridTextColumn Header="Prénom" Binding="{Binding FirstName}" Width="*"/>
+                        <DataGridTextColumn Header="Nom" Binding="{Binding LastName}" Width="*"/>
+                        <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="200"/>
+                        <DataGridTextColumn Header="Téléphone" Binding="{Binding Phone}" Width="120"/>
+                        <DataGridTextColumn Header="Classe" Binding="{Binding ClassId}" Width="100"/>
+                        <DataGridTemplateColumn Header="Actions" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="✏️" Command="{Binding DataContext.EditStudentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                                CommandParameter="{Binding}" Style="{StaticResource GhostButton}" Width="28" Height="28"/>
+                                        <Button Content="🗑️" Command="{Binding DataContext.DeleteStudentCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                                CommandParameter="{Binding}" Style="{StaticResource GhostButton}" Width="28" Height="28"
+                                                Foreground="{DynamicResource ColorErrorBrush}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!-- Edit Form -->
+                <Border Grid.Row="1" Visibility="{Binding IsEditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Background="{DynamicResource ColorSurface}" BorderBrush="{DynamicResource ColorBorder}" BorderThickness="0,1,0,0" Padding="16" Margin="16">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Nouvel élève" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource ColorText}" Margin="0,0,0,16"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding SelectedStudent.FirstName, Mode=TwoWay}" Style="{StaticResource ModernTextBox}" Tag="Prénom" Margin="0,0,8,8"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedStudent.LastName, Mode=TwoWay}" Style="{StaticResource ModernTextBox}" Tag="Nom" Margin="8,0,0,8"/>
+                            <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding SelectedStudent.Email, Mode=TwoWay}" Style="{StaticResource ModernTextBox}" Tag="Email" Margin="0,0,8,8"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedStudent.Phone, Mode=TwoWay}" Style="{StaticResource ModernTextBox}" Tag="Téléphone" Margin="8,0,0,8"/>
+                            <TextBox Grid.Row="2" Grid.Column="0" Text="{Binding SelectedStudent.ClassId, Mode=TwoWay}" Style="{StaticResource ModernTextBox}" Tag="ID Classe" Margin="0,0,8,8"/>
+                            <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding SelectedStudent.DateOfBirth, Mode=TwoWay}" Margin="8,0,0,8"/>
+
+                            <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                                <Button Content="Annuler" Command="{Binding CancelCommand}" Style="{StaticResource SecondaryButton}"/>
+                                <Button Content="Enregistrer" Command="{Binding SaveStudentCommand}" Style="{StaticResource PrimaryButton}" Margin="8,0,0,0"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

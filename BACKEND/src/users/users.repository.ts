@@ -11,7 +11,7 @@ export class UsersRepository extends BaseRepository<User> {
     @Inject(REQUEST)
     request: any,
   ) {
-    super(prisma.user, request.user?.school_id);
+    super(prisma.user, request);
   }
 
   async findByEmail(email: string): Promise<User | null> {

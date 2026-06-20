@@ -6,8 +6,20 @@ import { StorageService } from '../storage/storage.service';
 jest.mock('pdfmake', () => {
   return jest.fn().mockImplementation(() => ({
     createPdfKitDocument: jest.fn().mockReturnValue({
-      on: jest.fn(),
-      end: jest.fn(),
+      on: jest.fn().mockImplementation(function (
+        this: any,
+        event: string,
+        cb: Function,
+      ) {
+        this._handlers = this._handlers || {};
+        this._handlers[event] = cb;
+        return this;
+      }),
+      end: jest.fn().mockImplementation(function (this: any) {
+        const h = this._handlers || {};
+        if (h['data']) h['data'](Buffer.from('pdf-content'));
+        if (h['end']) h['end']();
+      }),
     }),
   }));
 });
@@ -19,8 +31,36 @@ describe('BulletinService (Integration)', () => {
 
   beforeEach(async () => {
     mockPrisma = {
-      student: { findUnique: jest.fn().mockResolvedValue({ name: 'Jean Dupont' }) },
-      grade: { findMany: jest.fn().mockResolvedValue([{ value: 15, subject: { name: 'Maths' } }]) },
+      student: {
+        findUnique: jest.fn().mockResolvedValue({
+          name: 'Jean Dupont',
+          id: 1,
+          school: { name: 'EduCIV Academy' },
+          class: { name: '6ème A' },
+        }),
+      },
+      academicPeriod: {
+        findUnique: jest.fn().mockResolvedValue({ id: 1, name: 'Trimestre 1' }),
+      },
+      grade: {
+        findMany: jest.fn().mockResolvedValue([
+          {
+            value: 15,
+            subject_id: 1,
+            subject: { name: 'Maths', coefficient: 3 },
+          },
+        ]),
+      },
+      reportCard: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 1,
+          average: 15.0,
+          rank: 1,
+          total_points: 45.0,
+          total_coef: 3.0,
+        }),
+        create: jest.fn().mockResolvedValue({ id: 1 }),
+      },
     };
     mockStorage = {
       uploadFile: jest.fn().mockResolvedValue({}),
@@ -39,7 +79,7 @@ describe('BulletinService (Integration)', () => {
   });
 
   it('should generate a bulletin, upload it, and return a signed URL', async () => {
-    const url = await service.generateBulletin(1, 1);
+    const url = await service.generateBulletin(1, 1, '2025-2026');
     expect(mockStorage.uploadFile).toHaveBeenCalled();
     expect(url).toBe('http://signed-url.com');
   });
