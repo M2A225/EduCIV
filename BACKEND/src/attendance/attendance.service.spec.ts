@@ -31,9 +31,9 @@ const mockPrisma = {
 
 describe('AttendanceService', () => {
   let service: AttendanceService;
-  let sessionsRepo: AttendanceSessionRepository;
-  let attendanceRepo: AttendanceRepository;
-  let timetableRepo: TimetablesRepository;
+  let _sessionsRepo: AttendanceSessionRepository;
+  let _attendanceRepo: AttendanceRepository;
+  let _timetableRepo: TimetablesRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -47,11 +47,11 @@ describe('AttendanceService', () => {
     }).compile();
 
     service = module.get<AttendanceService>(AttendanceService);
-    sessionsRepo = module.get<AttendanceSessionRepository>(
+    _sessionsRepo = module.get<AttendanceSessionRepository>(
       AttendanceSessionRepository,
     );
-    attendanceRepo = module.get<AttendanceRepository>(AttendanceRepository);
-    timetableRepo = module.get<TimetablesRepository>(TimetablesRepository);
+    _attendanceRepo = module.get<AttendanceRepository>(AttendanceRepository);
+    _timetableRepo = module.get<TimetablesRepository>(TimetablesRepository);
     jest.clearAllMocks();
   });
 
