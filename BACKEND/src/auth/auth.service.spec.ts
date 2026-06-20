@@ -154,7 +154,7 @@ describe('AuthService', () => {
           email: 'a',
           password: 'hashed',
           school_id: 1,
-        } as any);
+        });
       mockUsers.verifyPassword.mockResolvedValue(true);
 
       const result = await service.login('a', 'password');
@@ -173,7 +173,7 @@ describe('AuthService', () => {
           email: 'b',
           password: 'hashed',
           school_id: 1,
-        } as any);
+        });
       mockUsers.verifyPassword.mockResolvedValue(false);
 
       for (let i = 0; i < 4; i++) {

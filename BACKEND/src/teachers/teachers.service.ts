@@ -35,7 +35,7 @@ export class TeachersService {
   }
 
   async getById(id: number) {
-    const teacher = await this.teachersRepo.findOne({ where: { id } as any });
+    const teacher = await this.teachersRepo.findOne({ where: { id } });
     if (!teacher) throw new NotFoundException('Enseignant non trouvé');
     return teacher;
   }

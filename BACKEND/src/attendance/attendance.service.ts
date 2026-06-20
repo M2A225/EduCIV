@@ -30,7 +30,7 @@ export class AttendanceService {
         class_id: dto.class_id,
         subject_id: dto.subject_id,
         date: dto.date,
-        ...((dto as any).school_id && { school_id: (dto as any).school_id }),
+        ...(dto.school_id && { school_id: dto.school_id }),
       },
     });
     if (existing) return existing;
@@ -44,12 +44,12 @@ export class AttendanceService {
 
   async markAttendance(sessionId: number, dto: MarkAttendanceDto) {
     const session = await this.sessionsRepo.findOne({
-      where: { id: sessionId } as any,
+      where: { id: sessionId },
     });
     if (!session) throw new NotFoundException('Session introuvable');
 
     const existing = await this.attendanceRepo.findOne({
-      where: { session_id: sessionId, student_id: dto.student_id } as any,
+      where: { session_id: sessionId, student_id: dto.student_id },
     });
 
     if (existing) {
@@ -60,7 +60,7 @@ export class AttendanceService {
       if (updated.count === 0) {
         throw new ConflictException('Présence modifiée par une autre requête');
       }
-      return this.attendanceRepo.findOne({ where: { id: existing.id } as any });
+      return this.attendanceRepo.findOne({ where: { id: existing.id } });
     }
 
     return this.attendanceRepo.create({
@@ -72,12 +72,12 @@ export class AttendanceService {
   }
 
   async getSession(id: number) {
-    return this.sessionsRepo.findOne({ where: { id } as any });
+    return this.sessionsRepo.findOne({ where: { id } });
   }
 
   async getAttendancesForSession(sessionId: number) {
     return this.attendanceRepo.find({
-      where: { session_id: sessionId } as any,
+      where: { session_id: sessionId },
     });
   }
 

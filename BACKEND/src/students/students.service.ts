@@ -52,7 +52,7 @@ export class StudentsService {
 
   async getByUserId(userId: number) {
     const student = await this.studentsRepo.findOne({
-      where: { user_id: userId } as any,
+      where: { user_id: userId },
       include: { class: true },
     });
     return student;
@@ -66,7 +66,7 @@ export class StudentsService {
   }
 
   async getById(id: number) {
-    const student = await this.studentsRepo.findOne({ where: { id } as any });
+    const student = await this.studentsRepo.findOne({ where: { id } });
     if (!student) throw new NotFoundException('Élève non trouvé');
     return student;
   }

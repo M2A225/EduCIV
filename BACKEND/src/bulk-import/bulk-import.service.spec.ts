@@ -19,13 +19,10 @@ const createMockWorksheet = () => ({
   columns: [],
 });
 
-let capturedWorkbook: any;
-
 jest.mock('exceljs', () => {
   return {
     Workbook: jest.fn().mockImplementation(function () {
       const ws = createMockWorksheet();
-      capturedWorkbook = this;
       this.worksheets = [ws];
       this.xlsx = {
         load: jest.fn().mockImplementation(() => {

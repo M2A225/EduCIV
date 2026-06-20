@@ -18,6 +18,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SchoolContextGuard } from '../auth/guards/school-context.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import type { RequestWithUser } from '../auth/types';
 
 @Controller('bulk-import')
 @UseGuards(JwtAuthGuard, SchoolContextGuard, PermissionGuard)
@@ -45,13 +46,13 @@ export class BulkImportController {
   @UseInterceptors(FileInterceptor('file'))
   async importStudents(
     @UploadedFile() file: Express.Multer.File,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     if (!file) return { success: false, data: null, error: 'Fichier requis' };
     const result: ImportResult = await this.bulkImportService.importStudents(
       file.buffer,
-      req.user.currentSchoolId,
-      req.user.userId,
+      req.user!.currentSchoolId!,
+      req.user!.userId,
     );
     return { success: true, data: result, error: null };
   }
@@ -61,13 +62,13 @@ export class BulkImportController {
   @UseInterceptors(FileInterceptor('file'))
   async importTeachers(
     @UploadedFile() file: Express.Multer.File,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     if (!file) return { success: false, data: null, error: 'Fichier requis' };
     const result: ImportResult = await this.bulkImportService.importTeachers(
       file.buffer,
-      req.user.currentSchoolId,
-      req.user.userId,
+      req.user!.currentSchoolId!,
+      req.user!.userId,
     );
     return { success: true, data: result, error: null };
   }
@@ -77,13 +78,13 @@ export class BulkImportController {
   @UseInterceptors(FileInterceptor('file'))
   async importParents(
     @UploadedFile() file: Express.Multer.File,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     if (!file) return { success: false, data: null, error: 'Fichier requis' };
     const result: ImportResult = await this.bulkImportService.importParents(
       file.buffer,
-      req.user.currentSchoolId,
-      req.user.userId,
+      req.user!.currentSchoolId!,
+      req.user!.userId,
     );
     return { success: true, data: result, error: null };
   }

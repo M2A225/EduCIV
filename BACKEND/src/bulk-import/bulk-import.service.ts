@@ -10,6 +10,38 @@ export interface ImportResult {
   invitations: { type: string; nom: string; token?: string; lien?: string }[];
 }
 
+interface StudentRow {
+  nom: string;
+  matricule: string | null;
+  date_naissance: string | null;
+  lieu_naissance: string | null;
+  sexe: string | null;
+  nationalite: string | null;
+  redoublant: string | null;
+  regime: string | null;
+  interne: string | null;
+  classe: string | null;
+  nom_parent: string | null;
+  tel_parent: string | null;
+}
+
+interface TeacherRow {
+  nom: string;
+  email: string | null;
+  telephone: string | null;
+  grade: string | null;
+  specialite: string | null;
+  date_embauche: string | null;
+  adresse: string | null;
+}
+
+interface ParentRow {
+  nom: string;
+  email: string | null;
+  telephone: string | null;
+  eleves_matricules: string | null;
+}
+
 @Injectable()
 export class BulkImportService {
   constructor(
@@ -119,24 +151,24 @@ export class BulkImportService {
   }
 
   async importStudents(
-    fileBuffer: any,
+    fileBuffer: Uint8Array,
     schoolId: number,
     userId: number,
   ): Promise<ImportResult> {
     const result: ImportResult = { imported: 0, errors: [], invitations: [] };
     const wb = new ExcelJS.Workbook();
-    await (wb.xlsx as any).load(fileBuffer);
+    await (wb.xlsx.load as unknown as (data: Uint8Array) => Promise<void>)(fileBuffer);
     const ws = wb.worksheets[0];
 
     if (!ws) {
       throw new BadRequestException('Fichier Excel vide');
     }
 
-    const rows: any[] = [];
-    ws.eachRow((row, rowNumber) => {
+    const rows: StudentRow[] = [];
+    ws.eachRow((row: ExcelJS.Row, rowNumber: number) => {
       if (rowNumber === 1) return;
-      const values = row.values as any[];
-      if (!values || values.length < 2) return;
+      const raw = row.values;
+      const values = Array.isArray(raw) ? raw : [];
       const nom = values[1]?.toString().trim();
       if (!nom) return;
       rows.push({
@@ -172,7 +204,7 @@ export class BulkImportService {
 
     const parentPhones = [
       ...new Set(rows.filter((r) => r.tel_parent).map((r) => r.tel_parent)),
-    ];
+    ].filter((p): p is string => p !== null);
     const existingParents =
       parentPhones.length > 0
         ? await this.prisma.user.findMany({
@@ -236,7 +268,7 @@ export class BulkImportService {
               matricule: row.matricule,
               dob,
               place_birth: row.lieu_naissance || null,
-              sexe: row.sexe?.toUpperCase() || null,
+              sexe: (row.sexe?.toUpperCase() as 'M' | 'F') || null,
               nationality: row.nationalite || null,
               is_repeater: row.redoublant?.toUpperCase() === 'OUI',
               regime: row.regime || null,
@@ -259,7 +291,7 @@ export class BulkImportService {
                 data: {
                   phone: row.tel_parent,
                   password: tempPassword,
-                  name: row.nom_parent,
+                  name: row.nom_parent!,
                   role: 'PARENT',
                 },
               });
@@ -307,7 +339,7 @@ export class BulkImportService {
           );
           result.invitations.push({
             type: 'PARENT',
-            nom: row.nom_parent,
+            nom: row.nom_parent!,
             token: inv.token,
             lien: inv.registrationLink,
           });
@@ -326,22 +358,22 @@ export class BulkImportService {
   }
 
   async importTeachers(
-    fileBuffer: any,
+    fileBuffer: Uint8Array,
     schoolId: number,
     userId: number,
   ): Promise<ImportResult> {
     const result: ImportResult = { imported: 0, errors: [], invitations: [] };
     const wb = new ExcelJS.Workbook();
-    await (wb.xlsx as any).load(fileBuffer);
+    await (wb.xlsx.load as unknown as (data: Uint8Array) => Promise<void>)(fileBuffer);
     const ws = wb.worksheets[0];
 
     if (!ws) throw new BadRequestException('Fichier Excel vide');
 
-    const rows: any[] = [];
-    ws.eachRow((row, rowNumber) => {
+    const rows: TeacherRow[] = [];
+    ws.eachRow((row: ExcelJS.Row, rowNumber: number) => {
       if (rowNumber === 1) return;
-      const values = row.values as any[];
-      if (!values || values.length < 2) return;
+      const raw = row.values;
+      const values = Array.isArray(raw) ? raw : [];
       const nom = values[1]?.toString().trim();
       if (!nom) return;
       rows.push({
@@ -465,22 +497,22 @@ export class BulkImportService {
   }
 
   async importParents(
-    fileBuffer: any,
+    fileBuffer: Uint8Array,
     schoolId: number,
     userId: number,
   ): Promise<ImportResult> {
     const result: ImportResult = { imported: 0, errors: [], invitations: [] };
     const wb = new ExcelJS.Workbook();
-    await (wb.xlsx as any).load(fileBuffer);
+    await (wb.xlsx.load as unknown as (data: Uint8Array) => Promise<void>)(fileBuffer);
     const ws = wb.worksheets[0];
 
     if (!ws) throw new BadRequestException('Fichier Excel vide');
 
-    const rows: any[] = [];
-    ws.eachRow((row, rowNumber) => {
+    const rows: ParentRow[] = [];
+    ws.eachRow((row: ExcelJS.Row, rowNumber: number) => {
       if (rowNumber === 1) return;
-      const values = row.values as any[];
-      if (!values || values.length < 2) return;
+      const raw = row.values;
+      const values = Array.isArray(raw) ? raw : [];
       const nom = values[1]?.toString().trim();
       if (!nom) return;
       rows.push({
@@ -507,7 +539,7 @@ export class BulkImportService {
     ];
     const parentPhones = [
       ...new Set(rows.filter((r) => r.telephone).map((r) => r.telephone)),
-    ];
+    ].filter((p): p is string => p !== null);
     const existingParents = await this.prisma.user.findMany({
       where: {
         OR: [

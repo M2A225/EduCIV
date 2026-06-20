@@ -111,7 +111,7 @@ describe('PaymentPlansService', () => {
       mockRepo.findOne.mockResolvedValue(null);
 
       await expect(
-        service.update(999, { name: 'Test' } as any),
+        service.update(999, { name: 'Test' } as Record<string, unknown>),
       ).rejects.toThrow(NotFoundException);
     });
   });

@@ -249,7 +249,7 @@ export class ProgressionService {
     > = {};
 
     for (const p of progressions) {
-      const className = (p.student as any)?.class?.name || 'Inconnue';
+      const className = (p.student as { class?: { name?: string } })?.class?.name || 'Inconnue';
       if (!byClass[className])
         byClass[className] = {
           total: 0,

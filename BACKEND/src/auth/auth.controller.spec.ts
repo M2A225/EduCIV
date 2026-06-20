@@ -28,7 +28,6 @@ const mockRes = (): jest.Mocked<Partial<Response>> => ({
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let authService: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,7 +36,6 @@ describe('AuthController', () => {
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
-    authService = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {

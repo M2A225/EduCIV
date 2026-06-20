@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SyncController } from './sync.controller';
 import { SyncService } from './sync.service';
+import type { RequestWithUser } from '../auth/types';
 
 const mockService = {
   processOperations: jest
@@ -37,9 +38,12 @@ describe('SyncController', () => {
 
   it('should push operations via sync', async () => {
     const req = {
-      user: { school_ids: [1], primary_school_id: 1 },
+      user: { userId: 1, role: 'DIRECTOR', school_ids: [1], primary_school_id: 1 },
       headers: {},
-    } as any;
+      params: {},
+      query: {},
+      body: {},
+    } as unknown as RequestWithUser;
     const result = await controller.sync(
       { operations: [{ entity: 'student', action: 'create' }] },
       req,
@@ -52,9 +56,12 @@ describe('SyncController', () => {
 
   it('should pull data', async () => {
     const req = {
-      user: { school_ids: [1], primary_school_id: 1 },
+      user: { userId: 1, role: 'DIRECTOR', school_ids: [1], primary_school_id: 1 },
       headers: {},
-    } as any;
+      params: {},
+      query: {},
+      body: {},
+    } as unknown as RequestWithUser;
     const result = await controller.pull(req, '2025-01-01');
     expect(service.pullData).toHaveBeenCalledWith(1, '2025-01-01');
     expect(result.data.synced_at).toBe('2025-01-01');

@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { SCOPE_SCHOOL_KEY } from '../decorators/scope-school.decorator';
 import { PrismaService } from '../../core/prisma.service';
+import { RequestWithUser } from '../types';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -26,7 +27,7 @@ export class PermissionGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<RequestWithUser>();
     const user = request.user;
 
     if (!user) {
@@ -55,14 +56,14 @@ export class PermissionGuard implements CanActivate {
       } else if (source === 'query' && key) {
         targetSchoolId = parseInt(request.query[key], 10);
       } else if (source === 'body' && key) {
-        targetSchoolId = parseInt(request.body[key], 10);
+        targetSchoolId = parseInt(request.body[key] as string, 10);
       } else if (source === 'user') {
-        targetSchoolId = user.primary_school_id || user.currentSchoolId;
+        targetSchoolId = user.primary_school_id ?? user.currentSchoolId ?? null;
       } else {
-        targetSchoolId = user.currentSchoolId;
+        targetSchoolId = user.currentSchoolId ?? null;
       }
     } else {
-      targetSchoolId = user.currentSchoolId;
+      targetSchoolId = user.currentSchoolId ?? null;
     }
 
     if (targetSchoolId != null && !isNaN(targetSchoolId)) {

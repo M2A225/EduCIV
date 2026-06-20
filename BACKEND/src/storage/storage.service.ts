@@ -75,7 +75,7 @@ export class StorageService {
 
     if (error) {
       const err = new Error(error.message || 'Storage upload failed');
-      (err as any).status =
+      (err as Error & { status?: number }).status =
         typeof error.status === 'string'
           ? parseInt(error.status, 10)
           : error.status || 500;

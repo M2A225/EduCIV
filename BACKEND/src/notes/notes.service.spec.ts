@@ -3,6 +3,7 @@ import { NotesService } from './notes.service';
 import { NotesRepository } from './notes.repository';
 import { ReportCardsRepository } from './report-cards.repository';
 import { PrismaService } from '../core/prisma.service';
+import { UpdateGradeDto } from './dto/update-grade.dto';
 
 const mockNotesRepo = {
   create: jest.fn(),
@@ -12,7 +13,7 @@ const mockNotesRepo = {
   update: jest.fn(),
   delete: jest.fn(),
   currentSchoolId: 1,
-  prisma: {} as any,
+  prisma: {} as unknown as PrismaService,
   getStudentGrades: jest.fn(),
 };
 
@@ -71,7 +72,7 @@ describe('NotesService', () => {
         subject_id: 1,
       };
       mockNotesRepo.create.mockResolvedValue({ id: 1, ...dto });
-      const result = await service.createGrade(dto as any);
+      const result = await service.createGrade(dto);
       expect(result).toHaveProperty('id', 1);
       expect(mockNotesRepo.create).toHaveBeenCalled();
     });
@@ -87,7 +88,7 @@ describe('NotesService', () => {
 
     it('should throw NotFoundException for missing grade', async () => {
       mockNotesRepo.findOne.mockResolvedValue(null);
-      await expect(service.updateGrade(999, {} as any)).rejects.toThrow(
+      await expect(service.updateGrade(999, {} as UpdateGradeDto)).rejects.toThrow(
         'Note introuvable',
       );
     });

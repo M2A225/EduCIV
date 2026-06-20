@@ -81,7 +81,7 @@ const mockPrisma = {
     };
     return cb(tx);
   }),
-} as any;
+} as unknown as PrismaService;
 
 describe('SyncService', () => {
   let service: SyncService;

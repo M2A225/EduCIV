@@ -393,7 +393,7 @@ export class NotesService {
     const subjectCoefs = isPrimary
       ? null
       : await this.notesRepo.prisma.subject.findMany({
-          where: { school_id: (this.notesRepo as any).schoolId },
+          where: { school_id: this.notesRepo.currentSchoolId },
           select: { id: true, coefficient: true },
         });
     const coefMap = subjectCoefs

@@ -5,13 +5,14 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../core/prisma.service';
+import { RequestWithUser } from '../types';
 
 @Injectable()
 export class SchoolContextGuard implements CanActivate {
   constructor(private readonly prisma: PrismaService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<RequestWithUser>();
     const user = request.user;
     if (!user) throw new ForbiddenException('Non authentifié');
 
@@ -20,7 +21,7 @@ export class SchoolContextGuard implements CanActivate {
       if (headerSchoolId) {
         const schoolId = Number(headerSchoolId);
         if (!isNaN(schoolId)) {
-          request.user.currentSchoolId = schoolId;
+          user.currentSchoolId = schoolId;
         }
       }
       return true;
@@ -36,7 +37,7 @@ export class SchoolContextGuard implements CanActivate {
       }
 
       if (user.school_ids && user.school_ids.includes(schoolId)) {
-        request.user.currentSchoolId = schoolId;
+        user.currentSchoolId = schoolId;
         return true;
       }
 
@@ -63,7 +64,7 @@ export class SchoolContextGuard implements CanActivate {
             user.school_ids = [
               ...new Set([...(user.school_ids || []), ...groupSchoolIds]),
             ];
-            request.user.currentSchoolId = schoolId;
+            user.currentSchoolId = schoolId;
             return true;
           }
         }
@@ -71,11 +72,11 @@ export class SchoolContextGuard implements CanActivate {
 
       throw new ForbiddenException('Accès refusé à cette école');
     } else {
-      schoolId = user.primary_school_id;
+      schoolId = user.primary_school_id ?? null;
       if (!schoolId) {
         throw new ForbiddenException("Aucun contexte d'école disponible");
       }
-      request.user.currentSchoolId = schoolId;
+      user.currentSchoolId = schoolId;
       return true;
     }
   }

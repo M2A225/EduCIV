@@ -75,7 +75,7 @@ describe('SchoolYearsService', () => {
       mockRepo.currentSchoolId = undefined;
 
       await expect(
-        service.create({ year_range: '2025-2026' } as any),
+        service.create({ year_range: '2025-2026' } as Record<string, unknown>),
       ).rejects.toThrow(BadRequestException);
     });
   });
@@ -134,7 +134,7 @@ describe('SchoolYearsService', () => {
       mockRepo.findOne.mockResolvedValue(null);
 
       await expect(
-        service.update(999, { year_range: 'Test' } as any),
+        service.update(999, { year_range: 'Test' } as Record<string, unknown>),
       ).rejects.toThrow(NotFoundException);
     });
   });

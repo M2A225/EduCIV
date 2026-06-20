@@ -28,7 +28,7 @@ export class TimetablesService {
       throw new NotFoundException(`Classe #${dto.class_id} introuvable`);
 
     const conflicts = await this.timetablesRepo.findMany({
-      where: { slot: dto.slot } as any,
+      where: { slot: dto.slot },
     });
     const conflict = conflicts.find(
       (c) =>

@@ -19,7 +19,7 @@ export class ClassesService {
   }
 
   async getById(id: number) {
-    const cls = await this.classesRepo.findOne({ where: { id } as any });
+    const cls = await this.classesRepo.findOne({ where: { id } });
     if (!cls) throw new NotFoundException('Classe introuvable');
     return cls;
   }
