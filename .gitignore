@@ -38,3 +38,17 @@ build/
 .output/
 .next/
 .vite/
+
+# Desktop build artifacts
+DESKTOP/publish/
+DESKTOP/src/*/bin/
+DESKTOP/src/*/obj/
+DESKTOP/**/bin/
+DESKTOP/**/obj/
+
+# Test artifacts
+FRONTEND/stats.html
+FRONTEND/test-results/
+FRONTEND/coverage/
+BACKEND/coverage/
+BACKEND/dist/
