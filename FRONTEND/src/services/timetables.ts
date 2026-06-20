@@ -3,9 +3,11 @@ import type { CreateTimetableDto } from '../types';
 
 export const timetableService = {
   getTimetables: async (params?: { class_id?: number; teacher_id?: number; page?: number; pageSize?: number }) => {
-    return api.get('/timetables', { params });
+    const res = await api.get('/timetables', { params });
+    return res.data;
   },
   addSlot: async (data: CreateTimetableDto) => {
-    return api.post('/timetables', data);
+    const res = await api.post('/timetables', data);
+    return res.data;
   },
 };

@@ -5,12 +5,15 @@ export const studentService = {
   getStudents: async (page = 1, pageSize = 50, search?: string) => {
     const params: Record<string, unknown> = { page, pageSize };
     if (search) params.search = search;
-    return api.get<Student[]>('/students', { params });
+    const res = await api.get<Student[]>('/students', { params });
+    return res.data;
   },
   getStudent: async (id: string | number) => {
-    return api.get<Student>(`/students/${id}`);
+    const res = await api.get<Student>(`/students/${id}`);
+    return res.data;
   },
   createStudent: async (data: CreateStudentDto) => {
-    return api.post('/students', data);
+    const res = await api.post('/students', data);
+    return res.data;
   },
 };

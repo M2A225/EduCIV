@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
@@ -31,17 +31,17 @@ const COOKIE_OPTIONS = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
+export interface AuthRequest extends Request {
+  user: {
+    userId: number;
+    primary_school_id?: number;
+    school_ids?: number[];
+  };
+}
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  private setRefreshCookie(res: Response, token: string) {
-    res.cookie(REFRESH_COOKIE, token, COOKIE_OPTIONS);
-  }
-
-  private clearRefreshCookie(res: Response) {
-    res.clearCookie(REFRESH_COOKIE, { path: '/api/auth' });
-  }
 
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @HttpCode(HttpStatus.CREATED)
@@ -51,7 +51,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const tokens = await this.authService.login(body.identifier, body.password);
-    this.setRefreshCookie(res, tokens.refreshToken);
+    res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
     return {
       success: true,
       data: { accessToken: tokens.accessToken, user: tokens.user },
@@ -62,13 +62,13 @@ export class AuthController {
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @HttpCode(HttpStatus.CREATED)
   @Post('refresh')
-  async refresh(@Req() req: any, @Res({ passthrough: true }) res: Response) {
+  async refresh(@Req() req: AuthRequest, @Res({ passthrough: true }) res: Response) {
     const token = req.cookies?.[REFRESH_COOKIE];
     if (!token) {
       throw new UnauthorizedException('Aucun token de rafraîchissement');
     }
     const tokens = await this.authService.refresh(token);
-    this.setRefreshCookie(res, tokens.refreshToken);
+    res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
     return {
       success: true,
       data: { accessToken: tokens.accessToken, user: tokens.user },
@@ -78,18 +78,18 @@ export class AuthController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('logout')
-  async logout(@Req() req: any, @Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req: AuthRequest, @Res({ passthrough: true }) res: Response) {
     const token = req.cookies?.[REFRESH_COOKIE];
     if (token) {
       await this.authService.logout(token);
     }
-    this.clearRefreshCookie(res);
+    res.clearCookie(REFRESH_COOKIE, { path: '/api/auth' });
     return { success: true, data: null, error: null };
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  async getProfile(@Req() req: any, @Res({ passthrough: true }) res: Response) {
+  async getProfile(@Req() req: AuthRequest) {
     const profile = await this.authService.getProfile(req.user.userId);
     return { success: true, data: profile, error: null };
   }
@@ -108,7 +108,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const tokens = await this.authService.registerWithInvitation(body);
-    this.setRefreshCookie(res, tokens.refreshToken);
+    res.cookie(REFRESH_COOKIE, tokens.refreshToken, COOKIE_OPTIONS);
     return {
       success: true,
       data: { accessToken: tokens.accessToken },
@@ -119,7 +119,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post('link-invitation')
-  async linkInvitation(@Body() body: LinkInvitationDto, @Req() req: any) {
+  async linkInvitation(@Body() body: LinkInvitationDto, @Req() req: AuthRequest) {
     await this.authService.linkInvitation(req.user.userId, body.code);
     return { success: true, data: null, error: null };
   }
@@ -143,11 +143,14 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post('switch-role')
-  async switchRole(@Body() body: SwitchRoleDto, @Req() req: any) {
-    const schoolId = req.user.primary_school_id || req.user.school_ids?.[0];
+  async switchRole(@Body() body: SwitchRoleDto, @Req() req: AuthRequest) {
+    const maybeSchoolId = req.user.primary_school_id || req.user.school_ids?.[0];
+    if (maybeSchoolId == null) {
+      throw new UnauthorizedException('Aucune école associée');
+    }
     const tokens = await this.authService.switchRole(
       req.user.userId,
-      schoolId,
+      maybeSchoolId,
       body.role,
     );
     return {

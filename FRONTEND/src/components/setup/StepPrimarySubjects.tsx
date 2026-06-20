@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
-import { Select } from '../ui/Select';
 import { subjectService } from '../../services/subjects';
 import { MATIERES_PRIMAIRE, OPTIONNELLES_PRIMAIRE, TOTAL_PRIMAIRE } from '../../lib/constants';
 

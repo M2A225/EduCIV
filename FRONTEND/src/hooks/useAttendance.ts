@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { attendanceService } from '../services/attendance';
 import { extractData } from '../lib/utils';
-import type { AttendanceSession } from '../types';
+import type { AttendanceSession, MarkAttendanceDto, AttendanceStatus } from '../types';
 
 export const useAttendanceSessions = () => {
   const query = useQuery({
@@ -40,8 +40,8 @@ export const useCreateSession = () => {
 export const useMarkAttendance = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ sessionId, ...data }: Record<string, unknown> & { sessionId: number }) =>
-      attendanceService.markAttendance(sessionId, data),
+    mutationFn: ({ sessionId, student_id, status }: { sessionId: number; student_id: number; status: AttendanceStatus }) =>
+      attendanceService.markAttendance(sessionId, { student_id, status } as MarkAttendanceDto),
     onSuccess: () => {
       toast.success('Présences enregistrées');
       queryClient.invalidateQueries({ queryKey: ['attendance', 'attendance-sessions'] });

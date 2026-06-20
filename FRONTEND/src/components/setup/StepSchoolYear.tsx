@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
-import { Select } from '../ui/Select';
 import { useAuth } from '../../hooks/useAuth';
 import { schoolService } from '../../services/schools';
 import { PERIODES_PAR_TYPE, SCHOOL_TYPE_LABELS } from '../../lib/constants';

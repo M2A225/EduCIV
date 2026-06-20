@@ -1,4 +1,4 @@
-import React from 'react';
+// no React import needed
 import { Skeleton } from './Feedback';
 
 interface LoadingStateProps {

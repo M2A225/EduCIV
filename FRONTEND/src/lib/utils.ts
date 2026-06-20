@@ -5,8 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function extractData<T>(response: { data: { data: T } }): T {
-  return response.data.data;
+export function extractData<T>(response: { data: T } | { data: { data: T } }): T {
+  const d = response.data;
+  return 'data' in d && typeof d === 'object' && d !== null && 'data' in d
+    ? (d as { data: T }).data
+    : d as T;
 }
 
 export function formatCurrency(amount: number, currency = 'XOF'): string {

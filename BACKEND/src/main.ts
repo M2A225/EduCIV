@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { initSentry } from './sentry';
 
 initSentry();

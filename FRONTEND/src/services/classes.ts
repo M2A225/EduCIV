@@ -3,18 +3,23 @@ import type { Class, CreateClassDto } from '../types';
 
 export const classService = {
   getClasses: async (page = 1, pageSize = 50) => {
-    return api.get<Class[]>('/classes', { params: { page, pageSize } });
+    const res = await api.get<Class[]>('/classes', { params: { page, pageSize } });
+    return res.data;
   },
   getClass: async (id: number) => {
-    return api.get<Class>(`/classes/${id}`);
+    const res = await api.get<Class>(`/classes/${id}`);
+    return res.data;
   },
   createClass: async (data: CreateClassDto) => {
-    return api.post('/classes', data);
+    const res = await api.post('/classes', data);
+    return res.data;
   },
   updateClass: async (id: number, data: Partial<CreateClassDto>) => {
-    return api.patch(`/classes/${id}`, data);
+    const res = await api.patch(`/classes/${id}`, data);
+    return res.data;
   },
   deleteClass: async (id: number) => {
-    return api.delete(`/classes/${id}`);
+    const res = await api.delete(`/classes/${id}`);
+    return res.data;
   },
 };

@@ -3,19 +3,24 @@ import type { MarkAttendanceDto } from '../types';
 
 export const attendanceService = {
   getAttendanceSessions: async () => {
-    return api.get('/attendance/sessions');
+    const res = await api.get('/attendance/sessions');
+    return res.data;
   },
   getAttendance: async (studentId?: number) => {
     const params = studentId ? { student_id: studentId } : {};
-    return api.get('/attendance', { params });
+    const res = await api.get('/attendance', { params });
+    return res.data;
   },
   getSession: async (sessionId: number) => {
-    return api.get(`/attendance/session/${sessionId}`);
+    const res = await api.get(`/attendance/session/${sessionId}`);
+    return res.data;
   },
   markAttendance: async (sessionId: number, data: MarkAttendanceDto) => {
-    return api.post(`/attendance/${sessionId}`, data);
+    const res = await api.post(`/attendance/${sessionId}`, data);
+    return res.data;
   },
   createSession: async (data: { class_id: number; subject_id: number; timetable_id: number; date: string }) => {
-    return api.post('/attendance/session', data);
+    const res = await api.post('/attendance/session', data);
+    return res.data;
   },
 };

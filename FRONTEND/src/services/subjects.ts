@@ -1,23 +1,25 @@
 import { api } from './api';
-import type { Subject } from '../types';
+import type { Subject, CreateSubjectDto } from '../types';
 
 export const subjectService = {
   getSubjects: async (page = 1, pageSize = 50) => {
-    return api.get<Subject[]>('/subjects', { params: { page, pageSize } });
+    const res = await api.get<Subject[]>('/subjects', { params: { page, pageSize } });
+    return res.data;
   },
   getSubject: async (id: number) => {
-    return api.get<Subject>(`/subjects/${id}`);
+    const res = await api.get<Subject>(`/subjects/${id}`);
+    return res.data;
   },
-  createSubject: async (data: { name: string; coefficient: number }) => {
-    return api.post('/subjects', data);
+  createSubject: async (data: CreateSubjectDto) => {
+    const res = await api.post('/subjects', data);
+    return res.data;
   },
-  updateSubject: async (id: number, data: Partial<{ name: string; coefficient: number }>) => {
-    return api.patch(`/subjects/${id}`, data);
+  updateSubject: async (id: number, data: Partial<CreateSubjectDto>) => {
+    const res = await api.patch(`/subjects/${id}`, data);
+    return res.data;
   },
   deleteSubject: async (id: number) => {
-    return api.delete(`/subjects/${id}`);
-  },
-  bulkCreate: async (subjects: { name: string; coefficient: number; max_score?: number; level_group?: string }[]) => {
-    return api.post('/subjects/bulk', { subjects });
+    const res = await api.delete(`/subjects/${id}`);
+    return res.data;
   },
 };

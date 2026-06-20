@@ -3,24 +3,31 @@ import type { LoginDto } from '../types';
 
 export const authService = {
   login: async (data: LoginDto) => {
-    return api.post('/auth/login', data);
+    const res = await api.post('/auth/login', data);
+    return res.data;
   },
   refresh: async () => {
-    return api.post('/auth/refresh');
+    const res = await api.post('/auth/refresh');
+    return res.data;
   },
   logout: async () => {
-    return api.post('/auth/logout');
+    const res = await api.post('/auth/logout');
+    return res.data;
   },
   me: async () => {
-    return api.get('/auth/me');
+    const res = await api.get('/auth/me');
+    return res.data;
   },
   switchRole: async (role: string) => {
-    return api.post('/auth/switch-role', { role });
+    const res = await api.post('/auth/switch-role', { role });
+    return res.data;
   },
   forgotPassword: async (email: string) => {
-    return api.post('/auth/forgot-password', { email });
+    const res = await api.post('/auth/forgot-password', { email });
+    return res.data;
   },
   resetPassword: async (token: string, password: string) => {
-    return api.post('/auth/reset-password', { token, password });
+    const res = await api.post('/auth/reset-password', { token, password });
+    return res.data;
   }
 };

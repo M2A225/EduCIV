@@ -1,4 +1,5 @@
-import React from 'react';
+
+// no React import needed
 import { Button } from './Button';
 import { AlertTriangle, X } from 'lucide-react';
 

@@ -7,9 +7,24 @@ export interface CreateTeacherSubjectInput {
 }
 
 export const teacherSubjectService = {
-  getAssignments: async () => api.get('/teacher-subjects'),
-  getByTeacher: async (teacherId: number) => api.get(`/teacher-subjects/by-teacher/${teacherId}`),
-  getMyAssignments: async () => api.get('/teacher-subjects/my-assignments'),
-  createAssignment: async (data: CreateTeacherSubjectInput) => api.post('/teacher-subjects', data),
-  deleteAssignment: async (id: number) => api.delete(`/teacher-subjects/${id}`),
+  getAssignments: async () => {
+    const res = await api.get('/teacher-subjects');
+    return res.data;
+  },
+  getByTeacher: async (teacherId: number) => {
+    const res = await api.get(`/teacher-subjects/by-teacher/${teacherId}`);
+    return res.data;
+  },
+  getMyAssignments: async () => {
+    const res = await api.get('/teacher-subjects/my-assignments');
+    return res.data;
+  },
+  createAssignment: async (data: CreateTeacherSubjectInput) => {
+    const res = await api.post('/teacher-subjects', data);
+    return res.data;
+  },
+  deleteAssignment: async (id: number) => {
+    const res = await api.delete(`/teacher-subjects/${id}`);
+    return res.data;
+  },
 };

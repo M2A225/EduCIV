@@ -38,12 +38,12 @@ const SchoolPicker = () => {
         </div>
         <div className="space-y-3">
           {schoolIds.map(id => (
-            <Button
-              key={id}
-              variant="glass"
-              className="w-full flex items-center gap-3 py-4 text-left justify-start"
-              onClick={() => handleSelect(id)}
-            >
+              <Button
+                key={id}
+                variant="outline"
+                className="w-full flex items-center gap-3 py-4 text-left justify-start"
+                onClick={() => handleSelect(id)}
+              >
               <Building2 className="w-5 h-5 text-primary shrink-0" />
               <span className="font-medium">{schoolMap[id] || `École #${id}`}</span>
             </Button>

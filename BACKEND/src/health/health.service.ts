@@ -3,7 +3,7 @@ import { PrismaService } from '../core/prisma.service.js';
 import { Redis } from '@upstash/redis';
 import { REDIS_CLIENT } from '../common/redis.provider.js';
 
-interface HealthCheckResult {
+export interface HealthCheckResult {
   status: 'healthy' | 'unhealthy';
   timestamp: string;
   checks: {

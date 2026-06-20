@@ -24,25 +24,24 @@ export class AttendanceController {
   @HttpCode(HttpStatus.CREATED)
   @Post('session')
   async createSession(@Body() body: CreateSessionDto) {
-    const s = await this.attendanceService.createSession(body);
-    return { success: true, data: s, error: null };
+    return { success: true as const, data: await this.attendanceService.createSession(body), error: null };
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post(':id')
   async mark(@Param('id') id: string, @Body() body: MarkAttendanceDto) {
-    const a = await this.attendanceService.markAttendance(Number(id), body);
-    return { success: true, data: a, error: null };
+    return { success: true as const, data: await this.attendanceService.markAttendance(Number(id), body), error: null };
   }
 
   @Get('session/:id')
   async getSession(@Param('id') id: string) {
-    const s = await this.attendanceService.getSession(Number(id));
-    const at = await this.attendanceService.getAttendancesForSession(
-      Number(id),
-    );
+    const sessionId = Number(id);
+    const [s, at] = await Promise.all([
+      this.attendanceService.getSession(sessionId),
+      this.attendanceService.getAttendancesForSession(sessionId),
+    ]);
     return {
-      success: true,
+      success: true as const,
       data: { session: s, attendances: at },
       error: null,
     };
@@ -54,7 +53,7 @@ export class AttendanceController {
       q.page,
       q.pageSize,
     );
-    return { success: true, data: sessions, error: null };
+    return { success: true as const, data: sessions, error: null };
   }
 
   @Get()

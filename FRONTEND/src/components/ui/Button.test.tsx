@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Button, buttonVariants } from './Button';
+import { Button } from './Button';
 
 describe('Button', () => {
   it('renders children text', () => {

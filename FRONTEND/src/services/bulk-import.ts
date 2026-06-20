@@ -42,7 +42,7 @@ export const bulkImportService = {
     const res = await api.post('/bulk-import/students', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    return (res.data as { data: ImportResult }).data;
+    return res.data;
   },
 
   importTeachers: async (file: File): Promise<ImportResult> => {
@@ -51,7 +51,7 @@ export const bulkImportService = {
     const res = await api.post('/bulk-import/teachers', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    return (res.data as { data: ImportResult }).data;
+    return res.data;
   },
 
   importParents: async (file: File): Promise<ImportResult> => {
@@ -60,6 +60,6 @@ export const bulkImportService = {
     const res = await api.post('/bulk-import/parents', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    return (res.data as { data: ImportResult }).data;
+    return res.data;
   },
 };

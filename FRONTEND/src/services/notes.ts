@@ -3,37 +3,46 @@ import type { CreateGradeDto, Grade } from '../types';
 
 export const notesService = {
   getNotes: async (studentId?: number) => {
-    if (studentId) {
-      return api.get(`/notes/student/${studentId}`);
-    }
-    return api.get('/notes');
+    const res = studentId
+      ? await api.get(`/notes/student/${studentId}`)
+      : await api.get('/notes');
+    return res.data;
   },
   getNote: async (id: number) => {
-    return api.get(`/notes/${id}`);
+    const res = await api.get(`/notes/${id}`);
+    return res.data;
   },
   getPendingNotes: async (periodId?: number) => {
     const params = periodId ? { periodId } : {};
-    return api.get('/notes/pending', { params });
+    const res = await api.get('/notes/pending', { params });
+    return res.data;
   },
   addNote: async (data: CreateGradeDto) => {
-    return api.post('/notes', data);
+    const res = await api.post('/notes', data);
+    return res.data;
   },
   updateNote: async (id: number, data: Partial<Grade>) => {
-    return api.patch(`/notes/${id}`, data);
+    const res = await api.patch(`/notes/${id}`, data);
+    return res.data;
   },
   deleteNote: async (id: number) => {
-    return api.delete(`/notes/${id}`);
+    const res = await api.delete(`/notes/${id}`);
+    return res.data;
   },
   validateNote: async (id: number) => {
-    return api.post(`/notes/${id}/validate`);
+    const res = await api.post(`/notes/${id}/validate`);
+    return res.data;
   },
   rejectNote: async (id: number, rejection_reason?: string) => {
-    return api.post(`/notes/${id}/reject`, { rejection_reason });
+    const res = await api.post(`/notes/${id}/reject`, { rejection_reason });
+    return res.data;
   },
   getAverage: async (studentId: number, periodId: number) => {
-    return api.get(`/notes/average/${studentId}`, { params: { periodId } });
+    const res = await api.get(`/notes/average/${studentId}`, { params: { periodId } });
+    return res.data;
   },
   generateReportCard: async (studentId: number, periodId: number, year: string) => {
-    return api.post(`/notes/report-card/${studentId}`, { periodId, year });
+    const res = await api.post(`/notes/report-card/${studentId}`, { periodId, year });
+    return res.data;
   },
 };

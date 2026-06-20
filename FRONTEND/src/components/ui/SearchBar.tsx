@@ -32,7 +32,7 @@ export function SearchBar({
         </div>
         {onToggleFilters && (
           <Button
-            variant={showFilters ? 'primary' : 'glass'}
+            variant={showFilters ? 'primary' : 'outline'}
             onClick={onToggleFilters}
             className="whitespace-nowrap"
           >

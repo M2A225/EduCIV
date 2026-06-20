@@ -21,7 +21,7 @@ export class AppService {
   async checkInfrastructure() {
     const [dbOk, redisOk, storageOk] = await Promise.allSettled([
       (async () => {
-        await this.prisma.$queryRaw`SELECT 1`;
+        await this.prisma.$executeRawUnsafe('SELECT 1');
         return true;
       })(),
       (async () => {

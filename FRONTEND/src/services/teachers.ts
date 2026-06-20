@@ -3,18 +3,23 @@ import type { Teacher, CreateTeacherDto } from '../types';
 
 export const teacherService = {
   getTeachers: async (page = 1, pageSize = 50) => {
-    return api.get<Teacher[]>('/teachers', { params: { page, pageSize } });
+    const res = await api.get<Teacher[]>('/teachers', { params: { page, pageSize } });
+    return res.data;
   },
   getTeacher: async (id: number) => {
-    return api.get<Teacher>(`/teachers/${id}`);
+    const res = await api.get<Teacher>(`/teachers/${id}`);
+    return res.data;
   },
   createTeacher: async (data: CreateTeacherDto) => {
-    return api.post('/teachers', data);
+    const res = await api.post('/teachers', data);
+    return res.data;
   },
   updateTeacher: async (id: number, data: Partial<CreateTeacherDto>) => {
-    return api.patch(`/teachers/${id}`, data);
+    const res = await api.patch(`/teachers/${id}`, data);
+    return res.data;
   },
   deleteTeacher: async (id: number) => {
-    return api.delete(`/teachers/${id}`);
+    const res = await api.delete(`/teachers/${id}`);
+    return res.data;
   },
 };

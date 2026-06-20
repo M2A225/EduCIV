@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import type { Response } from 'express';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import type { AuthRequest } from './auth.controller';
 
 const mockAuthService = {
   login: jest.fn().mockResolvedValue({ accessToken: 'a', refreshToken: 'r' }),
@@ -19,10 +21,10 @@ const mockAuthService = {
     .mockResolvedValue({ accessToken: 'a4', refreshToken: 'r4' }),
 };
 
-const mockRes = () => ({
+const mockRes = (): jest.Mocked<Partial<Response>> => ({
   cookie: jest.fn(),
   clearCookie: jest.fn(),
-});
+}) as unknown as jest.Mocked<Partial<Response>>;
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -44,10 +46,10 @@ describe('AuthController', () => {
 
   describe('login', () => {
     it('should call authService.login with identifier and password', async () => {
-      const res = mockRes() as any;
+      const res = mockRes();
       const result = await controller.login(
         { identifier: 'user@test.com', password: 'pass' },
-        res,
+        res as unknown as Response,
       );
       expect(authService.login).toHaveBeenCalledWith('user@test.com', 'pass');
       expect(res.cookie).toHaveBeenCalled();
@@ -57,37 +59,46 @@ describe('AuthController', () => {
 
   describe('refresh', () => {
     it('should call authService.refresh with token from cookie', async () => {
-      const req = { cookies: { refresh_token: 'rt' } } as any;
-      const res = mockRes() as any;
-      const result = await controller.refresh(req, res);
+      const req = { cookies: { refresh_token: 'rt' } };
+      const res = mockRes();
+      const result = await controller.refresh(
+        req as unknown as AuthRequest,
+        res as unknown as Response,
+      );
       expect(authService.refresh).toHaveBeenCalledWith('rt');
       expect(res.cookie).toHaveBeenCalled();
       expect(result.data.accessToken).toBe('a2');
     });
 
     it('should throw UnauthorizedException when no cookie', async () => {
-      const req = { cookies: {} } as any;
-      const res = mockRes() as any;
-      await expect(controller.refresh(req, res)).rejects.toThrow(
-        'Aucun token de rafraîchissement',
-      );
+      const req = { cookies: {} };
+      const res = mockRes();
+      await expect(
+        controller.refresh(req as unknown as AuthRequest, res as unknown as Response),
+      ).rejects.toThrow('Aucun token de rafraîchissement');
     });
   });
 
   describe('logout', () => {
     it('should call authService.logout and clear cookie', async () => {
-      const req = { cookies: { refresh_token: 'rt' } } as any;
-      const res = mockRes() as any;
-      const result = await controller.logout(req, res);
+      const req = { cookies: { refresh_token: 'rt' } };
+      const res = mockRes();
+      const result = await controller.logout(
+        req as unknown as AuthRequest,
+        res as unknown as Response,
+      );
       expect(authService.logout).toHaveBeenCalledWith('rt');
       expect(res.clearCookie).toHaveBeenCalled();
       expect(result.data).toBeNull();
     });
 
     it('should skip logout when no cookie', async () => {
-      const req = { cookies: {} } as any;
-      const res = mockRes() as any;
-      const result = await controller.logout(req, res);
+      const req = { cookies: {} };
+      const res = mockRes();
+      const result = await controller.logout(
+        req as unknown as AuthRequest,
+        res as unknown as Response,
+      );
       expect(authService.logout).not.toHaveBeenCalled();
       expect(res.clearCookie).toHaveBeenCalled();
       expect(result.data).toBeNull();
@@ -96,9 +107,12 @@ describe('AuthController', () => {
 
   describe('registerWithInvitation', () => {
     it('should call authService.registerWithInvitation', async () => {
-      const res = mockRes() as any;
+      const res = mockRes();
       const dto = { code: 'invite123', password: 'pass', name: 'Test' };
-      const result = await controller.registerWithInvitation(dto, res);
+      const result = await controller.registerWithInvitation(
+        dto,
+        res as unknown as Response,
+      );
       expect(authService.registerWithInvitation).toHaveBeenCalledWith(dto);
       expect(res.cookie).toHaveBeenCalled();
       expect(result.data.accessToken).toBe('a3');
@@ -107,10 +121,10 @@ describe('AuthController', () => {
 
   describe('linkInvitation', () => {
     it('should call authService.linkInvitation', async () => {
-      const req = { user: { userId: 42 } } as any;
+      const req = { user: { userId: 42 } };
       const result = await controller.linkInvitation(
         { code: 'invite456' },
-        req,
+        req as unknown as AuthRequest,
       );
       expect(authService.linkInvitation).toHaveBeenCalledWith(42, 'invite456');
       expect(result.data).toBeNull();
@@ -119,9 +133,8 @@ describe('AuthController', () => {
 
   describe('getProfile', () => {
     it('should return user profile', async () => {
-      const req = { user: { userId: 1 } } as any;
-      const res = mockRes() as any;
-      const result = await controller.getProfile(req, res);
+      const req = { user: { userId: 1 } };
+      const result = await controller.getProfile(req as unknown as AuthRequest);
       expect(authService.getProfile).toHaveBeenCalledWith(1);
       expect(result.data.name).toBe('Test');
     });

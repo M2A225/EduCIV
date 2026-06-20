@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useSchools } from '../../hooks/useSchools';
 import { Building2, ChevronDown } from 'lucide-react';

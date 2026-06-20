@@ -3,30 +3,39 @@ import type { City, Commune } from '../types';
 
 export const cityService = {
   getAll: async () => {
-    return api.get<City[]>('/cities');
+    const res = await api.get<City[]>('/cities');
+    return res.data;
   },
   getById: async (id: number) => {
-    return api.get<City>(`/cities/${id}`);
+    const res = await api.get<City>(`/cities/${id}`);
+    return res.data;
   },
   create: async (name: string) => {
-    return api.post('/cities', { name });
+    const res = await api.post('/cities', { name });
+    return res.data;
   },
   update: async (id: number, name: string) => {
-    return api.patch(`/cities/${id}`, { name });
+    const res = await api.patch(`/cities/${id}`, { name });
+    return res.data;
   },
   delete: async (id: number) => {
-    return api.delete(`/cities/${id}`);
+    const res = await api.delete(`/cities/${id}`);
+    return res.data;
   },
   getCommunes: async (cityId: number) => {
-    return api.get<Commune[]>(`/cities/${cityId}/communes`);
+    const res = await api.get<Commune[]>(`/cities/${cityId}/communes`);
+    return res.data;
   },
   createCommune: async (cityId: number, name: string) => {
-    return api.post(`/cities/${cityId}/communes`, { name });
+    const res = await api.post(`/cities/${cityId}/communes`, { name });
+    return res.data;
   },
   updateCommune: async (id: number, name: string) => {
-    return api.patch(`/cities/communes/${id}`, { name });
+    const res = await api.patch(`/cities/communes/${id}`, { name });
+    return res.data;
   },
   deleteCommune: async (id: number) => {
-    return api.delete(`/cities/communes/${id}`);
+    const res = await api.delete(`/cities/communes/${id}`);
+    return res.data;
   },
 };

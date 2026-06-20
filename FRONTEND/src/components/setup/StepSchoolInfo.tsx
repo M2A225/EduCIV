@@ -5,7 +5,7 @@ import { Button } from '../ui/Button';
 import { cityService } from '../../services/cities';
 import { schoolService } from '../../services/schools';
 import { SCHOOL_TYPE_LABELS } from '../../lib/constants';
-import type { School, City } from '../../types';
+import type { City } from '../../types';
 
 const TYPES = [
   { value: 'Public', label: 'Public' },

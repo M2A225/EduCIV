@@ -12,15 +12,19 @@ export interface CreatePaymentInput {
 export const paymentService = {
   getPayments: async (studentId?: number) => {
     const params = studentId ? { student_id: studentId } : {};
-    return api.get('/payments', { params });
+    const res = await api.get('/payments', { params });
+    return res.data;
   },
   createPayment: async (data: CreatePaymentInput) => {
-    return api.post('/payments', data);
+    const res = await api.post('/payments', data);
+    return res.data;
   },
   cancelPayment: async (id: number) => {
-    return api.post(`/payments/${id}/cancel`);
+    const res = await api.post(`/payments/${id}/cancel`);
+    return res.data;
   },
   getAuditLogs: async () => {
-    return api.get('/payments/audit');
+    const res = await api.get('/payments/audit');
+    return res.data;
   },
 };

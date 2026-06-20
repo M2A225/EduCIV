@@ -1,4 +1,4 @@
-import React from 'react';
+// no React import needed
 import { cn } from '@/lib/utils';
 
 export function Skeleton({ className = '' }: { className?: string }) {

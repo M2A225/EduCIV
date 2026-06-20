@@ -6,10 +6,28 @@ export interface CreatePaymentPlanInput {
 }
 
 export const paymentPlanService = {
-  getPlans: async () => api.get('/payment-plans'),
-  getPlan: async (id: number) => api.get(`/payment-plans/${id}`),
-  createPlan: async (data: CreatePaymentPlanInput) => api.post('/payment-plans', data),
-  updatePlan: async (id: number, data: Partial<CreatePaymentPlanInput>) => api.patch(`/payment-plans/${id}`, data),
-  deletePlan: async (id: number) => api.delete(`/payment-plans/${id}`),
-  bulkCreate: async (plans: CreatePaymentPlanInput[]) => api.post('/payment-plans/bulk', { plans }),
+  getPlans: async () => {
+    const res = await api.get('/payment-plans');
+    return res.data;
+  },
+  getPlan: async (id: number) => {
+    const res = await api.get(`/payment-plans/${id}`);
+    return res.data;
+  },
+  createPlan: async (data: CreatePaymentPlanInput) => {
+    const res = await api.post('/payment-plans', data);
+    return res.data;
+  },
+  updatePlan: async (id: number, data: Partial<CreatePaymentPlanInput>) => {
+    const res = await api.patch(`/payment-plans/${id}`, data);
+    return res.data;
+  },
+  deletePlan: async (id: number) => {
+    const res = await api.delete(`/payment-plans/${id}`);
+    return res.data;
+  },
+  bulkCreate: async (plans: CreatePaymentPlanInput[]) => {
+    const res = await api.post('/payment-plans/bulk', { plans });
+    return res.data;
+  },
 };

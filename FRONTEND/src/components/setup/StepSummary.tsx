@@ -4,7 +4,7 @@ import { Card } from '../ui/Card';
 import { schoolService } from '../../services/schools';
 import { subjectService } from '../../services/subjects';
 import { useSetup } from '../../hooks/useSetup';
-import { CheckCircle2, Building2, BookOpen, Layers, GraduationCap, Calendar } from 'lucide-react';
+import { CheckCircle2, Building2, Layers, GraduationCap } from 'lucide-react';
 
 const GROUP_LABELS: Record<string, string> = {
   'CP1-CP2': 'CP1 – CP2',

@@ -3,18 +3,23 @@ import type { SchoolYear } from '../types';
 
 export const schoolYearService = {
   getSchoolYears: async (page = 1, pageSize = 50) => {
-    return api.get<SchoolYear[]>('/school-years', { params: { page, pageSize } });
+    const res = await api.get<SchoolYear[]>('/school-years', { params: { page, pageSize } });
+    return res.data;
   },
   getSchoolYear: async (id: number) => {
-    return api.get<SchoolYear>(`/school-years/${id}`);
+    const res = await api.get<SchoolYear>(`/school-years/${id}`);
+    return res.data;
   },
   createSchoolYear: async (data: { year_range: string }) => {
-    return api.post('/school-years', data);
+    const res = await api.post('/school-years', data);
+    return res.data;
   },
   updateSchoolYear: async (id: number, data: Partial<{ year_range: string }>) => {
-    return api.patch(`/school-years/${id}`, data);
+    const res = await api.patch(`/school-years/${id}`, data);
+    return res.data;
   },
   deleteSchoolYear: async (id: number) => {
-    return api.delete(`/school-years/${id}`);
+    const res = await api.delete(`/school-years/${id}`);
+    return res.data;
   },
 };

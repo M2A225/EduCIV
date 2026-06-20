@@ -1,5 +1,6 @@
 import { MotionConfig, useReducedMotion } from 'framer-motion';
-import { ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
+import type { ReactNode } from 'react';
 
 interface MotionProviderProps {
   children: ReactNode;
