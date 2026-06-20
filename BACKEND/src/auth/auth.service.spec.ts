@@ -60,7 +60,7 @@ const mockPrisma = {
   studentParent: {
     createMany: jest.fn(),
   },
-  $transaction: jest.fn((fn: any) => {
+  $transaction: jest.fn((fn: (tx: Record<string, unknown>) => unknown) => {
     const tx = {
       userSchool: {
         findFirst: jest.fn().mockResolvedValue(null),

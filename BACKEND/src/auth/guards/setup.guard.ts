@@ -6,12 +6,22 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../core/prisma.service';
 
+interface SetupRequest {
+  user?: {
+    role: string;
+    currentSchoolId?: number;
+    primary_school_id?: number;
+    school_ids?: number[];
+  };
+  route?: { path: string };
+}
+
 @Injectable()
 export class SetupGuard implements CanActivate {
   constructor(private readonly prisma: PrismaService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest();
+    const req = context.switchToHttp().getRequest<SetupRequest>();
     const user = req.user;
 
     if (!user || !['DIRECTOR', 'ACCOUNTANT'].includes(user.role)) {

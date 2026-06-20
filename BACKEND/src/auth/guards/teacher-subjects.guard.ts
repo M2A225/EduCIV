@@ -7,12 +7,18 @@ import {
 import { PrismaService } from '../../core/prisma.service';
 import { getCurrentSchoolId } from '../../common/school-context';
 
+interface TeacherRequest {
+  user?: { userId: number };
+  body?: { class_id?: number; subject_id?: number };
+  query?: { class_id?: number; subject_id?: number };
+}
+
 @Injectable()
 export class TeacherSubjectsGuard implements CanActivate {
   constructor(private readonly prisma: PrismaService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<TeacherRequest>();
     const user = request.user;
     if (!user) return false;
 

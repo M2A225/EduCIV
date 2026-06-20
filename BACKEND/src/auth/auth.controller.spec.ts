@@ -51,7 +51,7 @@ describe('AuthController', () => {
         { identifier: 'user@test.com', password: 'pass' },
         res as unknown as Response,
       );
-      expect(authService.login).toHaveBeenCalledWith('user@test.com', 'pass');
+      expect(mockAuthService.login).toHaveBeenCalledWith('user@test.com', 'pass');
       expect(res.cookie).toHaveBeenCalled();
       expect(result.data.accessToken).toBe('a');
     });
@@ -65,7 +65,7 @@ describe('AuthController', () => {
         req as unknown as AuthRequest,
         res as unknown as Response,
       );
-      expect(authService.refresh).toHaveBeenCalledWith('rt');
+      expect(mockAuthService.refresh).toHaveBeenCalledWith('rt');
       expect(res.cookie).toHaveBeenCalled();
       expect(result.data.accessToken).toBe('a2');
     });
@@ -87,7 +87,7 @@ describe('AuthController', () => {
         req as unknown as AuthRequest,
         res as unknown as Response,
       );
-      expect(authService.logout).toHaveBeenCalledWith('rt');
+      expect(mockAuthService.logout).toHaveBeenCalledWith('rt');
       expect(res.clearCookie).toHaveBeenCalled();
       expect(result.data).toBeNull();
     });
@@ -99,7 +99,7 @@ describe('AuthController', () => {
         req as unknown as AuthRequest,
         res as unknown as Response,
       );
-      expect(authService.logout).not.toHaveBeenCalled();
+      expect(mockAuthService.logout).not.toHaveBeenCalled();
       expect(res.clearCookie).toHaveBeenCalled();
       expect(result.data).toBeNull();
     });
@@ -113,7 +113,7 @@ describe('AuthController', () => {
         dto,
         res as unknown as Response,
       );
-      expect(authService.registerWithInvitation).toHaveBeenCalledWith(dto);
+      expect(mockAuthService.registerWithInvitation).toHaveBeenCalledWith(dto);
       expect(res.cookie).toHaveBeenCalled();
       expect(result.data.accessToken).toBe('a3');
     });
@@ -126,7 +126,7 @@ describe('AuthController', () => {
         { code: 'invite456' },
         req as unknown as AuthRequest,
       );
-      expect(authService.linkInvitation).toHaveBeenCalledWith(42, 'invite456');
+      expect(mockAuthService.linkInvitation).toHaveBeenCalledWith(42, 'invite456');
       expect(result.data).toBeNull();
     });
   });
@@ -135,7 +135,7 @@ describe('AuthController', () => {
     it('should return user profile', async () => {
       const req = { user: { userId: 1 } };
       const result = await controller.getProfile(req as unknown as AuthRequest);
-      expect(authService.getProfile).toHaveBeenCalledWith(1);
+      expect(mockAuthService.getProfile).toHaveBeenCalledWith(1);
       expect(result.data.name).toBe('Test');
     });
   });
@@ -143,7 +143,7 @@ describe('AuthController', () => {
   describe('verifyInvitation', () => {
     it('should call authService.verifyInvitation', async () => {
       const result = await controller.verifyInvitation('abc123');
-      expect(authService.verifyInvitation).toHaveBeenCalledWith('abc123');
+      expect(mockAuthService.verifyInvitation).toHaveBeenCalledWith('abc123');
       expect(result.data.valid).toBe(true);
     });
   });

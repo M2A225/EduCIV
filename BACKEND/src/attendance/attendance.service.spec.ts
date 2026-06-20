@@ -138,12 +138,12 @@ describe('AttendanceService', () => {
         .mockResolvedValueOnce({ ...existing, status: 'PRESENT', version: 2 });
       mockPrisma.attendance.updateMany.mockResolvedValue({ count: 1 });
 
-      const result = await service.markAttendance(sessionId, dto);
+      const result = await service.markAttendance(sessionId, dto) as Record<string, unknown> | null;
       expect(mockPrisma.attendance.updateMany).toHaveBeenCalledWith({
         where: { id: 5, version: 1 },
         data: { status: 'PRESENT', version: 2 },
       });
-      expect(result!.status).toBe('PRESENT');
+      expect((result as Record<string, unknown>).status).toBe('PRESENT');
     });
 
     it('should throw ConflictException on version mismatch', async () => {
@@ -167,7 +167,7 @@ describe('AttendanceService', () => {
   describe('getSession', () => {
     it('should return session by id', async () => {
       mockSessionRepo.findOne.mockResolvedValue({ id: 1, class_id: 1 });
-      const result = await service.getSession(1);
+      const result = await service.getSession(1) as Record<string, unknown>;
       expect(result).toEqual({ id: 1, class_id: 1 });
     });
   });
@@ -175,10 +175,10 @@ describe('AttendanceService', () => {
   describe('getAttendancesForSession', () => {
     it('should return attendances', async () => {
       mockAttendanceRepo.find.mockResolvedValue([{ id: 1, status: 'PRESENT' }]);
-      const result = await service.getAttendancesForSession(1);
+      const result = await service.getAttendancesForSession(1) as Array<Record<string, unknown>>;
       expect(mockAttendanceRepo.find).toHaveBeenCalledWith({
         where: { session_id: 1 },
-      });
+      } as Record<string, unknown>);
       expect(result).toHaveLength(1);
     });
   });

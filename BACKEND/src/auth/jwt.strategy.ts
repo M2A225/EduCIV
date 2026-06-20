@@ -3,6 +3,15 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 
+interface JwtPayload {
+  sub: number;
+  role: string;
+  school_ids?: number[];
+  primary_school_id?: number;
+  roles?: string[];
+  scope_by_role?: Record<string, string>;
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly configService: ConfigService) {
@@ -13,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any) {
+  validate(payload: JwtPayload) {
     const systemRoles = ['BACKOFFICE'];
     const isSystemRole = systemRoles.includes(payload.role);
     if (
