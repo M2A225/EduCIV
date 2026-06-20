@@ -24,25 +24,27 @@ export class AttendanceController {
   @HttpCode(HttpStatus.CREATED)
   @Post('session')
   async createSession(@Body() body: CreateSessionDto) {
-    return { success: true as const, data: await this.attendanceService.createSession(body), error: null };
+    const data = await this.attendanceService.createSession(body) as Record<string, unknown>;
+    return { success: true as const, data, error: null };
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post(':id')
   async mark(@Param('id') id: string, @Body() body: MarkAttendanceDto) {
-    return { success: true as const, data: await this.attendanceService.markAttendance(Number(id), body), error: null };
+    const data = await this.attendanceService.markAttendance(Number(id), body) as Record<string, unknown>;
+    return { success: true as const, data, error: null };
   }
 
   @Get('session/:id')
   async getSession(@Param('id') id: string) {
     const sessionId = Number(id);
-    const [s, at] = await Promise.all([
-      this.attendanceService.getSession(sessionId),
-      this.attendanceService.getAttendancesForSession(sessionId),
-    ]);
+    const session = await this.attendanceService.getSession(sessionId) as Record<string, unknown>;
+    const attendances = await this.attendanceService.getAttendancesForSession(
+      sessionId,
+    ) as Array<Record<string, unknown>>;
     return {
       success: true as const,
-      data: { session: s, attendances: at },
+      data: { session, attendances },
       error: null,
     };
   }
@@ -52,13 +54,13 @@ export class AttendanceController {
     const sessions = await this.attendanceService.listSessions(
       q.page,
       q.pageSize,
-    );
+    ) as Array<Record<string, unknown>>;
     return { success: true as const, data: sessions, error: null };
   }
 
   @Get()
   async list(@Query() q: PaginationDto) {
-    const records = await this.attendanceService.list(q.page, q.pageSize);
+    const records = await this.attendanceService.list(q.page, q.pageSize) as Array<Record<string, unknown>>;
     return { success: true, data: records, error: null };
   }
 }

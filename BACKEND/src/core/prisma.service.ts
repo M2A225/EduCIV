@@ -38,6 +38,10 @@ export class PrismaService
     });
   }
 
+  async executeRaw(sql: string): Promise<number> {
+    return this.$executeRawUnsafe(sql);
+  }
+
   async onModuleInit() {
     await this.$connect();
   }

@@ -32,6 +32,7 @@ const COOKIE_OPTIONS = {
 };
 
 export interface AuthRequest extends Request {
+  cookies: Record<string, string>;
   user: {
     userId: number;
     primary_school_id?: number;

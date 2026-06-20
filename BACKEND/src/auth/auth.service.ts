@@ -19,10 +19,23 @@ import * as bcrypt from 'bcryptjs';
 import { REDIS_CLIENT } from '../common/redis.provider';
 import { Redis } from '@upstash/redis';
 
+export interface UserProfile {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  avatar_url: string | null;
+  role: string;
+  roles: string[];
+  school_ids: number[];
+  primary_school_id: number | null;
+  scope_by_role: Record<string, string>;
+}
+
 export interface Tokens {
   accessToken: string;
   refreshToken: string;
-  user?: any;
+  user?: UserProfile;
 }
 
 @Injectable()
@@ -133,13 +146,13 @@ export class AuthService {
     }
   }
 
-  async getProfile(userId: number) {
-    const user = await this.usersService.findById(userId);
+  async getProfile(userId: number): Promise<UserProfile> {
+    const user = await this.usersService.findById(userId) as { id: number; role: string; name: string; email: string; phone: string | null; avatar_url: string | null; school_id: number | null } | null;
     if (!user) throw new UnauthorizedException('User not found');
 
     const userSchools = await this.prisma.userSchool.findMany({
       where: { user_id: userId },
-    });
+    }) as Array<{ school_id: number; role: string; scope: string }>;
     const schoolIds = [...new Set(userSchools.map((us) => us.school_id))];
     const roleMap = new Map<string, string>();
     for (const us of userSchools) {
@@ -175,7 +188,7 @@ export class AuthService {
         'Compte temporairement bloqué. Réessayez dans 15 minutes.',
       );
 
-    const user = await this.usersService.findByIdentifier(identifier);
+    const user = await this.usersService.findByIdentifier(identifier) as { id: number; role: string; school_id: number | null; name: string; email: string; phone: string | null; avatar_url: string | null; } | null;
     if (!user) {
       await this.safeIncrementAttempt(attemptKey, blockKey);
       throw new UnauthorizedException(
@@ -202,7 +215,7 @@ export class AuthService {
     } else {
       const userSchools = await this.prisma.userSchool.findMany({
         where: { user_id: user.id },
-      });
+      }) as Array<{ school_id: number; role: string; scope: string }>;
       schoolIds = [...new Set(userSchools.map((us) => us.school_id))];
       const roleMap = new Map<string, string>();
       for (const us of userSchools) {
