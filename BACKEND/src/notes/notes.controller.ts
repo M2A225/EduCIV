@@ -20,6 +20,7 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { RequestWithUser } from '../auth/types';
 
 @Controller('notes')
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -109,7 +110,7 @@ export class NotesController {
   @HttpCode(HttpStatus.CREATED)
   @Post(':id/validate')
   @Roles('DIRECTOR', 'BACKOFFICE')
-  async validate(@Param('id') id: string, @Req() req: any) {
+  async validate(@Param('id') id: string, @Req() req: RequestWithUser) {
     const userId = req.user?.userId || req.user?.id;
     const data = await this.notesService.validateGrade(
       Number(id),
@@ -124,7 +125,7 @@ export class NotesController {
   async reject(
     @Param('id') id: string,
     @Body() body: ValidateGradeDto,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     const userId = req.user?.userId || req.user?.id;
     const data = await this.notesService.rejectGrade(

@@ -5,7 +5,6 @@ import { PrismaService } from '../core/prisma.service';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let repo: UsersRepository;
 
   const mockPrisma = {
     user: {
@@ -37,7 +36,6 @@ describe('UsersService', () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
-    repo = module.get<UsersRepository>(UsersRepository);
   });
 
   it('should be defined', () => {

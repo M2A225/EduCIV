@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TimetablesController } from './timetables.controller';
 import { TimetablesService } from './timetables.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { PermissionGuard } from '../auth/guards/permission.guard';
 import { PrismaService } from '../core/prisma.service';
 
 describe('TimetablesController', () => {

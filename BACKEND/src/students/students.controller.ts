@@ -18,6 +18,7 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { RequestWithUser } from '../auth/types';
 
 @Controller('students')
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -42,7 +43,7 @@ export class StudentsController {
     'CASHIER',
     'ACCOUNTANT',
   )
-  async getMe(@Req() req: any) {
+  async getMe(@Req() req: RequestWithUser) {
     const userId = req.user?.id;
     const s = await this.studentsService.getByUserId(userId);
     return { success: true, data: s, error: null };

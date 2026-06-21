@@ -442,10 +442,6 @@ export class NotesService {
 
   async generateReportCard(studentId: number, periodId: number, year: string) {
     const schoolId = this.reportCardsRepo.currentSchoolId!;
-    const student = await this.notesRepo.prisma.student.findUnique({
-      where: { id: studentId },
-      select: { class_id: true },
-    });
 
     const { rank, average } = await this.computeStudentRank(
       studentId,

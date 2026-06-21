@@ -6,6 +6,7 @@ import { StorageService } from '../storage/storage.service';
 jest.mock('pdfmake', () => {
   return jest.fn().mockImplementation(() => ({
     createPdfKitDocument: jest.fn().mockReturnValue({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-function-type
       on: jest.fn().mockImplementation(function (
         this: any,
         event: string,
@@ -15,6 +16,7 @@ jest.mock('pdfmake', () => {
         this._handlers[event] = cb;
         return this;
       }),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       end: jest.fn().mockImplementation(function (this: any) {
         const h = this._handlers || {};
         if (h['data']) h['data'](Buffer.from('pdf-content'));

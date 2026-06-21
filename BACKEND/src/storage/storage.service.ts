@@ -94,7 +94,7 @@ export class StorageService {
     return data.signedUrl;
   }
 
-  async getPublicUrl(bucket: string, path: string) {
+  getPublicUrl(bucket: string, path: string) {
     const targetBucket = bucket || process.env.STORAGE_BUCKET || 'documents';
     const { data } = this.supabase.storage
       .from(targetBucket)
@@ -103,7 +103,7 @@ export class StorageService {
     return data.publicUrl;
   }
 
-  async listBuckets() {
+  listBuckets() {
     return this.supabase.storage.listBuckets();
   }
 }

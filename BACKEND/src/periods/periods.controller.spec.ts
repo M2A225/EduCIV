@@ -41,17 +41,17 @@ describe('PeriodsController', () => {
   });
 
   it('should list periods', async () => {
-    const result = await controller.list({ page: 1, pageSize: 20 });
+    await controller.list({ page: 1, pageSize: 20 });
     expect(service.list).toHaveBeenCalledWith(1, 20);
   });
 
   it('should get period by id', async () => {
-    const result = await controller.get('1');
+    await controller.get('1');
     expect(service.getById).toHaveBeenCalledWith(1);
   });
 
   it('should update a period', async () => {
-    const result = await controller.update('1', { name: 'Semestre 1 modifié' });
+    await controller.update('1', { name: 'Semestre 1 modifié' });
     expect(service.update).toHaveBeenCalledWith(1, {
       name: 'Semestre 1 modifié',
     });

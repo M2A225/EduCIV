@@ -19,8 +19,6 @@ const mockPrisma = {
 
 describe('TimetablesService', () => {
   let service: TimetablesService;
-  let repo: TimetablesRepository;
-  let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,8 +30,6 @@ describe('TimetablesService', () => {
     }).compile();
 
     service = module.get<TimetablesService>(TimetablesService);
-    repo = module.get<TimetablesRepository>(TimetablesRepository);
-    prisma = module.get<PrismaService>(PrismaService);
     jest.clearAllMocks();
   });
 

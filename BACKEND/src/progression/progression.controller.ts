@@ -17,6 +17,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SchoolContextGuard } from '../auth/guards/school-context.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { RequestWithUser } from '../auth/types';
 import { DecisionVote, DecisionFinale } from '@prisma/client';
 
 @Controller('progression')
@@ -29,7 +30,7 @@ export class ProgressionController {
   async getClassStudents(
     @Param('classId') classId: string,
     @Param('yearId') yearId: string,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     const data = await this.progressionService.getClassStudents(
       Number(classId),
@@ -44,7 +45,7 @@ export class ProgressionController {
   async getClassVotes(
     @Param('classId') classId: string,
     @Param('yearId') yearId: string,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     const data = await this.progressionService.getClassVotes(
       Number(classId),
@@ -57,7 +58,7 @@ export class ProgressionController {
   @HttpCode(HttpStatus.CREATED)
   @Post('vote')
   @Roles('TEACHER')
-  async vote(@Body() body: VoteDto, @Req() req: any) {
+  async vote(@Body() body: VoteDto, @Req() req: RequestWithUser) {
     const yearId = await this.progressionService.getCurrentYearId(
       req.user.currentSchoolId,
     );
@@ -79,7 +80,7 @@ export class ProgressionController {
   @HttpCode(HttpStatus.CREATED)
   @Post('decide')
   @Roles('DIRECTOR')
-  async decide(@Body() body: DecideDto, @Req() req: any) {
+  async decide(@Body() body: DecideDto, @Req() req: RequestWithUser) {
     const yearId = await this.progressionService.getCurrentYearId(
       req.user.currentSchoolId,
     );
@@ -97,7 +98,7 @@ export class ProgressionController {
   @HttpCode(HttpStatus.CREATED)
   @Post('apply')
   @Roles('DIRECTOR')
-  async apply(@Body() body: ApplyDto, @Req() req: any) {
+  async apply(@Body() body: ApplyDto, @Req() req: RequestWithUser) {
     const data = await this.progressionService.apply(
       body.school_year_id,
       req.user.currentSchoolId,
@@ -107,7 +108,7 @@ export class ProgressionController {
 
   @Get('options/:classId')
   @Roles('DIRECTOR', 'TEACHER')
-  async getOptions(@Param('classId') classId: string, @Req() req: any) {
+  async getOptions(@Param('classId') classId: string, @Req() req: RequestWithUser) {
     const data = await this.progressionService.getProgressionOptions(
       Number(classId),
       req.user.currentSchoolId,
@@ -118,7 +119,7 @@ export class ProgressionController {
   @HttpCode(HttpStatus.CREATED)
   @Post('archive/:schoolYearId')
   @Roles('DIRECTOR')
-  async archive(@Param('schoolYearId') schoolYearId: string, @Req() req: any) {
+  async archive(@Param('schoolYearId') schoolYearId: string, @Req() req: RequestWithUser) {
     const data = await this.progressionService.archiveYear(
       Number(schoolYearId),
       req.user.currentSchoolId,
@@ -129,7 +130,7 @@ export class ProgressionController {
 
   @Get('stats/:schoolYearId')
   @Roles('DIRECTOR')
-  async stats(@Param('schoolYearId') schoolYearId: string, @Req() req: any) {
+  async stats(@Param('schoolYearId') schoolYearId: string, @Req() req: RequestWithUser) {
     const data = await this.progressionService.getYearStats(
       Number(schoolYearId),
       req.user.currentSchoolId,
@@ -141,7 +142,7 @@ export class ProgressionController {
   @Roles('DIRECTOR', 'ACCOUNTANT')
   async financial(
     @Param('schoolYearId') schoolYearId: string,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     const data = await this.progressionService.getFinancialClose(
       Number(schoolYearId),
@@ -153,7 +154,7 @@ export class ProgressionController {
   @HttpCode(HttpStatus.CREATED)
   @Post('create-next-year')
   @Roles('DIRECTOR')
-  async createNextYear(@Req() req: any) {
+  async createNextYear(@Req() req: RequestWithUser) {
     const data = await this.progressionService.createNextYear(
       req.user.currentSchoolId,
     );

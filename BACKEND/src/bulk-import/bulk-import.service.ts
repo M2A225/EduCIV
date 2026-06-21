@@ -42,6 +42,11 @@ interface ParentRow {
   eleves_matricules: string | null;
 }
 
+function safeToString(value: unknown): string {
+  if (value === null || value === undefined) return '';
+  return String(value);
+}
+
 @Injectable()
 export class BulkImportService {
   constructor(
@@ -239,7 +244,7 @@ export class BulkImportService {
         if (!classId) {
           result.errors.push({
             row: rowNum,
-            message: `Classe "${row.classe}" introuvable`,
+            message: `Classe "${safeToString(row.classe)}" introuvable`,
           });
           continue;
         }
@@ -248,7 +253,7 @@ export class BulkImportService {
           if (existingMatricules.has(row.matricule)) {
             result.errors.push({
               row: rowNum,
-              message: `Matricule "${row.matricule}" existe déjà`,
+              message: `Matricule "${safeToString(row.matricule)}" existe déjà`,
             });
             continue;
           }
@@ -414,14 +419,14 @@ export class BulkImportService {
         if (row.email && existingEmails.has(row.email.toLowerCase())) {
           result.errors.push({
             row: rowNum,
-            message: `Email "${row.email}" déjà utilisé`,
+            message: `Email "${safeToString(row.email)}" déjà utilisé`,
           });
           continue;
         }
         if (row.telephone && existingPhones.has(row.telephone)) {
           result.errors.push({
             row: rowNum,
-            message: `Téléphone "${row.telephone}" déjà utilisé`,
+            message: `Téléphone "${safeToString(row.telephone)}" déjà utilisé`,
           });
           continue;
         }

@@ -11,7 +11,9 @@ import type {
   Grade,
   Subject,
 } from '@prisma/client';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const pdfMake = require('pdfmake/build/pdfmake');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const vfs = require('pdfmake/build/vfs_fonts');
 pdfMake.vfs = vfs;
 pdfMake.fonts = {
@@ -148,7 +150,6 @@ export class BulletinService {
     let docDefinition: TDocumentDefinitions;
 
     if (isPrimary) {
-      const hasMaxScore = grades.some((g) => g.max_score != null);
       const totalMax = student.class?.grade_total_max || 0;
 
       docDefinition = {

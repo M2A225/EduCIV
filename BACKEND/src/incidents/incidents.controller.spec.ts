@@ -42,17 +42,17 @@ describe('IncidentsController', () => {
   });
 
   it('should list incidents', async () => {
-    const result = await controller.list({ page: 1, pageSize: 20 });
+    await controller.list({ page: 1, pageSize: 20 });
     expect(service.list).toHaveBeenCalledWith(1, 20);
   });
 
   it('should get incident by id', async () => {
-    const result = await controller.get('1');
+    await controller.get('1');
     expect(service.getById).toHaveBeenCalledWith(1);
   });
 
   it('should update an incident', async () => {
-    const result = await controller.update('1', { type: 'ABSENCE' });
+    await controller.update('1', { type: 'ABSENCE' });
     expect(service.update).toHaveBeenCalledWith(1, { type: 'ABSENCE' });
   });
 

@@ -233,7 +233,7 @@ export class SchoolsService {
     };
   }
 
-  async getDefaultLevels(schoolType: string): Promise<string[]> {
+  getDefaultLevels(schoolType: string): string[] {
     switch (schoolType) {
       case 'PRIMAIRE':
         return ['CP1', 'CP2', 'CE1', 'CE2', 'CM1', 'CM2'];

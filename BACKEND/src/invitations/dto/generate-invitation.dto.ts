@@ -1,4 +1,4 @@
-import { IsArray, IsInt, IsNotEmpty, ArrayMinSize, Min } from 'class-validator';
+import { IsArray, IsInt, IsNotEmpty, ArrayMinSize } from 'class-validator';
 
 export class GenerateInvitationDto {
   @IsArray()

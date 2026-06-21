@@ -1,12 +1,14 @@
+import { RequestWithUser } from '../auth/types';
+
 export interface MultiTenantEntity {
   school_id: number | null;
-  id?: any;
+  id?: number | null;
 }
 
 export abstract class BaseRepository<T extends MultiTenantEntity> {
   constructor(
     protected readonly model: any,
-    protected readonly request?: any,
+    protected readonly request?: RequestWithUser,
   ) {}
 
   protected get schoolId(): number | undefined {
@@ -35,7 +37,7 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     }
   }
 
-  async find(args: any = {}): Promise<T[]> {
+  find(args: any = {}): Promise<T[]> {
     this.ensureSchoolId();
     return this.model.findMany({
       ...args,
@@ -46,11 +48,11 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     });
   }
 
-  async findMany(args: any = {}): Promise<T[]> {
+  findMany(args: any = {}): Promise<T[]> {
     return this.find(args);
   }
 
-  async findOne(args: any): Promise<T | null> {
+  findOne(args: any): Promise<T | null> {
     this.ensureSchoolId();
     return this.model.findFirst({
       ...args,
@@ -61,7 +63,7 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     });
   }
 
-  async create(data: any): Promise<T> {
+  create(data: any): Promise<T> {
     this.ensureSchoolId();
     return this.model.create({
       data: {
@@ -92,7 +94,7 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     });
   }
 
-  async count(args: any = {}): Promise<number> {
+  count(args: any = {}): Promise<number> {
     this.ensureSchoolId();
     return this.model.count({
       ...args,

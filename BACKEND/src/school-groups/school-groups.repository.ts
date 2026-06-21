@@ -1,6 +1,5 @@
 import { Injectable, Inject, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { SchoolGroup } from '@prisma/client';
 import { BaseRepository } from '../core/base.repository';
 import { PrismaService } from '../core/prisma.service';
 

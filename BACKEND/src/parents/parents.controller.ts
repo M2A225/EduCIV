@@ -15,6 +15,7 @@ import { LinkParentDto } from './dto/link-parent.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { getCurrentSchoolId } from '../common/school-context';
+import { RequestWithUser } from '../auth/types';
 
 @Controller('parents')
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -23,7 +24,7 @@ export class ParentsController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('link')
-  async linkParent(@Body() body: LinkParentDto, @Req() req: any) {
+  async linkParent(@Body() body: LinkParentDto, @Req() req: RequestWithUser) {
     const school_id = getCurrentSchoolId(req);
     const result = await this.parentsService.linkParent(body, school_id);
     return { success: true, data: result, error: null };
@@ -32,7 +33,7 @@ export class ParentsController {
   @Get('student/:studentId')
   async getStudentParents(
     @Param('studentId') studentId: string,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     const school_id = getCurrentSchoolId(req);
     const result = await this.parentsService.getStudentParents(
@@ -45,7 +46,7 @@ export class ParentsController {
   @Get('parent/:parentUserId')
   async getParentStudents(
     @Param('parentUserId') parentUserId: string,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     const school_id = getCurrentSchoolId(req);
     const result = await this.parentsService.getParentStudents(
@@ -60,7 +61,7 @@ export class ParentsController {
   async unlinkParent(
     @Param('studentId') studentId: string,
     @Param('parentUserId') parentUserId: string,
-    @Req() req: any,
+    @Req() req: RequestWithUser,
   ) {
     const school_id = getCurrentSchoolId(req);
     await this.parentsService.unlinkParent(

@@ -1,6 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
+import { RequestWithUser } from '../auth/types';
 
-export function getCurrentSchoolId(req: any): number {
+export function getCurrentSchoolId(req: RequestWithUser): number {
   const user = req.user;
   if (!user) throw new UnauthorizedException('Non authentifié');
 

@@ -1,14 +1,35 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
 
+export interface SyncOperationInput {
+  client_operation_id: string;
+  entity: string;
+  entity_id: string;
+  type: 'CREATE' | 'UPDATE' | 'DELETE';
+  payload: Record<string, unknown>;
+}
+
+interface SyncTx {
+  student: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  grade: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  payment: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  attendance: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  incident: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  teacher: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  class: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  subject: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  timetable: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  syncOperation: { createMany(args: unknown): Promise<unknown> };
+}
+
 @Injectable()
 export class SyncService {
   private readonly logger = new Logger(SyncService.name);
   constructor(private prisma: PrismaService) {}
 
-  async processOperations(schoolId: number, operations: any[]) {
+  async processOperations(schoolId: number, operations: SyncOperationInput[]) {
     const results: { id: string; status: string }[] = [];
-    const opsToCreate: any[] = [];
+    const opsToCreate: { client_operation_id: string; entity: string; entity_id: string; payload: string; school_id: number }[] = [];
 
     const clientIds = operations.map((o) => o.client_operation_id);
     const existingOps = await this.prisma.syncOperation.findMany({
@@ -25,7 +46,7 @@ export class SyncService {
         }
 
         try {
-          await this.applyOperation(tx, op, schoolId);
+          await this.applyOperation(tx as unknown as SyncTx, op, schoolId);
           opsToCreate.push({
             client_operation_id: op.client_operation_id,
             entity: op.entity,
@@ -52,7 +73,7 @@ export class SyncService {
   }
 
   async pullData(schoolId: number, since?: string) {
-    const where: any = { school_id: schoolId };
+    const where: Record<string, unknown> = { school_id: schoolId };
     if (since) {
       where.updated_at = { gte: new Date(since) };
     }
@@ -84,7 +105,7 @@ export class SyncService {
     };
   }
 
-  private async applyOperation(tx: any, op: any, schoolId: number) {
+  private async applyOperation(tx: SyncTx, op: SyncOperationInput, schoolId: number) {
     const data = { ...op.payload, school_id: Number(schoolId) };
 
     switch (op.entity) {

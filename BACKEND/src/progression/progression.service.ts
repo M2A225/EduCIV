@@ -45,7 +45,7 @@ export class ProgressionService {
     });
   }
 
-  async getClassVotes(classId: number, yearId: number, schoolId: number) {
+  async getClassVotes(classId: number, yearId: number, _schoolId: number) {
     return this.prisma.teacherProgressionVote.findMany({
       where: { class_id: classId, school_year_id: yearId },
       include: { teacher: { select: { id: true, name: true } } },

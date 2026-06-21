@@ -89,4 +89,7 @@ async function bootstrap() {
   logger.log(`Swagger docs available at http://localhost:${port}/docs`);
 }
 
-bootstrap();
+bootstrap().catch((err) => {
+  console.error('Application failed to start', err);
+  process.exit(1);
+});

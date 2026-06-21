@@ -21,7 +21,8 @@ const createMockWorksheet = () => ({
 
 jest.mock('exceljs', () => {
   return {
-    Workbook: jest.fn().mockImplementation(function () {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Workbook: jest.fn().mockImplementation(function (this: any) {
       const ws = createMockWorksheet();
       this.worksheets = [ws];
       this.xlsx = {

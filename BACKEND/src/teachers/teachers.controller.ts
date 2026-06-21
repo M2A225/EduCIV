@@ -16,7 +16,6 @@ import { CreateTeacherDto, UpdateTeacherDto } from './dto/create-teacher.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('teachers')
 @UseGuards(JwtAuthGuard, PermissionGuard)

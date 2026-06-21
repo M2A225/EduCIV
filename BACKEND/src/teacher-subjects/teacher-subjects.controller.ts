@@ -15,6 +15,7 @@ import { CreateTeacherSubjectDto } from './dto/create-teacher-subject.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { RequestWithUser } from '../auth/types';
 
 @Controller('teacher-subjects')
 @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -45,7 +46,7 @@ export class TeacherSubjectsController {
 
   @Get('my-assignments')
   @Roles('TEACHER', 'DIRECTOR', 'BACKOFFICE')
-  async getMyAssignments(@Req() req: any) {
+  async getMyAssignments(@Req() req: RequestWithUser) {
     const userId = req.user?.userId || req.user?.id;
     const data = await this.service.getMyAssignments(Number(userId));
     return { success: true, data, error: null };
