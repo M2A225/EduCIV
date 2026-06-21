@@ -59,11 +59,11 @@ export function Sidebar({ collapsed, onToggleCollapse, onLogout }: SidebarProps)
   }, [queryClient]);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     setMobileOpen(false);
   }, [location.pathname, setMobileOpen]);
 
   useEffect(() => {
-    /* eslint-disable react-hooks/exhaustive-deps */
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && mobileOpen) {
         setMobileOpen(false);
