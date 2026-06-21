@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { timetableService } from '../services/timetables';
 import { extractData } from '../lib/utils';
-import type { Timetable } from '../types';
+import type { Timetable, CreateTimetableDto } from '../types';
 
 export const useTimetables = (params?: { class_id?: number; teacher_id?: number }) => {
   const query = useQuery({
@@ -16,7 +16,7 @@ export const useTimetables = (params?: { class_id?: number; teacher_id?: number 
 export const useAddSlot = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: Record<string, unknown>) => timetableService.addSlot(data),
+    mutationFn: (data: CreateTimetableDto) => timetableService.addSlot(data),
     onSuccess: () => {
       toast.success('Créneau ajouté avec succès');
       queryClient.invalidateQueries({ queryKey: ['timetables'] });

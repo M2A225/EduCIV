@@ -22,7 +22,7 @@ export const useSyncStore = create<SyncState>((set) => ({
 
 export const useSyncPush = () => {
   return useMutation({
-    mutationFn: (data: Record<string, unknown>) => syncService.pushData(data)
+    mutationFn: (data: { operations: Record<string, unknown>[] }) => syncService.pushData(data)
   });
 };
 

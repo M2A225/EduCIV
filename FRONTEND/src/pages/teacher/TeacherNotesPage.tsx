@@ -14,7 +14,7 @@ import { useNotes, useAddNote, useDeleteNote } from '../../hooks/useNotes';
 import { useMyAssignments } from '../../hooks/useTeacherSubjects';
 import { useStudents } from '../../hooks/useStudents';
 import { usePeriods } from '../../hooks/usePeriods';
-import type { Grade, Student, Subject, AcademicPeriod } from '../../types';
+import type { Grade, Student, Subject, AcademicPeriod, CreateGradeDto } from '../../types';
 
 export const TeacherNotesPage = () => {
   const { grades, loading: notesLoading, error, refetch } = useNotes();
@@ -45,7 +45,7 @@ export const TeacherNotesPage = () => {
   const filteredStudents = useMemo(() => {
     if (!students || !assignments) return [];
     const classIds = [...assignedClassIds];
-    return students.filter((s: Student) => classIds.includes(s.class_id));
+    return students.filter((s: Student) => s.class_id != null && classIds.includes(s.class_id));
   }, [students, assignedClassIds, assignments]);
 
   const filteredSubjects = useMemo(() => {
@@ -75,8 +75,7 @@ export const TeacherNotesPage = () => {
         period_id: Number(formData.period_id),
         value: Number(formData.value),
         type: formData.type,
-        status: 'EN_ATTENTE',
-      });
+      } as CreateGradeDto);
       setShowForm(false);
     } catch { toast.error('Impossible d\'ajouter la note'); }
     setFormData({ student_id: '', subject_id: '', period_id: '', value: '', type: 'DEVOIR' });

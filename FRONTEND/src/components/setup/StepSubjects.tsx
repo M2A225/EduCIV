@@ -29,7 +29,7 @@ export const StepSubjects = ({ onComplete }: Props) => {
   useEffect(() => {
     if (currentSchoolId) {
       schoolService.getMySchool().then(res => {
-        const type = res.data.data.school_type || '';
+        const type = res.data.school_type || '';
         setSchoolType(type);
 
         let list: { name: string; coefficient: number }[];

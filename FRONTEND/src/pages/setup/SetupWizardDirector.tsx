@@ -30,7 +30,7 @@ export const SetupWizardDirector = () => {
 
   useEffect(() => {
     schoolService.getMySchool().then(r => {
-      setIsPrimary(r.data.data.school_type === 'PRIMAIRE');
+      setIsPrimary(r.data.school_type === 'PRIMAIRE');
     }).catch(() => {});
   }, []);
 

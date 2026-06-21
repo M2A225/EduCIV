@@ -10,7 +10,7 @@ import { SearchBar } from '../../components/ui/SearchBar';
 import { PageHeader } from '../../components/ui/PageHeader';
 import { useClasses, useCreateClass, useUpdateClass, useDeleteClass } from '../../hooks/useClasses';
 import { api } from '../../services/api';
-import type { Class, ApiResponse } from '../../types';
+import type { Class, CreateClassDto, ApiResponse } from '../../types';
 import type { Column } from '../../components/ui/Table';
 
 const NIVEAUX = [
@@ -72,7 +72,7 @@ export const ClassesPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.level) return;
-    const payload: Record<string, unknown> = {
+    const payload: CreateClassDto & { grade_total_max?: number; grade_avg_scale?: number } = {
       name: formData.name,
       level: formData.level || undefined,
       section: formData.section || undefined,

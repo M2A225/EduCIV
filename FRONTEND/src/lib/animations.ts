@@ -1,4 +1,4 @@
-import { Variants, Transition } from 'framer-motion';
+import type { Variants, Transition } from 'framer-motion';
 
 const springTransition: Transition = {
   type: 'spring',
@@ -18,68 +18,68 @@ export const presets = {
     animate: { opacity: 1 },
     exit: { opacity: 0 },
     transition: { duration: 0.2 },
-  } as Variants,
+  } as unknown as Variants,
 
   fadeOut: {
     initial: { opacity: 1 },
     animate: { opacity: 0 },
     exit: { opacity: 0 },
     transition: { duration: 0.15 },
-  } as Variants,
+  } as unknown as Variants,
 
   slideUp: {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -20 },
     transition: springTransition,
-  } as Variants,
+  } as unknown as Variants,
 
   slideDown: {
     initial: { opacity: 0, y: -20 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: 20 },
     transition: springTransition,
-  } as Variants,
+  } as unknown as Variants,
 
   slideLeft: {
     initial: { opacity: 0, x: 20 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: -20 },
     transition: springTransition,
-  } as Variants,
+  } as unknown as Variants,
 
   slideRight: {
     initial: { opacity: 0, x: -20 },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: 20 },
     transition: springTransition,
-  } as Variants,
+  } as unknown as Variants,
 
   scaleIn: {
     initial: { opacity: 0, scale: 0.95 },
     animate: { opacity: 1, scale: 1 },
     exit: { opacity: 0, scale: 0.95 },
     transition: springTransition,
-  } as Variants,
+  } as unknown as Variants,
 
   scaleOut: {
     initial: { opacity: 1, scale: 1 },
     animate: { opacity: 0, scale: 0.95 },
     exit: { opacity: 0, scale: 0.95 },
     transition: { duration: 0.15, ease: [0.4, 0, 0.2, 1] },
-  } as Variants,
+  } as unknown as Variants,
 
   staggerContainer: {
     animate: {
       transition: { staggerChildren: 0.06, delayChildren: 0.1 },
     },
-  } as Variants,
+  } as unknown as Variants,
 
   staggerItem: {
     initial: { opacity: 0, y: 10 },
     animate: { opacity: 1, y: 0 },
     transition: springTransition,
-  } as Variants,
+  } as unknown as Variants,
 
   pageTransition: {
     initial: { opacity: 0, y: 8 },
@@ -90,35 +90,35 @@ export const presets = {
       stiffness: 300,
       damping: 30,
     },
-  } as Variants,
+  } as unknown as Variants,
 
   modalOverlay: {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
     exit: { opacity: 0 },
     transition: { duration: 0.2 },
-  } as Variants,
+  } as unknown as Variants,
 
   modalContent: {
     initial: { opacity: 0, scale: 0.95, y: 8 },
     animate: { opacity: 1, scale: 1, y: 0 },
     exit: { opacity: 0, scale: 0.95, y: -8 },
     transition: springTransition,
-  } as Variants,
+  } as unknown as Variants,
 
   drawer: {
     initial: { opacity: 0, x: '100%' },
     animate: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: '100%' },
     transition: emphasizedTransition,
-  } as Variants,
+  } as unknown as Variants,
 
   toast: {
     initial: { opacity: 0, x: 40, y: -20 },
     animate: { opacity: 1, x: 0, y: 0 },
     exit: { opacity: 0, x: 40, y: -20 },
     transition: springTransition,
-  } as Variants,
+  } as unknown as Variants,
 
   hoverLift: {
     whileHover: { y: -2, transition: { duration: 0.15 } },
@@ -182,7 +182,7 @@ export function createSlideVariants(
     animate: { opacity: 1, x: 0, y: 0 },
     exit: { opacity: 0, ...Object.fromEntries(Object.entries(transforms[direction]).map(([k, v]) => [k, -v])) },
     transition: springTransition,
-  };
+  } as unknown as Variants;
 }
 
 export function createPageTransitionVariants(): Variants {
@@ -195,5 +195,5 @@ export function createPageTransitionVariants(): Variants {
       stiffness: 300,
       damping: 30,
     },
-  };
+  } as unknown as Variants;
 }

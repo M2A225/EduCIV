@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './useAuth';
 import { schoolService } from '../services/schools';
+import { extractData } from '../lib/utils';
 import type { SetupStatus } from '../types';
 
 export const useSetup = () => {
@@ -16,7 +17,7 @@ export const useSetup = () => {
     }
     try {
       const res = await schoolService.getSetupStatus();
-      setSetupStatus(res.data.data);
+      setSetupStatus(extractData<SetupStatus>(res));
     } catch {
       setSetupStatus(null);
     } finally {

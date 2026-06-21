@@ -58,10 +58,6 @@ export function Sidebar({ collapsed, onToggleCollapse, onLogout }: SidebarProps)
     PREFETCH_MAP[path]?.(queryClient);
   }, [queryClient]);
 
-  const mobileOpenRef = useRef(false);
-  const [, forceRender] = useState(0);
-  const setMobileOpen = useCallback((v: boolean) => { mobileOpenRef.current = v; forceRender(n => n + 1); }, []);
-
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname, setMobileOpen]);

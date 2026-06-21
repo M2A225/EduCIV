@@ -14,7 +14,7 @@ export const usePeriods = () => {
 export const useCreatePeriod = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: Record<string, unknown>) => periodService.createPeriod(data),
+    mutationFn: (data: { name: string; start_date: string; end_date: string; period_type?: string; school_year_id?: number }) => periodService.createPeriod(data),
     onSuccess: () => {
       toast.success('Période créée avec succès');
       queryClient.invalidateQueries({ queryKey: ['periods'] });

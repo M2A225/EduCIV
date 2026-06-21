@@ -14,12 +14,7 @@ export function initSentry(): void {
     dsn,
     environment,
     integrations: [
-      browserTracingIntegration({
-        routingInstrumentation: Sentry.reactRouterV7Instrumentation(
-          undefined,
-          { startTransactionOnLocationChange: true }
-        ),
-      }),
+      browserTracingIntegration(),
       replayIntegration({
         maskAllText: true,
         blockAllMedia: true,

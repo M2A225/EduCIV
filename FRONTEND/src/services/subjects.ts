@@ -22,4 +22,8 @@ export const subjectService = {
     const res = await api.delete(`/subjects/${id}`);
     return res.data;
   },
+  bulkCreate: async (subjects: Omit<Subject, 'id' | 'school_id'>[]) => {
+    const res = await api.post('/subjects/bulk', { subjects });
+    return res.data;
+  },
 };

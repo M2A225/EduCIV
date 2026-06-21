@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
     },
     mutations: {
       onError: (error: Error) => {
-        const msg = error?.response?.data?.error?.message || error?.message || 'Une erreur est survenue';
+        const msg = (error as { response?: { data?: { error?: string } } })?.response?.data?.error || error?.message || 'Une erreur est survenue';
         toast.error(msg);
       },
     },

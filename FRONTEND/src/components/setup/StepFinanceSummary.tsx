@@ -14,8 +14,8 @@ export const StepFinanceSummary = () => {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    paymentPlanService.getPlans().then(res => setPlans(Array.isArray(res.data.data) ? res.data.data : []));
-    schoolService.getLevelTuitions().then(res => setTuitions(res.data.data));
+    paymentPlanService.getPlans().then(res => setPlans(Array.isArray(res.data) ? res.data : []));
+    schoolService.getLevelTuitions().then(res => setTuitions(res.data));
   }, []);
 
   const handleComplete = async () => {

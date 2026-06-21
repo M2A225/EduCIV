@@ -50,7 +50,7 @@ export const SchoolManagePage = () => {
 
   const school = useMemo(() => {
     if (!Array.isArray(schools)) return null;
-    return schools.find((s: School) => s.id === schoolId);
+    return schools.find((s: School) => s.id === schoolId) ?? null;
   }, [schools, schoolId]);
 
   const tabs: { key: Tab; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -96,7 +96,7 @@ export const SchoolManagePage = () => {
       </div>
 
       {activeTab === 'dashboard' && (
-        <DashboardTab stats={stats} statsLoading={statsLoading} school={school} navigate={navigate} onTabChange={setActiveTab} />
+        <DashboardTab stats={stats} statsLoading={statsLoading} school={school} onTabChange={setActiveTab} />
       )}
       {activeTab === 'users' && (
         <UsersTab schoolId={schoolId} />

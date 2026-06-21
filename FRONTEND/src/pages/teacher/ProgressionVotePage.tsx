@@ -8,10 +8,21 @@ import { api } from '../../services/api';
 import { Save } from 'lucide-react';
 import { LoadingState } from '../../components/ui/LoadingState';
 
+interface ClassData {
+  id: number;
+  name: string;
+}
+
+interface StudentData {
+  id: number;
+  name: string;
+  average?: number;
+}
+
 export const ProgressionVotePage = () => {
-  const [classes, setClasses] = useState<Record<string, unknown>[]>([]);
+  const [classes, setClasses] = useState<ClassData[]>([]);
   const [selectedClassId, setSelectedClassId] = useState<string>('');
-  const [students, setStudents] = useState<Record<string, unknown>[]>([]);
+  const [students, setStudents] = useState<StudentData[]>([]);
   const [votes, setVotes] = useState<Record<number, string>>({});
   const [comments, setComments] = useState<Record<number, string>>({});
   const [loading, setLoading] = useState(true);
@@ -29,9 +40,9 @@ export const ProgressionVotePage = () => {
         const current = years.length > 0 ? years[years.length - 1] : null;
         if (current) setYearId(current.id);
 
-        const uniqueClasses = new Map();
-        (assignmentsRes.data.data || []).forEach((a: Record<string, unknown>) => {
-          const c = a.class as { id: number; name: string } | undefined;
+        const uniqueClasses = new Map<number, ClassData>();
+        (assignmentsRes.data.data || []).forEach((a: { class?: ClassData }) => {
+          const c = a.class;
           if (c) uniqueClasses.set(c.id, c);
         });
         setClasses(Array.from(uniqueClasses.values()));
@@ -57,9 +68,9 @@ export const ProgressionVotePage = () => {
       setStudents(studentsData);
       const voteMap: Record<number, string> = {};
       const commentMap: Record<number, string> = {};
-      votesData.forEach((v: Record<string, unknown>) => {
-        voteMap[v.student_id as number] = v.decision as string;
-        if (v.comment) commentMap[v.student_id as number] = v.comment as string;
+      votesData.forEach((v: { student_id: number; decision: string; comment?: string }) => {
+        voteMap[v.student_id] = v.decision;
+        if (v.comment) commentMap[v.student_id] = v.comment;
       });
       setVotes(voteMap);
       setComments(commentMap);
@@ -114,7 +125,7 @@ export const ProgressionVotePage = () => {
           <Select
             value={selectedClassId}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedClassId(e.target.value)}
-            options={[{ value: '', label: 'Sélectionner une classe' }, ...classes.map((c: Record<string, unknown>) => ({ value: String(c.id as number), label: c.name as string }))]}
+            options={[{ value: '', label: 'Sélectionner une classe' }, ...classes.map((c: ClassData) => ({ value: String(c.id), label: c.name }))]}
           />
         </CardContent>
       </Card>

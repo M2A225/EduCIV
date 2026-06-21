@@ -10,7 +10,7 @@ export const periodService = {
     const res = await api.get<AcademicPeriod>(`/periods/${id}`);
     return res.data;
   },
-  createPeriod: async (data: { name: string; start_date: string; end_date: string }) => {
+  createPeriod: async (data: { name: string; start_date: string; end_date: string; period_type?: string; school_year_id?: number }) => {
     const res = await api.post('/periods', data);
     return res.data;
   },

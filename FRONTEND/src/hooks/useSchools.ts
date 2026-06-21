@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { schoolService } from '../services/schools';
 import { extractData } from '../lib/utils';
-import type { School, CreateSchoolDto, UpdateSchoolDto } from '../types';
+import type { School, SchoolStats, CreateSchoolDto, UpdateSchoolDto } from '../types';
 
 export const useSchools = () => {
   return useQuery({
@@ -14,10 +14,7 @@ export const useSchools = () => {
 export const useSchool = (id: number) => {
   return useQuery({
     queryKey: ['schools', id],
-    queryFn: () => schoolService.getSchool(id).then(res => {
-      const body = res.data as Record<string, unknown>;
-      return (body?.data ?? body) as School;
-    }),
+    queryFn: () => schoolService.getSchool(id).then(res => extractData<School>(res)),
     enabled: !!id,
   });
 };
@@ -25,10 +22,7 @@ export const useSchool = (id: number) => {
 export const useSchoolStats = (schoolId: number) => {
   return useQuery({
     queryKey: ['school-stats', schoolId],
-    queryFn: () => schoolService.getSchoolStats(schoolId).then(res => {
-      const body = res.data as Record<string, unknown>;
-      return (body?.data ?? body) as Record<string, unknown>;
-    }),
+    queryFn: () => schoolService.getSchoolStats(schoolId).then(res => extractData<SchoolStats>(res)),
     enabled: !!schoolId,
   });
 };

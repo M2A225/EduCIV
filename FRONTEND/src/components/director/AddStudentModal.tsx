@@ -120,7 +120,7 @@ export const AddStudentModal = ({ onClose }: AddStudentModalProps) => {
             <Select
               {...register('class_id')}
               label="Classe"
-              options={(classes || []).map((c: any) => ({ value: String(c.id), label: c.name }))}
+              options={(classes || []).map((c: Class) => ({ value: String(c.id), label: c.name }))}
               placeholder="Sélectionner..."
               error={errors.class_id?.message}
             />

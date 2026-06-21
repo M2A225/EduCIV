@@ -4,6 +4,7 @@ import { Select } from '../ui/Select';
 import { Button } from '../ui/Button';
 import { cityService } from '../../services/cities';
 import { schoolService } from '../../services/schools';
+import { extractData } from '../../lib/utils';
 import { SCHOOL_TYPE_LABELS } from '../../lib/constants';
 import type { City } from '../../types';
 
@@ -25,12 +26,12 @@ export const StepSchoolInfo = ({ onComplete }: Props) => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    cityService.getAll().then(res => setCities(res.data.data));
+    cityService.getAll().then(res => setCities(extractData<City[]>(res)));
   }, []);
 
   useEffect(() => {
     if (form.city_id) {
-      cityService.getCommunes(Number(form.city_id)).then(res => setCommunes(res.data.data));
+      cityService.getCommunes(Number(form.city_id)).then(res => setCommunes(extractData<{ id: number; name: string }[]>(res)));
     }
   }, [form.city_id]);
 

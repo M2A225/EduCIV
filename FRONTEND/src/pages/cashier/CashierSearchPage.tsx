@@ -155,7 +155,7 @@ export const CashierSearchPage = () => {
                       <div>
                         <div className="font-medium">{p.payment_type}</div>
                         <div className="text-sm text-text/60">{new Date(p.payment_date).toLocaleDateString('fr-FR')} - Reçu: {p.receipt_number}</div>
-                        {p.plan && <div className="text-xs text-text/40">{p.plan.name}</div>}
+                        {p.plan_id && <div className="text-xs text-text/40">Plan #{p.plan_id}</div>}
                       </div>
                       <div className="text-right">
                         <div className="font-bold text-cta">{p.amount_fcfa?.toLocaleString()} FCFA</div>

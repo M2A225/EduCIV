@@ -377,6 +377,13 @@ export interface CreateClassDto {
   classroom?: string;
 }
 
+export interface CreateSubjectDto {
+  name: string;
+  coefficient: number;
+  max_score?: number;
+  level_group?: string;
+}
+
 export interface CreateTeacherDto {
   name: string;
   phone?: string;

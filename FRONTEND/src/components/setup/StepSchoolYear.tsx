@@ -34,11 +34,11 @@ export const StepSchoolYear = ({ onComplete }: Props) => {
   useEffect(() => {
     if (currentSchoolId) {
       schoolService.getMySchool().then(res => {
-        const st = res.data.data.school_type || 'SECONDAIRE';
+        const st = res.data.school_type || 'SECONDAIRE';
         setSchoolType(st);
       });
       schoolService.getLevels().then(res => {
-        const levels = res.data.data.map(l => l.level);
+        const levels = res.data.map((l: { level: string }) => l.level);
         setHasCM2(levels.includes('CM2'));
       });
     }
@@ -79,7 +79,7 @@ export const StepSchoolYear = ({ onComplete }: Props) => {
     setSaving(true);
     try {
       const syRes = await api.post('/school-years', { year_range: yearRange });
-      const schoolYearId = syRes.data.data.id;
+      const schoolYearId = syRes.data.id;
 
       for (const p of periods) {
         await api.post('/academic-periods', {

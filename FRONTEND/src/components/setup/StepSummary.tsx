@@ -3,6 +3,7 @@ import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { schoolService } from '../../services/schools';
 import { subjectService } from '../../services/subjects';
+import { extractData } from '../../lib/utils';
 import { useSetup } from '../../hooks/useSetup';
 import { CheckCircle2, Building2, Layers, GraduationCap } from 'lucide-react';
 
@@ -21,10 +22,10 @@ export const StepSummary = () => {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    schoolService.getMySchool().then(res => setSchool(res.data.data));
-    schoolService.getLevels().then(res => setLevels(res.data.data));
+    schoolService.getMySchool().then(res => setSchool(res.data));
+    schoolService.getLevels().then(res => setLevels(res.data));
     subjectService.getSubjects(1, 100).then(res => {
-      const list = Array.isArray(res.data.data) ? res.data.data : (res.data.data?.data || []);
+      const list = extractData<any[]>(res);
       setSubjects(list);
     });
   }, []);

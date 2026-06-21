@@ -16,8 +16,8 @@ export const StepLevels = ({ onComplete }: Props) => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    schoolService.getDefaultLevels().then(res => setSuggestions(res.data.data));
-    schoolService.getLevels().then(res => setSelected(res.data.data.map(l => l.level)));
+    schoolService.getDefaultLevels().then(res => setSuggestions(res.data));
+    schoolService.getLevels().then(res => setSelected(res.data.map((l: { level: string }) => l.level)));
   }, [currentSchoolId]);
 
   const toggle = (level: string) => {

@@ -15,7 +15,7 @@ export const BackofficeUserManage = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState<Partial<User>>({});
+  const [form, setForm] = useState<Partial<User & { password?: string }>>({});
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['user', id],

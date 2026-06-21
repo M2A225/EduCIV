@@ -14,10 +14,7 @@ export const useUsers = () => {
 export const useUser = (id: number) => {
   return useQuery({
     queryKey: ['users', id],
-    queryFn: () => userService.getUser(id).then(res => {
-      const body = res.data as Record<string, unknown>;
-      return (body?.data ?? body) as User;
-    }),
+    queryFn: () => userService.getUser(id).then(res => extractData<User>(res)),
     enabled: !!id,
   });
 };

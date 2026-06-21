@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { paymentService } from '../services/payments';
 import { extractData } from '../lib/utils';
 import type { Payment, PaymentAuditLog } from '../types';
+import type { CreatePaymentInput } from '../services/payments';
 
 export const usePayments = (studentId?: number) => {
   const query = useQuery({
@@ -15,7 +16,7 @@ export const usePayments = (studentId?: number) => {
 export const useCreatePayment = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: Record<string, unknown>) => paymentService.createPayment(data),
+    mutationFn: (data: CreatePaymentInput) => paymentService.createPayment(data),
     onSuccess: () => {
       toast.success('Paiement créé avec succès');
       queryClient.invalidateQueries({ queryKey: ['payments'] });

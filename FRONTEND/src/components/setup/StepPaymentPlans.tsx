@@ -22,7 +22,7 @@ export const StepPaymentPlans = ({ onComplete }: Props) => {
 
   useEffect(() => {
     schoolService.getLevels().then(res => {
-      const lvls = res.data.data.map(l => l.level);
+      const lvls = res.data.map((l: { level: string }) => l.level);
       setLevels(lvls);
       const initial: Record<string, number> = {};
       lvls.forEach(l => { initial[l] = 0; });

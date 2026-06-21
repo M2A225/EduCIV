@@ -7,7 +7,7 @@ import { Eye, EyeOff, Building2 } from 'lucide-react';
 import { useCreateUser, useUpdateUser } from '../../hooks/useUsers';
 import { useAuth } from '../../hooks/useAuth';
 import { useSchools } from '../../hooks/useSchools';
-import type { User } from '../../types';
+import type { User, CreateUserDto } from '../../types';
 
 interface UserFormModalProps {
   onClose: () => void;
@@ -62,20 +62,20 @@ export const UserFormModal = ({ onClose, user }: UserFormModalProps) => {
     e.preventDefault();
     if (!form.email || (!isEditing && !form.password)) return;
 
-    const data: Record<string, string | number | undefined> = {
+    const userData: Partial<CreateUserDto> = {
       email: form.email,
       name: form.name || undefined,
       phone: form.phone || undefined,
-      role: form.role,
+      role: form.role as CreateUserDto['role'],
     };
-    if (form.school_id) data.school_id = Number(form.school_id);
-    if (form.password) data.password = form.password;
+    if (form.school_id) userData.school_id = Number(form.school_id);
+    if (form.password) userData.password = form.password;
 
     try {
       if (isEditing && user) {
-        await updateUser.mutateAsync({ id: user.id, data });
+        await updateUser.mutateAsync({ id: user.id, data: userData as Partial<CreateUserDto> });
       } else {
-        await createUser.mutateAsync(data);
+        await createUser.mutateAsync(userData as CreateUserDto);
       }
       onClose();
     } catch { toast.error('Impossible d\'enregistrer l\'utilisateur'); }
