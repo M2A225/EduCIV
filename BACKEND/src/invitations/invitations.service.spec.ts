@@ -38,7 +38,7 @@ describe('InvitationsService', () => {
       expect(prisma.invitation.create).toHaveBeenCalledWith({
         data: {
           code: expect.stringMatching(/^EDU-\d{8}-[A-F0-9]{6}$/),
-          target_type: 'PARENT',
+          target_type: 'PARENT' as string,
           target_ids: JSON.stringify([1, 2]),
           school_id: 1,
           created_by: 10,

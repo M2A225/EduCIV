@@ -47,7 +47,8 @@ describe('SchoolYearsService', () => {
       const schoolYear = { id: 1, year_range: '2025-2026', school_id: 1 };
       const school = { id: 1, school_type: 'SECONDAIRE' };
 
-      prisma.$transaction.mockImplementation(async (cb: any) => {
+      // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+      prisma.$transaction.mockImplementation(async (cb: (tx: Record<string, Record<string, jest.Mock>>) => unknown) => {
         const tx = {
           schoolYear: {
             create: jest.fn().mockResolvedValue(schoolYear),

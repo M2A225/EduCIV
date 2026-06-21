@@ -19,10 +19,10 @@ const createMockWorksheet = () => ({
   columns: [],
 });
 
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 jest.mock('exceljs', () => {
   return {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Workbook: jest.fn().mockImplementation(function (this: any) {
+    Workbook: jest.fn().mockImplementation(function (this: Record<string, unknown>) {
       const ws = createMockWorksheet();
       this.worksheets = [ws];
       this.xlsx = {
@@ -34,6 +34,7 @@ jest.mock('exceljs', () => {
     }),
   };
 });
+/* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 
 jest.mock('crypto', () => ({
   randomBytes: jest.fn().mockReturnValue({

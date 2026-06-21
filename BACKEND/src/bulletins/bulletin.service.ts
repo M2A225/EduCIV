@@ -11,10 +11,10 @@ import type {
   Grade,
   Subject,
 } from '@prisma/client';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+/* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 const pdfMake = require('pdfmake/build/pdfmake');
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const vfs = require('pdfmake/build/vfs_fonts');
+/* eslint-enable @typescript-eslint/no-require-imports */
 pdfMake.vfs = vfs;
 pdfMake.fonts = {
   Roboto: {
@@ -24,6 +24,7 @@ pdfMake.fonts = {
     bolditalics: 'Roboto-MediumItalic.ttf',
   },
 };
+/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 
 type StudentWithRelations = Student & { class: Class | null; school: School };
 type GradeWithSubject = Grade & { subject: Subject };
@@ -378,10 +379,13 @@ export class BulletinService {
       };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const pdfDoc = pdfMake.createPdf(docDefinition);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const blob = await pdfDoc.getBlob();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const arrayBuffer = await blob.arrayBuffer();
-    const pdfBuffer: Buffer<ArrayBufferLike> = Buffer.from(arrayBuffer);
+    const pdfBuffer: Buffer<ArrayBufferLike> = Buffer.from(arrayBuffer as ArrayBuffer);
 
     const path = `bulletins/${student.school.school_id}/${period.name}/${period.id}/student_${student.id}.pdf`;
     await this.storage.uploadFile(

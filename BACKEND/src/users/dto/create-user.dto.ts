@@ -14,7 +14,7 @@ export class CreateUserDto {
   @IsOptional()
   email?: string;
 
-  @ValidateIf((o) => !o.email)
+  @ValidateIf((o: CreateUserDto) => !o.email)
   @IsString()
   @IsNotEmpty({ message: 'Email ou téléphone requis' })
   phone?: string;

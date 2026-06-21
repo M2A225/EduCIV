@@ -48,6 +48,7 @@ export const mockPrismaService = {
   studentProgression: createMockModel(),
   commune: createMockModel(),
   city: createMockModel(),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   $transaction: jest.fn((cb: any) => cb(mockPrismaService)),
   $connect: jest.fn(),
   $disconnect: jest.fn(),

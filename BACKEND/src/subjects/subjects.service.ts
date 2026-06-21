@@ -18,7 +18,7 @@ export class SubjectsService {
       level_group?: string;
     }[],
   ) {
-    const results: any[] = [];
+    const results: Awaited<ReturnType<typeof this.subjectsRepo.create>>[] = [];
     for (const subject of subjects) {
       const data = { ...subject, level_group: subject.level_group || '' };
       const created = await this.subjectsRepo.create(data);

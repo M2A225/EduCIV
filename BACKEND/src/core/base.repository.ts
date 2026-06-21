@@ -5,9 +5,18 @@ export interface MultiTenantEntity {
   id?: number | null;
 }
 
+type PrismaDelegate = {
+  findMany: (...args: unknown[]) => Promise<unknown>;
+  findFirst: (...args: unknown[]) => Promise<unknown>;
+  create: (...args: unknown[]) => Promise<unknown>;
+  update: (...args: unknown[]) => Promise<unknown>;
+  delete: (...args: unknown[]) => Promise<unknown>;
+  count: (...args: unknown[]) => Promise<unknown>;
+};
+
 export abstract class BaseRepository<T extends MultiTenantEntity> {
   constructor(
-    protected readonly model: any,
+    protected readonly model: PrismaDelegate,
     protected readonly request?: RequestWithUser,
   ) {}
 
@@ -37,6 +46,7 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   find(args: any = {}): Promise<T[]> {
     this.ensureSchoolId();
     return this.model.findMany({
@@ -45,13 +55,15 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
         ...(args.where || {}),
         school_id: this.schoolId,
       },
-    });
+    }) as Promise<T[]>;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   findMany(args: any = {}): Promise<T[]> {
     return this.find(args);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   findOne(args: any): Promise<T | null> {
     this.ensureSchoolId();
     return this.model.findFirst({
@@ -60,9 +72,10 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
         ...(args.where || {}),
         school_id: this.schoolId,
       },
-    });
+    }) as Promise<T | null>;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   create(data: any): Promise<T> {
     this.ensureSchoolId();
     return this.model.create({
@@ -70,9 +83,10 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
         ...data,
         school_id: this.schoolId,
       },
-    });
+    }) as Promise<T>;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async update(id: any, data: any): Promise<T> {
     this.ensureSchoolId();
     const item = await this.findOne({ where: { id } });
@@ -81,10 +95,10 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     return this.model.update({
       where: { id },
       data,
-    });
+    }) as Promise<T>;
   }
 
-  async delete(id: any): Promise<void> {
+  async delete(id: number): Promise<void> {
     this.ensureSchoolId();
     const item = await this.findOne({ where: { id } });
     if (!item) throw new Error('Item not found or access denied');
@@ -94,6 +108,7 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   count(args: any = {}): Promise<number> {
     this.ensureSchoolId();
     return this.model.count({
@@ -102,6 +117,6 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
         ...(args.where || {}),
         school_id: this.schoolId,
       },
-    });
+    }) as Promise<number>;
   }
 }

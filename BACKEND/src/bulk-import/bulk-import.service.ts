@@ -44,6 +44,7 @@ interface ParentRow {
 
 function safeToString(value: unknown): string {
   if (value === null || value === undefined) return '';
+  if (typeof value === 'object') return JSON.stringify(value);
   return String(value);
 }
 
@@ -54,6 +55,7 @@ export class BulkImportService {
     private readonly invitationsService: InvitationsService,
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async generateTemplate(type: string): Promise<ExcelJS.Workbook> {
     const wb = new ExcelJS.Workbook();
     const ws = wb.addWorksheet('Import');
@@ -173,22 +175,22 @@ export class BulkImportService {
     ws.eachRow((row: ExcelJS.Row, rowNumber: number) => {
       if (rowNumber === 1) return;
       const raw = row.values;
-      const values = Array.isArray(raw) ? raw : [];
-      const nom = values[1]?.toString().trim();
+      const values = Array.isArray(raw) ? (raw as (string | number | null | undefined)[]) : [];
+      const nom = safeToString(values[1]).trim();
       if (!nom) return;
       rows.push({
         nom,
-        matricule: values[2]?.toString().trim() || null,
-        date_naissance: values[3]?.toString().trim() || null,
-        lieu_naissance: values[4]?.toString().trim() || null,
-        sexe: values[5]?.toString().trim() || null,
-        nationalite: values[6]?.toString().trim() || null,
-        redoublant: values[7]?.toString().trim() || null,
-        regime: values[8]?.toString().trim() || null,
-        interne: values[9]?.toString().trim() || null,
-        classe: values[10]?.toString().trim() || null,
-        nom_parent: values[11]?.toString().trim() || null,
-        tel_parent: values[12]?.toString().trim() || null,
+        matricule: safeToString(values[2]).trim() || null,
+        date_naissance: safeToString(values[3]).trim() || null,
+        lieu_naissance: safeToString(values[4]).trim() || null,
+        sexe: safeToString(values[5]).trim() || null,
+        nationalite: safeToString(values[6]).trim() || null,
+        redoublant: safeToString(values[7]).trim() || null,
+        regime: safeToString(values[8]).trim() || null,
+        interne: safeToString(values[9]).trim() || null,
+        classe: safeToString(values[10]).trim() || null,
+        nom_parent: safeToString(values[11]).trim() || null,
+        tel_parent: safeToString(values[12]).trim() || null,
       });
     });
 
@@ -378,17 +380,17 @@ export class BulkImportService {
     ws.eachRow((row: ExcelJS.Row, rowNumber: number) => {
       if (rowNumber === 1) return;
       const raw = row.values;
-      const values = Array.isArray(raw) ? raw : [];
-      const nom = values[1]?.toString().trim();
+      const values = Array.isArray(raw) ? (raw as (string | number | null | undefined)[]) : [];
+      const nom = safeToString(values[1]).trim();
       if (!nom) return;
       rows.push({
         nom,
-        email: values[2]?.toString().trim() || null,
-        telephone: values[3]?.toString().trim() || null,
-        grade: values[4]?.toString().trim() || null,
-        specialite: values[5]?.toString().trim() || null,
-        date_embauche: values[6]?.toString().trim() || null,
-        adresse: values[7]?.toString().trim() || null,
+        email: safeToString(values[2]).trim() || null,
+        telephone: safeToString(values[3]).trim() || null,
+        grade: safeToString(values[4]).trim() || null,
+        specialite: safeToString(values[5]).trim() || null,
+        date_embauche: safeToString(values[6]).trim() || null,
+        adresse: safeToString(values[7]).trim() || null,
       });
     });
 
@@ -517,14 +519,14 @@ export class BulkImportService {
     ws.eachRow((row: ExcelJS.Row, rowNumber: number) => {
       if (rowNumber === 1) return;
       const raw = row.values;
-      const values = Array.isArray(raw) ? raw : [];
-      const nom = values[1]?.toString().trim();
+      const values = Array.isArray(raw) ? (raw as (string | number | null | undefined)[]) : [];
+      const nom = safeToString(values[1]).trim();
       if (!nom) return;
       rows.push({
         nom,
-        email: values[2]?.toString().trim() || null,
-        telephone: values[3]?.toString().trim() || null,
-        eleves_matricules: values[4]?.toString().trim() || null,
+        email: safeToString(values[2]).trim() || null,
+        telephone: safeToString(values[3]).trim() || null,
+        eleves_matricules: safeToString(values[4]).trim() || null,
       });
     });
 

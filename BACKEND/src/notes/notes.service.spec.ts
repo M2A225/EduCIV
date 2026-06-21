@@ -28,6 +28,7 @@ const mockPrisma = {
   grade: { findMany: jest.fn(), findUnique: jest.fn(), updateMany: jest.fn() },
   class: { findUnique: jest.fn() },
   reportCard: { findUnique: jest.fn() },
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
   $transaction: jest.fn((cb: any) => {
     const tx = {
       grade: {
@@ -88,7 +89,7 @@ describe('NotesService', () => {
 
     it('should throw NotFoundException for missing grade', async () => {
       mockNotesRepo.findOne.mockResolvedValue(null);
-      await expect(service.updateGrade(999, {} as unknown as UpdateGradeDto)).rejects.toThrow(
+      await expect(service.updateGrade(999, {} as UpdateGradeDto)).rejects.toThrow(
         'Note introuvable',
       );
     });
@@ -127,7 +128,7 @@ describe('NotesService', () => {
     it('should validate a pending grade', async () => {
       mockNotesRepo.findOne.mockResolvedValue({ id: 1, status: 'EN_ATTENTE' });
       mockNotesRepo.update.mockResolvedValue({ id: 1, status: 'VALIDE' });
-      const result = await service.validateGrade(1, 10);
+      await service.validateGrade(1, 10);
       expect(mockNotesRepo.update).toHaveBeenCalledWith(
         1,
         expect.objectContaining({ status: 'VALIDE' }),

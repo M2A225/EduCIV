@@ -26,7 +26,7 @@ export class StorageService {
         'Supabase credentials not configured: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set',
       );
     }
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+    this.supabase = createClient(supabaseUrl, supabaseKey) as SupabaseClient;
   }
 
   private validate(

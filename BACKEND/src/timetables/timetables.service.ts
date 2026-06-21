@@ -42,7 +42,7 @@ export class TimetablesService {
   }
 
   async list(page = 1, pageSize = 100, classId?: number, teacherId?: number) {
-    const where: Record<string, unknown> = {};
+    const where: Record<string, number> = {};
     if (classId) where.class_id = classId;
     if (teacherId) where.teacher_id = teacherId;
 

@@ -209,7 +209,8 @@ describe('ProgressionService', () => {
       ];
       prisma.studentProgression.findMany.mockResolvedValue(progressions);
 
-      prisma.$transaction.mockImplementation(async (cb: any) => {
+      // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+      prisma.$transaction.mockImplementation(async (cb: (tx: Record<string, Record<string, jest.Mock>>) => unknown) => {
         const tx = {
           student: { update: jest.fn().mockResolvedValue({}) },
           studentProgression: { update: jest.fn().mockResolvedValue({}) },
@@ -243,7 +244,8 @@ describe('ProgressionService', () => {
       ];
       prisma.studentProgression.findMany.mockResolvedValue(progressions);
 
-      prisma.$transaction.mockImplementation(async (cb: any) => {
+      // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+      prisma.$transaction.mockImplementation(async (cb: (tx: Record<string, Record<string, jest.Mock>>) => unknown) => {
         const tx = {
           student: { update: jest.fn().mockResolvedValue({}) },
           studentProgression: { update: jest.fn().mockResolvedValue({}) },
@@ -297,7 +299,8 @@ describe('ProgressionService', () => {
     it('should archive a school year in a transaction', async () => {
       prisma.schoolYear.findFirst.mockResolvedValue({ id: 1, school_id: 1 });
 
-      prisma.$transaction.mockImplementation(async (cb: any) => {
+      // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+      prisma.$transaction.mockImplementation(async (cb: (tx: Record<string, Record<string, jest.Mock>>) => unknown) => {
         const tx = {
           grade: { updateMany: jest.fn().mockResolvedValue({}) },
           attendance: { updateMany: jest.fn().mockResolvedValue({}) },

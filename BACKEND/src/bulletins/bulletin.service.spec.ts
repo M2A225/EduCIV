@@ -3,33 +3,33 @@ import { BulletinService } from './bulletin.service';
 import { PrismaService } from '../core/prisma.service';
 import { StorageService } from '../storage/storage.service';
 
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-function-type */
 jest.mock('pdfmake', () => {
   return jest.fn().mockImplementation(() => ({
     createPdfKitDocument: jest.fn().mockReturnValue({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-function-type
       on: jest.fn().mockImplementation(function (
-        this: any,
+        this: Record<string, unknown>,
         event: string,
-        cb: Function,
+        cb: (...args: unknown[]) => void,
       ) {
-        this._handlers = this._handlers || {};
-        this._handlers[event] = cb;
+        this._handlers = (this._handlers as Record<string, (...args: unknown[]) => void>) || {};
+        (this._handlers as Record<string, (...args: unknown[]) => void>)[event] = cb;
         return this;
       }),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      end: jest.fn().mockImplementation(function (this: any) {
-        const h = this._handlers || {};
+      end: jest.fn().mockImplementation(function (this: Record<string, unknown>) {
+        const h = (this._handlers || {}) as Record<string, (...args: unknown[]) => void>;
         if (h['data']) h['data'](Buffer.from('pdf-content'));
         if (h['end']) h['end']();
       }),
     }),
   }));
 });
+/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-function-type */
 
 describe('BulletinService (Integration)', () => {
   let service: BulletinService;
-  let mockPrisma: any;
-  let mockStorage: any;
+  let mockPrisma: Record<string, unknown>;
+  let mockStorage: Record<string, unknown>;
 
   beforeEach(async () => {
     mockPrisma = {

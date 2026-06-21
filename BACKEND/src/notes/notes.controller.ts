@@ -111,7 +111,7 @@ export class NotesController {
   @Post(':id/validate')
   @Roles('DIRECTOR', 'BACKOFFICE')
   async validate(@Param('id') id: string, @Req() req: RequestWithUser) {
-    const userId = req.user?.userId || req.user?.id;
+    const userId = req.user?.userId;
     const data = await this.notesService.validateGrade(
       Number(id),
       Number(userId),
@@ -127,7 +127,7 @@ export class NotesController {
     @Body() body: ValidateGradeDto,
     @Req() req: RequestWithUser,
   ) {
-    const userId = req.user?.userId || req.user?.id;
+    const userId = req.user?.userId;
     const data = await this.notesService.rejectGrade(
       Number(id),
       Number(userId),

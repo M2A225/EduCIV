@@ -12,7 +12,7 @@ export class PaymentPlansService {
   }
 
   async bulkCreate(plans: { name: string; total_amount: number }[]) {
-    const results: any[] = [];
+    const results: Awaited<ReturnType<typeof this.repo.create>>[] = [];
     for (const plan of plans) {
       const created = await this.repo.create(plan);
       results.push(created);

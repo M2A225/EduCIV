@@ -23,7 +23,7 @@ export class SchoolsService {
       file.buffer,
       file.mimetype,
     );
-    const url = await this.storage.getPublicUrl('documents', path);
+    const url = this.storage.getPublicUrl('documents', path);
 
     return this.prisma.school.update({
       where: { id: schoolId },

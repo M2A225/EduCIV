@@ -44,8 +44,11 @@ export class StudentsController {
     'ACCOUNTANT',
   )
   async getMe(@Req() req: RequestWithUser) {
-    const userId = req.user?.id;
-    const s = await this.studentsService.getByUserId(userId!);
+    const userId = req.user?.userId;
+    if (!userId) {
+      return { success: false, data: null, error: 'Unauthorized' };
+    }
+    const s = await this.studentsService.getByUserId(userId);
     return { success: true, data: s, error: null };
   }
 

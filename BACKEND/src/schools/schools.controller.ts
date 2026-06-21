@@ -56,7 +56,7 @@ export class SchoolsController {
   ) {
     const schoolId = getCurrentSchoolId(req);
     const school = await this.schoolsService.getSchoolById(schoolId);
-    const data = await this.schoolsService.getDefaultLevels(
+    const data = this.schoolsService.getDefaultLevels(
       schoolType || school?.school_type || '',
     );
     return { success: true, data, error: null };

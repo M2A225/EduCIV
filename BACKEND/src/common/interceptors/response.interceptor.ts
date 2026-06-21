@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
-      map((data) => {
+      map((data: unknown) => {
         // Ensure standard response shape
         if (data && typeof data === 'object' && 'success' in data) return data;
         return { success: true, data: data ?? null, error: null };

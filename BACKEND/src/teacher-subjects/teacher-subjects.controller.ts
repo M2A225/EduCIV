@@ -47,7 +47,7 @@ export class TeacherSubjectsController {
   @Get('my-assignments')
   @Roles('TEACHER', 'DIRECTOR', 'BACKOFFICE')
   async getMyAssignments(@Req() req: RequestWithUser) {
-    const userId = req.user?.userId || req.user?.id;
+    const userId = req.user?.userId;
     const data = await this.service.getMyAssignments(Number(userId));
     return { success: true, data, error: null };
   }

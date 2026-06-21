@@ -38,7 +38,7 @@ describe('IncidentsController', () => {
     const dto = { student_id: 1, type: 'RETARD', description: 'En retard' };
     const result = await controller.create(dto);
     expect(service.create).toHaveBeenCalledWith(dto);
-    expect(result.data.id).toBe(1);
+    expect((result as { data: { id: number } }).data.id).toBe(1);
   });
 
   it('should list incidents', async () => {

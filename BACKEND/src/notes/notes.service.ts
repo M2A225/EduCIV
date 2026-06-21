@@ -51,7 +51,7 @@ export class NotesService {
   }
 
   async getStudentGrades(studentId: number, periodId?: number) {
-    const where: any = { student_id: studentId };
+    const where: Record<string, unknown> = { student_id: studentId };
     if (periodId) where.period_id = periodId;
     return this.notesRepo.findMany({
       where,
@@ -97,7 +97,7 @@ export class NotesService {
     });
 
     // Index grades by student_id + subject_id
-    const gradeMap = new Map<string, any>();
+    const gradeMap = new Map<string, { student_id: number; subject_id: number; value: number; max_score: number | null }>();
     for (const g of grades) {
       gradeMap.set(`${g.student_id}-${g.subject_id}`, g);
     }
@@ -191,7 +191,7 @@ export class NotesService {
         }
       }
 
-      const results: any[] = [];
+      const results: Array<{ id: number; value: number; status: string }> = [];
       for (const u of toUpdate) {
         results.push(
           await tx.grade.update({
@@ -277,7 +277,7 @@ export class NotesService {
   }
 
   async getPendingValidation(periodId?: number) {
-    const where: any = { status: 'EN_ATTENTE' };
+    const where: Record<string, unknown> = { status: 'EN_ATTENTE' };
     if (periodId) where.period_id = periodId;
     return this.notesRepo.find({
       where,

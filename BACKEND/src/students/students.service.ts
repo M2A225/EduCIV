@@ -27,7 +27,7 @@ export class StudentsService {
       file.buffer,
       file.mimetype,
     );
-    const url = await this.storage.getPublicUrl('documents', path);
+    const url = this.storage.getPublicUrl('documents', path);
 
     return this.prisma.student.update({
       where: { id: studentId },
