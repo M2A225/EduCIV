@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import type { ReactNode } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
@@ -31,7 +31,7 @@ export function ThemeProvider({ children, defaultTheme = 'system' }: { children:
     return stored ?? defaultTheme;
   });
 
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() => resolveTheme(theme));
+  const resolvedTheme = useMemo(() => resolveTheme(theme), [theme]);
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
@@ -46,20 +46,16 @@ export function ThemeProvider({ children, defaultTheme = 'system' }: { children:
   }, [theme, setTheme]);
 
   useEffect(() => {
-    const resolved = resolveTheme(theme);
-    setResolvedTheme(resolved);
     document.documentElement.classList.remove('light', 'dark');
-    document.documentElement.classList.add(resolved);
-  }, [theme]);
+    document.documentElement.classList.add(resolvedTheme);
+  }, [resolvedTheme]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
       if (theme === 'system') {
-        const resolved = getSystemTheme();
-        setResolvedTheme(resolved);
         document.documentElement.classList.remove('light', 'dark');
-        document.documentElement.classList.add(resolved);
+        document.documentElement.classList.add(getSystemTheme());
       }
     };
     mediaQuery.addEventListener('change', handleChange);
@@ -73,6 +69,7 @@ export function ThemeProvider({ children, defaultTheme = 'system' }: { children:
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) {

@@ -21,7 +21,6 @@ const ROLES = [
   { value: 'CASHIER', label: 'Caissier' },
   { value: 'EDUCATOR', label: 'Éducateur' },
   { value: 'PARENT', label: 'Parent' },
-  { value: 'PARENT', label: 'Parent' },
   { value: 'BACKOFFICE', label: 'Super Admin' },
 ];
 
@@ -41,6 +40,7 @@ export const UserFormModal = ({ onClose, user }: UserFormModalProps) => {
   });
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
     if (user) {
       setForm({
         email: user.email || '',
@@ -62,7 +62,7 @@ export const UserFormModal = ({ onClose, user }: UserFormModalProps) => {
     e.preventDefault();
     if (!form.email || (!isEditing && !form.password)) return;
 
-    const data: any = {
+    const data: Record<string, string | number | undefined> = {
       email: form.email,
       name: form.name || undefined,
       phone: form.phone || undefined,

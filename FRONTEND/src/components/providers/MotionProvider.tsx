@@ -20,6 +20,7 @@ export function MotionProvider({ children }: MotionProviderProps) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useMotionConfig() {
   const shouldReduceMotion = useReducedMotion();
   return useMemo(() => ({

@@ -44,7 +44,7 @@ export const StepPaymentPlans = ({ onComplete }: Props) => {
       if (validPlans.length > 0) {
         await paymentPlanService.bulkCreate(validPlans);
       }
-      const tuitionList = Object.entries(tuitions).filter(([_, amount]) => amount > 0).map(([level, amount]) => ({ level, amount }));
+      const tuitionList = Object.entries(tuitions).filter(([, amount]) => amount > 0).map(([level, amount]) => ({ level, amount }));
       if (tuitionList.length > 0) {
         await schoolService.upsertLevelTuitions(tuitionList);
       }

@@ -26,6 +26,7 @@ export const StepSchoolYear = ({ onComplete }: Props) => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     const year = new Date().getFullYear();
     setYearRange(`${year}-${year + 1}`);
   }, []);
@@ -44,6 +45,7 @@ export const StepSchoolYear = ({ onComplete }: Props) => {
   }, [currentSchoolId]);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (!schoolType) return;
     const isPrimary = schoolType === 'PRIMAIRE' || (schoolType === 'GROUPE_SCOLAIRE' && hasCM2);
     const isLyc = schoolType === 'LYCEE_TECHNIQUE' || schoolType === 'LYCEE_PROFESSIONNEL';

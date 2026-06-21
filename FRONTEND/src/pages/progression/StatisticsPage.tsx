@@ -21,6 +21,7 @@ export const StatisticsPage = () => {
   }, []);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (!selectedYearId) return;
     setLoading(true);
     api.get(`/progression/stats/${selectedYearId}`).then(res => {

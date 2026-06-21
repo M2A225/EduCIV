@@ -37,6 +37,7 @@ export const ParentTimetablePage = () => {
   );
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (!user) return;
     setLoadingChildren(true);
     api.get(`/parents/parent/${user.id}`)

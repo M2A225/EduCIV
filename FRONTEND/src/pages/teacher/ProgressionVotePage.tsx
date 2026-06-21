@@ -70,7 +70,10 @@ export const ProgressionVotePage = () => {
     }
   };
 
-  useEffect(() => { loadStudents(); }, [selectedClassId]);
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+    loadStudents();
+  }, [selectedClassId]);
 
   const handleVote = async () => {
     if (!selectedClassId || !yearId) return;

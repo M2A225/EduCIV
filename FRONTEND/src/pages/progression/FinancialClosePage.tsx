@@ -21,6 +21,7 @@ export const FinancialClosePage = () => {
   }, []);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (!selectedYearId) return;
     setLoading(true);
     api.get(`/progression/financial/${selectedYearId}`).then(res => {

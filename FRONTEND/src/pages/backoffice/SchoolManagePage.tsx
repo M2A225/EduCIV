@@ -20,7 +20,7 @@ import { useClasses, useCreateClass, useDeleteClass } from '../../hooks/useClass
 import { useTeachers, useCreateTeacher, useDeleteTeacher } from '../../hooks/useTeachers';
 import { useStudents } from '../../hooks/useStudents';
 import { schoolService } from '../../services/schools';
-import type { User, School, SchoolStats, Class, Teacher, Student, Subject, CreateClassDto } from '../../types';
+import type { User, School, SchoolStats, Class, Teacher, Student, CreateClassDto } from '../../types';
 import {
   Users, School as SchoolIcon, CreditCard, Activity, AlertTriangle,
   ArrowLeft, UserPlus, BookOpen, ClipboardList, Settings,
@@ -38,6 +38,7 @@ export const SchoolManagePage = () => {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
 
   useEffect(() => {
+    /* eslint-disable react-hooks/exhaustive-deps */
     if (schoolId) setCurrentSchoolId(schoolId);
     return () => {
       if (originalSchoolId) setCurrentSchoolId(originalSchoolId);

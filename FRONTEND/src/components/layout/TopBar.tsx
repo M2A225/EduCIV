@@ -44,7 +44,7 @@ const themeLabels: Record<string, string> = {
 
 export function TopBar({ onToggleSidebar, collapsed }: TopBarProps) {
   const { user, activeRole, logout } = useAuth();
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const location = useLocation();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);

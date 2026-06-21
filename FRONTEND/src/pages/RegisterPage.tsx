@@ -43,7 +43,7 @@ export const RegisterPage = () => {
   const { login } = useAuth();
   const [step, setStep] = useState<1 | 2>(1);
   const [code, setCode] = useState('');
-  const [_invitationData, setInvitationData] = useState<InvitationData | null>(null);
+  const [, setInvitationData] = useState<InvitationData | null>(null);
   const [verifyError, setVerifyError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

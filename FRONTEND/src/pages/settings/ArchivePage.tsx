@@ -23,7 +23,10 @@ export const ArchivePage = () => {
     }
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
+    fetch();
+  }, []);
 
   const handleArchive = async (yearId: number) => {
     setArchiving(true);

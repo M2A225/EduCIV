@@ -31,28 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
   const [initialising, setInitialising] = useState(true);
 
-  useEffect(() => {
-    setOnTokenRefreshed((newToken, userData) => {
-      applyToken(newToken, userData);
-    });
-    const restore = async () => {
-      try {
-        const res = await authService.refresh();
-        const newToken = res.data.data.accessToken;
-        const userData = res.data.data.user;
-        applyToken(newToken, userData);
-      } catch {
-        setToken(null);
-        setAccessToken(null);
-      } finally {
-        setInitialising(false);
-      }
-    };
-    restore();
-    return () => { setOnTokenRefreshed(null); };
-  }, []);
-
-  const applyToken = (newToken: string, userData?: Record<string, unknown>) => {
+  const applyToken = useCallback((newToken: string, userData?: Record<string, unknown>) => {
     setAccessToken(newToken);
     setToken(newToken);
     if (userData) {
@@ -77,7 +56,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (fallback) localStorage.setItem(SCHOOL_KEY, String(fallback));
       }
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    setOnTokenRefreshed((newToken, userData) => {
+      applyToken(newToken, userData);
+    });
+    const restore = async () => {
+      try {
+        const res = await authService.refresh();
+        const newToken = res.data.data.accessToken;
+        const userData = res.data.data.user;
+        applyToken(newToken, userData);
+      } catch {
+        setToken(null);
+        setAccessToken(null);
+      } finally {
+        setInitialising(false);
+      }
+    };
+    restore();
+    return () => { setOnTokenRefreshed(null); };
+  }, [applyToken]);
 
   const login = (accessToken: string, userData?: Record<string, unknown>) => {
     applyToken(accessToken, userData);
@@ -101,6 +101,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const switchRole = useCallback(async (role: UserRole) => {
+    /* eslint-disable react-hooks/exhaustive-deps */
     const res = await authService.switchRole(role);
     const newToken = res.data.data.accessToken;
     const userData = res.data.data.user;
@@ -118,4 +119,5 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);

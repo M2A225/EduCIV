@@ -127,7 +127,6 @@ export const FilieresPage = () => {
           {Object.entries(GROUPE_SCOLAIRE_FILIERES).map(([catKey, catFilieres]) => {
             const cat = FILIERE_CATEGORIES[catKey];
             const allEnabled = catFilieres.every(f => enabledFilieres.includes(f));
-            const someEnabled = catFilieres.some(f => enabledFilieres.includes(f));
 
             return (
               <Card key={catKey}>

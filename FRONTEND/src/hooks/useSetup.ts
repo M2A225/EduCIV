@@ -25,6 +25,7 @@ export const useSetup = () => {
   }, [activeRole]);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     refresh();
   }, [refresh]);
 

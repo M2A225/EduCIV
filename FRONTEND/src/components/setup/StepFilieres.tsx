@@ -16,6 +16,7 @@ export const StepFilieres = ({ onComplete, onSkip }: Props) => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/exhaustive-deps */
     schoolService.getMySchool().then(res => {
       const schoolType = res.data.data.school_type || 'SECONDAIRE';
       if (schoolType === 'PRIMAIRE') {

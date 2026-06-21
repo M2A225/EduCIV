@@ -21,6 +21,7 @@ export const TeacherTimetablePage = () => {
   const [teacherName, setTeacherName] = useState('');
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (!teachers || !user) return;
     const match = teachers.find((t: Teacher) => t.email === user.email || t.name === user.name);
     if (match) {

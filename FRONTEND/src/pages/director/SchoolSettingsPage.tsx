@@ -38,7 +38,7 @@ export const SchoolSettingsPage = () => {
             school_type: school.school_type || '',
           });
         }
-      } catch (err) {
+      } catch {
         toast.error('Impossible de charger les informations de l\'école');
       }
     };
@@ -51,7 +51,7 @@ export const SchoolSettingsPage = () => {
       await api.patch('/schools/me', formData);
       setIsEditing(false);
       toast.success('Informations mises à jour avec succès');
-    } catch (err) {
+    } catch {
       toast.error('Échec de la sauvegarde des informations');
     } finally {
       setLoading(false);

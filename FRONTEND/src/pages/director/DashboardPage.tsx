@@ -9,7 +9,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { AddStudentModal } from '../../components/director/AddStudentModal';
 import {
   Users, School, CreditCard, Activity, AlertTriangle,
-  PlusCircle, FileText, TrendingUp, UserPlus, ArrowUpRight,
+  FileText, TrendingUp, UserPlus, ArrowUpRight,
 } from 'lucide-react';
 
 const statConfig = [

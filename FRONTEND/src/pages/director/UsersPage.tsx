@@ -11,13 +11,11 @@ import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { useUsers, useDeleteUser } from '../../hooks/useUsers';
 import type { User } from '../../types';
 import { Trash2, PlusCircle } from 'lucide-react';
-import { useAuth } from '../../hooks/useAuth';
 
 
 export const UsersPage = () => {
   const { data, isLoading } = useUsers();
   const deleteUser = useDeleteUser();
-  const { currentSchoolId: _currentSchoolId } = useAuth();
   const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);

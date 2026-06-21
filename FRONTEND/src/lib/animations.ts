@@ -1,10 +1,5 @@
 import { Variants, Transition } from 'framer-motion';
 
-const defaultTransition: Transition = {
-  duration: 0.25,
-  ease: [0.4, 0, 0.2, 1],
-};
-
 const springTransition: Transition = {
   type: 'spring',
   stiffness: 260,

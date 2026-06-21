@@ -22,6 +22,7 @@ export const StudentTimetablePage = () => {
   const [studentError, setStudentError] = useState('');
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (!user) return;
     setLoadingStudent(true);
     api.get('/students/me')

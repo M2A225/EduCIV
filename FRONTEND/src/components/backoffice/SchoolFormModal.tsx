@@ -6,7 +6,7 @@ import { Select } from '../ui/Select';
 import { Card } from '../ui/Card';
 import { api } from '../../services/api';
 import { useCreateSchool, useUpdateSchool } from '../../hooks/useSchools';
-import type { School, SchoolGroup } from '../../types';
+import type { School, SchoolGroup, ApiResponse } from '../../types';
 
 interface SchoolFormModalProps {
   onClose: () => void;
@@ -26,12 +26,13 @@ export const SchoolFormModal = ({ onClose, school }: SchoolFormModalProps) => {
 
   useEffect(() => {
     api.get('/school-groups').then(r => {
-      const data = (r.data as any)?.data ?? r.data;
+      const data = (r.data as ApiResponse<SchoolGroup[]>)?.data ?? r.data;
       setGroups(data ?? []);
     });
   }, []);
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (school) {
       setForm({
         name: school.name || '',

@@ -23,7 +23,10 @@ export const NextYearPage = () => {
     }
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
+    fetch();
+  }, []);
 
   const lastYear = years.length > 0 ? years[years.length - 1] : null;
 

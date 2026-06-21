@@ -42,7 +42,7 @@ interface GridData {
 export const NotesPage = () => {
   const { data: classes, isLoading: classesLoading } = useClasses();
   const { data: periods, isLoading: periodsLoading } = usePeriods();
-  const { data: pendingGrades, isLoading: pendingLoading, refetch: _refetchPending } = usePendingNotes();
+  const { data: pendingGrades, isLoading: pendingLoading } = usePendingNotes();
   const validateNote = useValidateNote();
   const rejectNote = useRejectNote();
 

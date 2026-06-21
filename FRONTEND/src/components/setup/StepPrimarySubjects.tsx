@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { subjectService } from '../../services/subjects';
@@ -21,26 +21,26 @@ const GROUP_LABELS: Record<string, string> = {
   'CM1-CM2': 'CM1 – CM2',
 };
 
-export const StepPrimarySubjects = ({ onComplete }: Props) => {
-  const [subjects, setSubjects] = useState<Record<string, SubjectItem[]>>({});
-  const [saving, setSaving] = useState(false);
+function buildInitialSubjects(): Record<string, SubjectItem[]> {
+  const init: Record<string, SubjectItem[]> = {};
+  for (const [group, items] of Object.entries(MATIERES_PRIMAIRE)) {
+    init[group] = items.map(m => ({ ...m, level_group: group }));
+  }
+  init['CP1-CP2'].push(
+    ...OPTIONNELLES_PRIMAIRE.map(name => ({ name, max_score: 0, level_group: 'CP1-CP2', is_optionnel: true }))
+  );
+  init['CE1-CE2'].push(
+    ...OPTIONNELLES_PRIMAIRE.map(name => ({ name, max_score: 0, level_group: 'CE1-CE2', is_optionnel: true }))
+  );
+  init['CM1-CM2'].push(
+    ...OPTIONNELLES_PRIMAIRE.map(name => ({ name, max_score: 0, level_group: 'CM1-CM2', is_optionnel: true }))
+  );
+  return init;
+}
 
-  useEffect(() => {
-    const init: Record<string, SubjectItem[]> = {};
-    for (const [group, items] of Object.entries(MATIERES_PRIMAIRE)) {
-      init[group] = items.map(m => ({ ...m, level_group: group }));
-    }
-    init['CP1-CP2'].push(
-      ...OPTIONNELLES_PRIMAIRE.map(name => ({ name, max_score: 0, level_group: 'CP1-CP2', is_optionnel: true }))
-    );
-    init['CE1-CE2'].push(
-      ...OPTIONNELLES_PRIMAIRE.map(name => ({ name, max_score: 0, level_group: 'CE1-CE2', is_optionnel: true }))
-    );
-    init['CM1-CM2'].push(
-      ...OPTIONNELLES_PRIMAIRE.map(name => ({ name, max_score: 0, level_group: 'CM1-CM2', is_optionnel: true }))
-    );
-    setSubjects(init);
-  }, []);
+export const StepPrimarySubjects = ({ onComplete }: Props) => {
+  const [subjects, setSubjects] = useState<Record<string, SubjectItem[]>>(buildInitialSubjects);
+  const [saving, setSaving] = useState(false);
 
   const update = (group: string, index: number, field: 'name' | 'max_score', value: string | number) => {
     setSubjects(prev => ({

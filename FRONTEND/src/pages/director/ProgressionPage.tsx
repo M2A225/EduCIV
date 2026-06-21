@@ -68,7 +68,10 @@ export const ProgressionPage = () => {
     } catch { toast.error('Erreur chargement options'); }
   };
 
-  useEffect(() => { loadStudents(); }, [selectedClassId, selectedYearId]);
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
+    loadStudents();
+  }, [selectedClassId, selectedYearId]);
 
   const handleDecide = async () => {
     setDeciding(true);

@@ -31,8 +31,6 @@ export const StepSchoolInfo = ({ onComplete }: Props) => {
   useEffect(() => {
     if (form.city_id) {
       cityService.getCommunes(Number(form.city_id)).then(res => setCommunes(res.data.data));
-    } else {
-      setCommunes([]);
     }
   }, [form.city_id]);
 

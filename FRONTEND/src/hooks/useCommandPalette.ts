@@ -31,6 +31,18 @@ export function useCommandPalette() {
     );
   }, [items, query]);
 
+  const close = useCallback(() => {
+    setIsOpen(false);
+    setQuery('');
+    setSelectedIndex(0);
+  }, []);
+
+  const open = useCallback(() => {
+    setIsOpen(true);
+    setQuery('');
+    setSelectedIndex(0);
+  }, []);
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!isOpen) return;
 
@@ -52,19 +64,7 @@ export function useCommandPalette() {
         close();
         break;
     }
-  }, [isOpen, filteredItems, selectedIndex]);
-
-  const open = useCallback(() => {
-    setIsOpen(true);
-    setQuery('');
-    setSelectedIndex(0);
-  }, []);
-
-  const close = useCallback(() => {
-    setIsOpen(false);
-    setQuery('');
-    setSelectedIndex(0);
-  }, []);
+  }, [isOpen, filteredItems, selectedIndex, close]);
 
   const toggle = useCallback(() => {
     if (isOpen) close();

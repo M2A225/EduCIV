@@ -58,11 +58,16 @@ export function Sidebar({ collapsed, onToggleCollapse, onLogout }: SidebarProps)
     PREFETCH_MAP[path]?.(queryClient);
   }, [queryClient]);
 
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname]);
+  const mobileOpenRef = useRef(false);
+  const [, forceRender] = useState(0);
+  const setMobileOpen = useCallback((v: boolean) => { mobileOpenRef.current = v; forceRender(n => n + 1); }, []);
 
   useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname, setMobileOpen]);
+
+  useEffect(() => {
+    /* eslint-disable react-hooks/exhaustive-deps */
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && mobileOpen) {
         setMobileOpen(false);

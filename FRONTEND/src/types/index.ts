@@ -268,7 +268,17 @@ export interface NavItem {
   icon?: string;
 }
 
-export interface DirectorStats extends SchoolStats {}
+export type DirectorStats = SchoolStats;
+
+export interface AxiosError {
+  response?: {
+    data?: {
+      error?: {
+        message?: string;
+      };
+    };
+  };
+}
 
 export interface StudentParent {
   student_id: number;
