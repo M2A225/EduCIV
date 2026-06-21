@@ -3,6 +3,7 @@ import { NotesService } from './notes.service';
 import { NotesRepository } from './notes.repository';
 import { ReportCardsRepository } from './report-cards.repository';
 import { PrismaService } from '../core/prisma.service';
+import { UpdateGradeDto } from './dto/update-grade.dto';
 
 const mockNotesRepo = {
   create: jest.fn(),

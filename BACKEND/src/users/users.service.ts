@@ -82,7 +82,7 @@ export class UsersService {
     });
   }
 
-  async verifyPassword(user: any, password: string) {
+  async verifyPassword(user: { password: string }, password: string) {
     return bcrypt.compare(password, user.password);
   }
 }

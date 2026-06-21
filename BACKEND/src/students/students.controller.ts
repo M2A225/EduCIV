@@ -45,7 +45,7 @@ export class StudentsController {
   )
   async getMe(@Req() req: RequestWithUser) {
     const userId = req.user?.id;
-    const s = await this.studentsService.getByUserId(userId);
+    const s = await this.studentsService.getByUserId(userId!);
     return { success: true, data: s, error: null };
   }
 
