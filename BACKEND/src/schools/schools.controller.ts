@@ -72,7 +72,10 @@ export class SchoolsController {
   @Put('levels')
   @UseGuards(SchoolContextGuard, PermissionGuard)
   @Roles('DIRECTOR')
-  async updateLevels(@Req() req: RequestWithUser, @Body() body: { levels: string[] }) {
+  async updateLevels(
+    @Req() req: RequestWithUser,
+    @Body() body: { levels: string[] },
+  ) {
     const data = await this.schoolsService.updateLevels(
       req.user.currentSchoolId,
       body.levels,
@@ -127,7 +130,10 @@ export class SchoolsController {
   }
 
   @Get('stats')
-  async getStats(@Req() req: RequestWithUser, @Query('school_id') school_id?: string) {
+  async getStats(
+    @Req() req: RequestWithUser,
+    @Query('school_id') school_id?: string,
+  ) {
     const schoolId = school_id ? Number(school_id) : getCurrentSchoolId(req);
     const s = await this.schoolsService.getStats(schoolId);
     return { success: true, data: s, error: null };
@@ -140,7 +146,10 @@ export class SchoolsController {
   }
 
   @Patch('me')
-  async updateMySchool(@Req() req: RequestWithUser, @Body() body: UpdateSchoolDto) {
+  async updateMySchool(
+    @Req() req: RequestWithUser,
+    @Body() body: UpdateSchoolDto,
+  ) {
     const schoolId = getCurrentSchoolId(req);
     const s = await this.schoolsService.updateSchool(schoolId, body);
     return { success: true, data: s, error: null };
@@ -162,7 +171,10 @@ export class SchoolsController {
   @HttpCode(HttpStatus.CREATED)
   @Post('logo')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadLogo(@Req() req: RequestWithUser, @UploadedFile() file: Express.Multer.File) {
+  async uploadLogo(
+    @Req() req: RequestWithUser,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     const schoolId = getCurrentSchoolId(req);
     const s = await this.schoolsService.uploadSchoolLogo(schoolId, file);
     return { success: true, data: s, error: null };
@@ -181,7 +193,10 @@ export class SchoolsController {
   @Put('filieres')
   @UseGuards(SchoolContextGuard, PermissionGuard)
   @Roles('DIRECTOR')
-  async updateFilieres(@Req() req: RequestWithUser, @Body() body: { filieres: string[] }) {
+  async updateFilieres(
+    @Req() req: RequestWithUser,
+    @Body() body: { filieres: string[] },
+  ) {
     const data = await this.schoolsService.updateFilieres(
       req.user.currentSchoolId,
       body.filieres,

@@ -63,7 +63,10 @@ export class AuthController {
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @HttpCode(HttpStatus.CREATED)
   @Post('refresh')
-  async refresh(@Req() req: AuthRequest, @Res({ passthrough: true }) res: Response) {
+  async refresh(
+    @Req() req: AuthRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const token = req.cookies?.[REFRESH_COOKIE];
     if (!token) {
       throw new UnauthorizedException('Aucun token de rafraîchissement');
@@ -79,7 +82,10 @@ export class AuthController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('logout')
-  async logout(@Req() req: AuthRequest, @Res({ passthrough: true }) res: Response) {
+  async logout(
+    @Req() req: AuthRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const token = req.cookies?.[REFRESH_COOKIE];
     if (token) {
       await this.authService.logout(token);
@@ -120,7 +126,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post('link-invitation')
-  async linkInvitation(@Body() body: LinkInvitationDto, @Req() req: AuthRequest) {
+  async linkInvitation(
+    @Body() body: LinkInvitationDto,
+    @Req() req: AuthRequest,
+  ) {
     await this.authService.linkInvitation(req.user.userId, body.code);
     return { success: true, data: null, error: null };
   }
@@ -145,7 +154,8 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('switch-role')
   async switchRole(@Body() body: SwitchRoleDto, @Req() req: AuthRequest) {
-    const maybeSchoolId = req.user.primary_school_id || req.user.school_ids?.[0];
+    const maybeSchoolId =
+      req.user.primary_school_id || req.user.school_ids?.[0];
     if (maybeSchoolId == null) {
       throw new UnauthorizedException('Aucune école associée');
     }

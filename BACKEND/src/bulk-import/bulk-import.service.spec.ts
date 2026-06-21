@@ -19,10 +19,11 @@ const createMockWorksheet = () => ({
   columns: [],
 });
 
-/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 jest.mock('exceljs', () => {
   return {
-    Workbook: jest.fn().mockImplementation(function (this: Record<string, unknown>) {
+    Workbook: jest.fn().mockImplementation(function (
+      this: Record<string, unknown>,
+    ) {
       const ws = createMockWorksheet();
       this.worksheets = [ws];
       this.xlsx = {
@@ -34,7 +35,6 @@ jest.mock('exceljs', () => {
     }),
   };
 });
-/* eslint-enable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 
 jest.mock('crypto', () => ({
   randomBytes: jest.fn().mockReturnValue({
@@ -42,7 +42,6 @@ jest.mock('crypto', () => ({
   }),
 }));
 
-/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/require-await */
 describe('BulkImportService', () => {
   let service: BulkImportService;
   const prisma = mockPrismaService;
@@ -315,4 +314,3 @@ describe('BulkImportService', () => {
     });
   });
 });
-/* eslint-enable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/require-await */

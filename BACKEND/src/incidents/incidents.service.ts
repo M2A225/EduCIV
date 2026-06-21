@@ -4,12 +4,13 @@ import {
   UpdateIncidentDto,
 } from './dto/create-incident.dto';
 import { IncidentsRepository } from './incidents.repository';
+import type { Incident } from '@prisma/client';
 
 @Injectable()
 export class IncidentsService {
   constructor(private readonly incidentsRepo: IncidentsRepository) {}
 
-  async create(dto: CreateIncidentDto) {
+  async create(dto: CreateIncidentDto): Promise<Incident> {
     return this.incidentsRepo.create({
       student_id: dto.student_id,
       teacher_id: dto.teacher_id,
@@ -20,7 +21,7 @@ export class IncidentsService {
     });
   }
 
-  async list(page: number, pageSize: number) {
+  async list(page: number, pageSize: number): Promise<Incident[]> {
     return this.incidentsRepo.find({
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -28,13 +29,13 @@ export class IncidentsService {
     });
   }
 
-  async getById(id: number) {
+  async getById(id: number): Promise<Incident> {
     const incident = await this.incidentsRepo.findOne({ where: { id } });
     if (!incident) throw new NotFoundException('Incident introuvable');
     return incident;
   }
 
-  async update(id: number, dto: UpdateIncidentDto) {
+  async update(id: number, dto: UpdateIncidentDto): Promise<Incident> {
     await this.getById(id);
     return this.incidentsRepo.update(id, dto);
   }

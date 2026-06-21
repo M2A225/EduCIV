@@ -102,9 +102,9 @@ describe('ClassesService', () => {
     it('should throw NotFoundException if class not found', async () => {
       mockRepo.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.update(999, { name: 'Test' } as Record<string, unknown>),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.update(999, { name: 'Test' })).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

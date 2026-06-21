@@ -97,7 +97,15 @@ export class NotesService {
     });
 
     // Index grades by student_id + subject_id
-    const gradeMap = new Map<string, { student_id: number; subject_id: number; value: number; max_score: number | null }>();
+    const gradeMap = new Map<
+      string,
+      {
+        student_id: number;
+        subject_id: number;
+        value: number;
+        max_score: number | null;
+      }
+    >();
     for (const g of grades) {
       gradeMap.set(`${g.student_id}-${g.subject_id}`, g);
     }

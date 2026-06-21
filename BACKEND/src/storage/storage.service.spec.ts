@@ -152,7 +152,7 @@ describe('StorageService', () => {
         data: { publicUrl: 'https://public.url' },
       });
 
-      const result = await service.getPublicUrl('documents', 'test.png');
+      const result = service.getPublicUrl('documents', 'test.png');
 
       expect(result).toBe('https://public.url');
     });

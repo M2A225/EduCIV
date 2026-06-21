@@ -15,7 +15,10 @@ export class AuditRepository extends BaseRepository<PaymentAuditLog> {
     super(prisma.paymentAuditLog, request);
   }
 
-  async log(action: string, data: Record<string, unknown>): Promise<PaymentAuditLog> {
+  async log(
+    action: string,
+    data: Record<string, unknown>,
+  ): Promise<PaymentAuditLog> {
     return this.create({ action, data });
   }
 }

@@ -47,24 +47,25 @@ describe('SchoolYearsService', () => {
       const schoolYear = { id: 1, year_range: '2025-2026', school_id: 1 };
       const school = { id: 1, school_type: 'SECONDAIRE' };
 
-      // eslint-disable-next-line @typescript-eslint/require-await, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-      prisma.$transaction.mockImplementation(async (cb: (tx: Record<string, Record<string, jest.Mock>>) => unknown) => {
-        const tx = {
-          schoolYear: {
-            create: jest.fn().mockResolvedValue(schoolYear),
-            findUnique: jest
-              .fn()
-              .mockResolvedValue({ ...schoolYear, periods: [] }),
-          },
-          school: {
-            findUnique: jest.fn().mockResolvedValue(school),
-          },
-          academicPeriod: {
-            createMany: jest.fn().mockResolvedValue({ count: 3 }),
-          },
-        };
-        return cb(tx);
-      });
+      prisma.$transaction.mockImplementation(
+        (cb: (tx: Record<string, Record<string, jest.Mock>>) => unknown) => {
+          const tx = {
+            schoolYear: {
+              create: jest.fn().mockResolvedValue(schoolYear),
+              findUnique: jest
+                .fn()
+                .mockResolvedValue({ ...schoolYear, periods: [] }),
+            },
+            school: {
+              findUnique: jest.fn().mockResolvedValue(school),
+            },
+            academicPeriod: {
+              createMany: jest.fn().mockResolvedValue({ count: 3 }),
+            },
+          };
+          return cb(tx);
+        },
+      );
 
       const result = await service.create({ year_range: '2025-2026' });
 
@@ -75,9 +76,9 @@ describe('SchoolYearsService', () => {
     it('should throw BadRequestException if no schoolId', async () => {
       mockRepo.currentSchoolId = undefined;
 
-      await expect(
-        service.create({ year_range: '2025-2026' } as Record<string, unknown>),
-      ).rejects.toThrow(BadRequestException);
+      await expect(service.create({ year_range: '2025-2026' })).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 
@@ -134,9 +135,9 @@ describe('SchoolYearsService', () => {
     it('should throw NotFoundException if not found', async () => {
       mockRepo.findOne.mockResolvedValue(null);
 
-      await expect(
-        service.update(999, { year_range: 'Test' } as Record<string, unknown>),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.update(999, { year_range: 'Test' })).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

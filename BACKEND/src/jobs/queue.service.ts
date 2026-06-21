@@ -6,7 +6,11 @@ import { BULL_QUEUE } from './queue.module';
 export class QueueService {
   constructor(@Inject(BULL_QUEUE) private readonly queue: Queue) {}
 
-  add(name: string, data: Record<string, unknown>, opts?: Record<string, unknown>) {
+  add(
+    name: string,
+    data: Record<string, unknown>,
+    opts?: Record<string, unknown>,
+  ) {
     return this.queue.add(name, data, opts);
   }
 

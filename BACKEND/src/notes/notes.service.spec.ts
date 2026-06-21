@@ -3,7 +3,6 @@ import { NotesService } from './notes.service';
 import { NotesRepository } from './notes.repository';
 import { ReportCardsRepository } from './report-cards.repository';
 import { PrismaService } from '../core/prisma.service';
-import { UpdateGradeDto } from './dto/update-grade.dto';
 
 const mockNotesRepo = {
   create: jest.fn(),
@@ -28,7 +27,7 @@ const mockPrisma = {
   grade: { findMany: jest.fn(), findUnique: jest.fn(), updateMany: jest.fn() },
   class: { findUnique: jest.fn() },
   reportCard: { findUnique: jest.fn() },
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+
   $transaction: jest.fn((cb: any) => {
     const tx = {
       grade: {
@@ -38,6 +37,7 @@ const mockPrisma = {
       },
       reportCard: { update: jest.fn(), create: jest.fn() },
     };
+
     return cb(tx);
   }),
 };
@@ -89,9 +89,9 @@ describe('NotesService', () => {
 
     it('should throw NotFoundException for missing grade', async () => {
       mockNotesRepo.findOne.mockResolvedValue(null);
-      await expect(service.updateGrade(999, {} as UpdateGradeDto)).rejects.toThrow(
-        'Note introuvable',
-      );
+      await expect(
+        service.updateGrade(999, {} as UpdateGradeDto),
+      ).rejects.toThrow('Note introuvable');
     });
   });
 

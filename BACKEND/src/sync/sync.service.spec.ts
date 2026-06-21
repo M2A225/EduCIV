@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SyncService } from './sync.service';
 import { PrismaService } from '../core/prisma.service';
 
-/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return */
 const createMockModel = () => ({
   findUnique: jest.fn(),
   findFirst: jest.fn(),
@@ -27,9 +26,8 @@ const mockPrisma = {
   syncOperation: createMockModel(),
   subject: createMockModel(),
   class: createMockModel(),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+
   $transaction: jest.fn((cb: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const tx: Record<string, Record<string, jest.Mock>> = {
       student: {
         create: jest.fn().mockResolvedValue({ id: 1 }),
@@ -231,4 +229,3 @@ describe('SyncService', () => {
     });
   });
 });
-/* eslint-enable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-return */

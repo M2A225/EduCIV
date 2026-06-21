@@ -22,7 +22,10 @@ export class SyncController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('push')
-  async sync(@Body() body: { operations: SyncOperationInput[] }, @Req() req: RequestWithUser) {
+  async sync(
+    @Body() body: { operations: SyncOperationInput[] },
+    @Req() req: RequestWithUser,
+  ) {
     const schoolId = getCurrentSchoolId(req);
     return {
       success: true,

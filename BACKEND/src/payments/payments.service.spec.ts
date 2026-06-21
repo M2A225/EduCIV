@@ -28,9 +28,15 @@ describe('PaymentsService', () => {
   };
 
   const mockPrismaService = {
-    $transaction: jest.fn().mockImplementation(
-      (cb: (tx: Record<string, Record<string, jest.Mock>>) => Promise<unknown>) => cb(mockTx),
-    ),
+    $transaction: jest
+      .fn()
+      .mockImplementation(
+        (
+          cb: (
+            tx: Record<string, Record<string, jest.Mock>>,
+          ) => Promise<unknown>,
+        ) => cb(mockTx),
+      ),
   };
 
   beforeEach(async () => {

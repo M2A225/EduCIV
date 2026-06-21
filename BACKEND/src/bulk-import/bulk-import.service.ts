@@ -45,7 +45,14 @@ interface ParentRow {
 function safeToString(value: unknown): string {
   if (value === null || value === undefined) return '';
   if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    typeof value === 'bigint'
+  )
+    return String(value);
+  return '';
 }
 
 @Injectable()
@@ -164,7 +171,9 @@ export class BulkImportService {
   ): Promise<ImportResult> {
     const result: ImportResult = { imported: 0, errors: [], invitations: [] };
     const wb = new ExcelJS.Workbook();
-    await (wb.xlsx.load as unknown as (data: Uint8Array) => Promise<void>)(fileBuffer);
+    await (wb.xlsx.load as unknown as (data: Uint8Array) => Promise<void>)(
+      fileBuffer,
+    );
     const ws = wb.worksheets[0];
 
     if (!ws) {
@@ -175,7 +184,9 @@ export class BulkImportService {
     ws.eachRow((row: ExcelJS.Row, rowNumber: number) => {
       if (rowNumber === 1) return;
       const raw = row.values;
-      const values = Array.isArray(raw) ? (raw as (string | number | null | undefined)[]) : [];
+      const values = Array.isArray(raw)
+        ? (raw as (string | number | null | undefined)[])
+        : [];
       const nom = safeToString(values[1]).trim();
       if (!nom) return;
       rows.push({
@@ -298,7 +309,7 @@ export class BulkImportService {
                 data: {
                   phone: row.tel_parent,
                   password: tempPassword,
-                  name: row.nom_parent!,
+                  name: row.nom_parent,
                   role: 'PARENT',
                 },
               });
@@ -371,7 +382,9 @@ export class BulkImportService {
   ): Promise<ImportResult> {
     const result: ImportResult = { imported: 0, errors: [], invitations: [] };
     const wb = new ExcelJS.Workbook();
-    await (wb.xlsx.load as unknown as (data: Uint8Array) => Promise<void>)(fileBuffer);
+    await (wb.xlsx.load as unknown as (data: Uint8Array) => Promise<void>)(
+      fileBuffer,
+    );
     const ws = wb.worksheets[0];
 
     if (!ws) throw new BadRequestException('Fichier Excel vide');
@@ -380,7 +393,9 @@ export class BulkImportService {
     ws.eachRow((row: ExcelJS.Row, rowNumber: number) => {
       if (rowNumber === 1) return;
       const raw = row.values;
-      const values = Array.isArray(raw) ? (raw as (string | number | null | undefined)[]) : [];
+      const values = Array.isArray(raw)
+        ? (raw as (string | number | null | undefined)[])
+        : [];
       const nom = safeToString(values[1]).trim();
       if (!nom) return;
       rows.push({
@@ -510,7 +525,9 @@ export class BulkImportService {
   ): Promise<ImportResult> {
     const result: ImportResult = { imported: 0, errors: [], invitations: [] };
     const wb = new ExcelJS.Workbook();
-    await (wb.xlsx.load as unknown as (data: Uint8Array) => Promise<void>)(fileBuffer);
+    await (wb.xlsx.load as unknown as (data: Uint8Array) => Promise<void>)(
+      fileBuffer,
+    );
     const ws = wb.worksheets[0];
 
     if (!ws) throw new BadRequestException('Fichier Excel vide');
@@ -519,7 +536,9 @@ export class BulkImportService {
     ws.eachRow((row: ExcelJS.Row, rowNumber: number) => {
       if (rowNumber === 1) return;
       const raw = row.values;
-      const values = Array.isArray(raw) ? (raw as (string | number | null | undefined)[]) : [];
+      const values = Array.isArray(raw)
+        ? (raw as (string | number | null | undefined)[])
+        : [];
       const nom = safeToString(values[1]).trim();
       if (!nom) return;
       rows.push({

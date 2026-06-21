@@ -385,7 +385,9 @@ export class BulletinService {
     const blob = await pdfDoc.getBlob();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const arrayBuffer = await blob.arrayBuffer();
-    const pdfBuffer: Buffer<ArrayBufferLike> = Buffer.from(arrayBuffer as ArrayBuffer);
+    const pdfBuffer: Buffer<ArrayBufferLike> = Buffer.from(
+      arrayBuffer as ArrayBuffer,
+    );
 
     const path = `bulletins/${student.school.school_id}/${period.name}/${period.id}/student_${student.id}.pdf`;
     await this.storage.uploadFile(
@@ -398,7 +400,9 @@ export class BulletinService {
     return await this.storage.getSignedUrl('documents', path);
   }
 
-  private groupGradesBySubject(grades: (GradeWithSubject & { subject: Subject })[]) {
+  private groupGradesBySubject(
+    grades: (GradeWithSubject & { subject: Subject })[],
+  ) {
     const subjects = new Map<
       number,
       { name: string; coef: number; sum: number; count: number }

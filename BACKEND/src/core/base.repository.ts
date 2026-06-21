@@ -46,7 +46,7 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
   find(args: any = {}): Promise<T[]> {
     this.ensureSchoolId();
     return this.model.findMany({
@@ -58,12 +58,10 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     }) as Promise<T[]>;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   findMany(args: any = {}): Promise<T[]> {
     return this.find(args);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   findOne(args: any): Promise<T | null> {
     this.ensureSchoolId();
     return this.model.findFirst({
@@ -75,7 +73,6 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     }) as Promise<T | null>;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   create(data: any): Promise<T> {
     this.ensureSchoolId();
     return this.model.create({
@@ -86,7 +83,6 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     }) as Promise<T>;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async update(id: any, data: any): Promise<T> {
     this.ensureSchoolId();
     const item = await this.findOne({ where: { id } });
@@ -108,7 +104,6 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   count(args: any = {}): Promise<number> {
     this.ensureSchoolId();
     return this.model.count({
@@ -119,4 +114,5 @@ export abstract class BaseRepository<T extends MultiTenantEntity> {
       },
     }) as Promise<number>;
   }
+  /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 }

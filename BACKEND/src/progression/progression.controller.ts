@@ -108,7 +108,10 @@ export class ProgressionController {
 
   @Get('options/:classId')
   @Roles('DIRECTOR', 'TEACHER')
-  async getOptions(@Param('classId') classId: string, @Req() req: RequestWithUser) {
+  async getOptions(
+    @Param('classId') classId: string,
+    @Req() req: RequestWithUser,
+  ) {
     const data = await this.progressionService.getProgressionOptions(
       Number(classId),
       req.user.currentSchoolId,
@@ -119,7 +122,10 @@ export class ProgressionController {
   @HttpCode(HttpStatus.CREATED)
   @Post('archive/:schoolYearId')
   @Roles('DIRECTOR')
-  async archive(@Param('schoolYearId') schoolYearId: string, @Req() req: RequestWithUser) {
+  async archive(
+    @Param('schoolYearId') schoolYearId: string,
+    @Req() req: RequestWithUser,
+  ) {
     const data = await this.progressionService.archiveYear(
       Number(schoolYearId),
       req.user.currentSchoolId,
@@ -130,7 +136,10 @@ export class ProgressionController {
 
   @Get('stats/:schoolYearId')
   @Roles('DIRECTOR')
-  async stats(@Param('schoolYearId') schoolYearId: string, @Req() req: RequestWithUser) {
+  async stats(
+    @Param('schoolYearId') schoolYearId: string,
+    @Req() req: RequestWithUser,
+  ) {
     const data = await this.progressionService.getYearStats(
       Number(schoolYearId),
       req.user.currentSchoolId,

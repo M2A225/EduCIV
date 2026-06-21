@@ -20,7 +20,10 @@ export class InvitationsController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('generate')
-  async generate(@Body() body: GenerateInvitationDto, @Req() req: RequestWithUser) {
+  async generate(
+    @Body() body: GenerateInvitationDto,
+    @Req() req: RequestWithUser,
+  ) {
     const code = await this.invitationsService.generateParentCode(
       body.student_ids,
       req.user.currentSchoolId,

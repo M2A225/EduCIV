@@ -24,7 +24,7 @@ const mockAuthService = {
 const mockRes = (): jest.Mocked<Partial<Response>> => ({
   cookie: jest.fn(),
   clearCookie: jest.fn(),
-}) as unknown as jest.Mocked<Partial<Response>>;
+});
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -49,7 +49,10 @@ describe('AuthController', () => {
         { identifier: 'user@test.com', password: 'pass' },
         res as unknown as Response,
       );
-      expect(mockAuthService.login).toHaveBeenCalledWith('user@test.com', 'pass');
+      expect(mockAuthService.login).toHaveBeenCalledWith(
+        'user@test.com',
+        'pass',
+      );
       expect(res.cookie).toHaveBeenCalled();
       expect(result.data.accessToken).toBe('a');
     });
@@ -72,7 +75,10 @@ describe('AuthController', () => {
       const req = { cookies: {} };
       const res = mockRes();
       await expect(
-        controller.refresh(req as unknown as AuthRequest, res as unknown as Response),
+        controller.refresh(
+          req as unknown as AuthRequest,
+          res as unknown as Response,
+        ),
       ).rejects.toThrow('Aucun token de rafraîchissement');
     });
   });
@@ -124,7 +130,10 @@ describe('AuthController', () => {
         { code: 'invite456' },
         req as unknown as AuthRequest,
       );
-      expect(mockAuthService.linkInvitation).toHaveBeenCalledWith(42, 'invite456');
+      expect(mockAuthService.linkInvitation).toHaveBeenCalledWith(
+        42,
+        'invite456',
+      );
       expect(result.data).toBeNull();
     });
   });

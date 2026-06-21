@@ -38,7 +38,12 @@ describe('SyncController', () => {
 
   it('should push operations via sync', async () => {
     const req = {
-      user: { userId: 1, role: 'DIRECTOR', school_ids: [1], primary_school_id: 1 },
+      user: {
+        userId: 1,
+        role: 'DIRECTOR',
+        school_ids: [1],
+        primary_school_id: 1,
+      },
       headers: {},
       params: {},
       query: {},
@@ -56,7 +61,12 @@ describe('SyncController', () => {
 
   it('should pull data', async () => {
     const req = {
-      user: { userId: 1, role: 'DIRECTOR', school_ids: [1], primary_school_id: 1 },
+      user: {
+        userId: 1,
+        role: 'DIRECTOR',
+        school_ids: [1],
+        primary_school_id: 1,
+      },
       headers: {},
       params: {},
       query: {},

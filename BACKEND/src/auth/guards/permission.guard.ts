@@ -42,10 +42,9 @@ export class PermissionGuard implements CanActivate {
       return true;
     }
 
-    const scopeSchoolMeta = this.reflector.getAllAndOverride<{ source: string; key?: string } | undefined>(
-      SCOPE_SCHOOL_KEY,
-      [context.getHandler(), context.getClass()],
-    );
+    const scopeSchoolMeta = this.reflector.getAllAndOverride<
+      { source: string; key?: string } | undefined
+    >(SCOPE_SCHOOL_KEY, [context.getHandler(), context.getClass()]);
 
     let targetSchoolId: number | null = null;
 

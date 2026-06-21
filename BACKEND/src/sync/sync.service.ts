@@ -10,15 +10,42 @@ export interface SyncOperationInput {
 }
 
 interface SyncTx {
-  student: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
-  grade: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
-  payment: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
-  attendance: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
-  incident: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
-  teacher: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
-  class: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
-  subject: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
-  timetable: { create(args: unknown): Promise<unknown>; update(args: unknown): Promise<unknown> };
+  student: {
+    create(args: unknown): Promise<unknown>;
+    update(args: unknown): Promise<unknown>;
+  };
+  grade: {
+    create(args: unknown): Promise<unknown>;
+    update(args: unknown): Promise<unknown>;
+  };
+  payment: {
+    create(args: unknown): Promise<unknown>;
+    update(args: unknown): Promise<unknown>;
+  };
+  attendance: {
+    create(args: unknown): Promise<unknown>;
+    update(args: unknown): Promise<unknown>;
+  };
+  incident: {
+    create(args: unknown): Promise<unknown>;
+    update(args: unknown): Promise<unknown>;
+  };
+  teacher: {
+    create(args: unknown): Promise<unknown>;
+    update(args: unknown): Promise<unknown>;
+  };
+  class: {
+    create(args: unknown): Promise<unknown>;
+    update(args: unknown): Promise<unknown>;
+  };
+  subject: {
+    create(args: unknown): Promise<unknown>;
+    update(args: unknown): Promise<unknown>;
+  };
+  timetable: {
+    create(args: unknown): Promise<unknown>;
+    update(args: unknown): Promise<unknown>;
+  };
   syncOperation: { createMany(args: unknown): Promise<unknown> };
 }
 
@@ -29,7 +56,13 @@ export class SyncService {
 
   async processOperations(schoolId: number, operations: SyncOperationInput[]) {
     const results: { id: string; status: string }[] = [];
-    const opsToCreate: { client_operation_id: string; entity: string; entity_id: string; payload: string; school_id: number }[] = [];
+    const opsToCreate: {
+      client_operation_id: string;
+      entity: string;
+      entity_id: string;
+      payload: string;
+      school_id: number;
+    }[] = [];
 
     const clientIds = operations.map((o) => o.client_operation_id);
     const existingOps = await this.prisma.syncOperation.findMany({
@@ -46,7 +79,7 @@ export class SyncService {
         }
 
         try {
-          await this.applyOperation(tx as unknown as SyncTx, op, schoolId);
+          await this.applyOperation(tx, op, schoolId);
           opsToCreate.push({
             client_operation_id: op.client_operation_id,
             entity: op.entity,
@@ -105,7 +138,11 @@ export class SyncService {
     };
   }
 
-  private async applyOperation(tx: SyncTx, op: SyncOperationInput, schoolId: number) {
+  private async applyOperation(
+    tx: SyncTx,
+    op: SyncOperationInput,
+    schoolId: number,
+  ) {
     const data = { ...op.payload, school_id: Number(schoolId) };
 
     switch (op.entity) {

@@ -83,7 +83,6 @@ export class UsersService {
   }
 
   async verifyPassword(user: { password: string }, password: string) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return bcrypt.compare(password, (user as Record<string, string>).password);
   }
 }

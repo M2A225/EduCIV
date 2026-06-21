@@ -70,7 +70,10 @@ describe('AttendanceService', () => {
     it('should return existing session if already created', async () => {
       mockTimetableRepo.findOne.mockResolvedValue({ id: 3, teacher_id: 10 });
       mockSessionRepo.findOne.mockResolvedValue({ id: 5, ...dto });
-      const result = await service.createSession(dto) as Record<string, unknown>;
+      const result = (await service.createSession(dto)) as Record<
+        string,
+        unknown
+      >;
       expect(result).toEqual({ id: 5, ...dto });
       expect(mockSessionRepo.create).not.toHaveBeenCalled();
     });
@@ -83,7 +86,10 @@ describe('AttendanceService', () => {
         ...dto,
         teacher_id: 10,
       });
-      const result = await service.createSession(dto) as Record<string, unknown>;
+      const result = (await service.createSession(dto)) as Record<
+        string,
+        unknown
+      >;
       expect(mockSessionRepo.create).toHaveBeenCalledWith({
         ...dto,
         teacher_id: 10,
@@ -114,7 +120,10 @@ describe('AttendanceService', () => {
         version: 1,
       });
 
-      const result = await service.markAttendance(sessionId, dto) as Record<string, unknown> | null;
+      const result = (await service.markAttendance(sessionId, dto)) as Record<
+        string,
+        unknown
+      > | null;
       expect(mockAttendanceRepo.create).toHaveBeenCalledWith({
         student_id: 10,
         status: 'PRESENT',
@@ -138,7 +147,10 @@ describe('AttendanceService', () => {
         .mockResolvedValueOnce({ ...existing, status: 'PRESENT', version: 2 });
       mockPrisma.attendance.updateMany.mockResolvedValue({ count: 1 });
 
-      const result = await service.markAttendance(sessionId, dto) as Record<string, unknown> | null;
+      const result = (await service.markAttendance(sessionId, dto)) as Record<
+        string,
+        unknown
+      > | null;
       expect(mockPrisma.attendance.updateMany).toHaveBeenCalledWith({
         where: { id: 5, version: 1 },
         data: { status: 'PRESENT', version: 2 },
@@ -167,7 +179,7 @@ describe('AttendanceService', () => {
   describe('getSession', () => {
     it('should return session by id', async () => {
       mockSessionRepo.findOne.mockResolvedValue({ id: 1, class_id: 1 });
-      const result = await service.getSession(1) as Record<string, unknown>;
+      const result = (await service.getSession(1)) as Record<string, unknown>;
       expect(result).toEqual({ id: 1, class_id: 1 });
     });
   });
@@ -175,10 +187,12 @@ describe('AttendanceService', () => {
   describe('getAttendancesForSession', () => {
     it('should return attendances', async () => {
       mockAttendanceRepo.find.mockResolvedValue([{ id: 1, status: 'PRESENT' }]);
-      const result = await service.getAttendancesForSession(1) as Array<Record<string, unknown>>;
+      const result = (await service.getAttendancesForSession(1)) as Array<
+        Record<string, unknown>
+      >;
       expect(mockAttendanceRepo.find).toHaveBeenCalledWith({
         where: { session_id: 1 },
-      } as Record<string, unknown>);
+      });
       expect(result).toHaveLength(1);
     });
   });
