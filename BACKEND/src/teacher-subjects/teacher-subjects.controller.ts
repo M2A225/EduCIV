@@ -15,7 +15,7 @@ import { CreateTeacherSubjectDto } from './dto/create-teacher-subject.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { RequestWithUser } from '../auth/types';
+import type { RequestWithUser } from '../auth/types';
 
 @Controller('teacher-subjects')
 @UseGuards(JwtAuthGuard, PermissionGuard)

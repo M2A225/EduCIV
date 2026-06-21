@@ -17,7 +17,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SchoolContextGuard } from '../auth/guards/school-context.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { RequestWithUser } from '../auth/types';
+import type { RequestWithUser } from '../auth/types';
 import { DecisionVote, DecisionFinale } from '@prisma/client';
 
 @Controller('progression')
@@ -35,7 +35,7 @@ export class ProgressionController {
     const data = await this.progressionService.getClassStudents(
       Number(classId),
       Number(yearId),
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     return { success: true, data, error: null };
   }
@@ -50,7 +50,7 @@ export class ProgressionController {
     const data = await this.progressionService.getClassVotes(
       Number(classId),
       Number(yearId),
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     return { success: true, data, error: null };
   }
@@ -60,17 +60,17 @@ export class ProgressionController {
   @Roles('TEACHER')
   async vote(@Body() body: VoteDto, @Req() req: RequestWithUser) {
     const yearId = await this.progressionService.getCurrentYearId(
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     const classId = await this.progressionService.getStudentClass(
       body.student_id,
     );
     const data = await this.progressionService.vote(
       body.student_id,
-      req.user.userId,
+      req.user!.userId,
       classId!,
       yearId,
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
       body.decision as DecisionVote,
       body.comment,
     );
@@ -82,12 +82,12 @@ export class ProgressionController {
   @Roles('DIRECTOR')
   async decide(@Body() body: DecideDto, @Req() req: RequestWithUser) {
     const yearId = await this.progressionService.getCurrentYearId(
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     const data = await this.progressionService.decide(
       body.student_id,
       yearId,
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
       body.final_decision as DecisionFinale,
       body.next_class_id,
       body.comment,
@@ -101,7 +101,7 @@ export class ProgressionController {
   async apply(@Body() body: ApplyDto, @Req() req: RequestWithUser) {
     const data = await this.progressionService.apply(
       body.school_year_id,
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     return { success: true, data, error: null };
   }
@@ -114,7 +114,7 @@ export class ProgressionController {
   ) {
     const data = await this.progressionService.getProgressionOptions(
       Number(classId),
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     return { success: true, data, error: null };
   }
@@ -128,8 +128,8 @@ export class ProgressionController {
   ) {
     const data = await this.progressionService.archiveYear(
       Number(schoolYearId),
-      req.user.currentSchoolId,
-      req.user.userId,
+      req.user!.currentSchoolId!,
+      req.user!.userId,
     );
     return { success: true, data, error: null };
   }
@@ -142,7 +142,7 @@ export class ProgressionController {
   ) {
     const data = await this.progressionService.getYearStats(
       Number(schoolYearId),
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     return { success: true, data, error: null };
   }
@@ -155,7 +155,7 @@ export class ProgressionController {
   ) {
     const data = await this.progressionService.getFinancialClose(
       Number(schoolYearId),
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     return { success: true, data, error: null };
   }
@@ -165,7 +165,7 @@ export class ProgressionController {
   @Roles('DIRECTOR')
   async createNextYear(@Req() req: RequestWithUser) {
     const data = await this.progressionService.createNextYear(
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     return { success: true, data, error: null };
   }

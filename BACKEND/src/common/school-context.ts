@@ -1,5 +1,5 @@
 import { UnauthorizedException } from '@nestjs/common';
-import { RequestWithUser } from '../auth/types';
+import type { RequestWithUser } from '../auth/types';
 
 export function getCurrentSchoolId(req: RequestWithUser): number {
   const user = req.user;
@@ -12,5 +12,5 @@ export function getCurrentSchoolId(req: RequestWithUser): number {
       return sid;
     }
   }
-  return user.primary_school_id ?? user.school_ids?.[0];
+  return user.primary_school_id ?? user.school_ids![0];
 }

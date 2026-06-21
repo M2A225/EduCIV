@@ -1,4 +1,4 @@
-import { RequestWithUser } from '../auth/types';
+import type { RequestWithUser } from '../auth/types';
 
 export interface MultiTenantEntity {
   school_id: number | null;

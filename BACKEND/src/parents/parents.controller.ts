@@ -15,7 +15,7 @@ import { LinkParentDto } from './dto/link-parent.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { getCurrentSchoolId } from '../common/school-context';
-import { RequestWithUser } from '../auth/types';
+import type { RequestWithUser } from '../auth/types';
 
 @Controller('parents')
 @UseGuards(JwtAuthGuard, PermissionGuard)

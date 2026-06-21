@@ -25,7 +25,7 @@ import { SchoolContextGuard } from '../auth/guards/school-context.guard';
 import { PermissionGuard } from '../auth/guards/permission.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { getCurrentSchoolId } from '../common/school-context';
-import { RequestWithUser } from '../auth/types';
+import type { RequestWithUser } from '../auth/types';
 
 @Controller('schools')
 @UseGuards(JwtAuthGuard)
@@ -44,7 +44,7 @@ export class SchoolsController {
     const schoolId = getCurrentSchoolId(req);
     const data = await this.schoolsService.getSetupStatus(
       schoolId,
-      req.user.role,
+      req.user!.role,
     );
     return { success: true, data, error: null };
   }
@@ -77,7 +77,7 @@ export class SchoolsController {
     @Body() body: { levels: string[] },
   ) {
     const data = await this.schoolsService.updateLevels(
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
       body.levels,
     );
     return { success: true, data, error: null };
@@ -98,7 +98,7 @@ export class SchoolsController {
     @Body() body: { tuitions: { level: string; amount: number }[] },
   ) {
     const data = await this.schoolsService.upsertLevelTuitions(
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
       body.tuitions,
     );
     return { success: true, data, error: null };
@@ -109,7 +109,7 @@ export class SchoolsController {
     const schoolId = getCurrentSchoolId(req);
     const data = await this.schoolsService.completeSetup(
       schoolId,
-      req.user.role,
+      req.user!.role,
     );
     return { success: true, data, error: null };
   }
@@ -185,7 +185,7 @@ export class SchoolsController {
   @Roles('DIRECTOR')
   async getFilieres(@Req() req: RequestWithUser) {
     const data = await this.schoolsService.getFilieres(
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
     );
     return { success: true, data, error: null };
   }
@@ -198,7 +198,7 @@ export class SchoolsController {
     @Body() body: { filieres: string[] },
   ) {
     const data = await this.schoolsService.updateFilieres(
-      req.user.currentSchoolId,
+      req.user!.currentSchoolId!,
       body.filieres,
     );
     return { success: true, data, error: null };

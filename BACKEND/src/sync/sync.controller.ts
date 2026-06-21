@@ -12,7 +12,7 @@ import {
 import { SyncService } from './sync.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { getCurrentSchoolId } from '../common/school-context';
-import { RequestWithUser } from '../auth/types';
+import type { RequestWithUser } from '../auth/types';
 import { SyncOperationInput } from './sync.service';
 
 @Controller('sync')

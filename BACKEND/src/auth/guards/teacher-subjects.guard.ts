@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../core/prisma.service';
 import { getCurrentSchoolId } from '../../common/school-context';
+import { RequestWithUser } from '../types';
 
 interface TeacherRequest {
   user?: { userId: number };
@@ -22,7 +23,7 @@ export class TeacherSubjectsGuard implements CanActivate {
     const user = request.user;
     if (!user) return false;
 
-    const school_id = getCurrentSchoolId(request);
+    const school_id = getCurrentSchoolId(request as RequestWithUser);
     const class_id = request.body?.class_id || request.query?.class_id;
     const subject_id = request.body?.subject_id || request.query?.subject_id;
 

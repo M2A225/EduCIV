@@ -204,6 +204,7 @@ export class AuthService {
       email: string;
       phone: string | null;
       avatar_url: string | null;
+      password: string;
     } | null;
     if (!user) {
       await this.safeIncrementAttempt(attemptKey, blockKey);

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
+import { SyncEntity } from '@prisma/client';
 
 export interface SyncOperationInput {
   client_operation_id: string;
@@ -58,7 +59,7 @@ export class SyncService {
     const results: { id: string; status: string }[] = [];
     const opsToCreate: {
       client_operation_id: string;
-      entity: string;
+      entity: SyncEntity;
       entity_id: string;
       payload: string;
       school_id: number;
@@ -82,7 +83,7 @@ export class SyncService {
           await this.applyOperation(tx, op, schoolId);
           opsToCreate.push({
             client_operation_id: op.client_operation_id,
-            entity: op.entity,
+            entity: op.entity as SyncEntity,
             entity_id: op.entity_id,
             payload: JSON.stringify(op.payload),
             school_id: Number(schoolId),
