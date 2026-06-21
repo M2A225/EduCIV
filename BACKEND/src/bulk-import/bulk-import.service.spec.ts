@@ -42,6 +42,7 @@ jest.mock('crypto', () => ({
   }),
 }));
 
+/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/require-await */
 describe('BulkImportService', () => {
   let service: BulkImportService;
   const prisma = mockPrismaService;
@@ -314,3 +315,4 @@ describe('BulkImportService', () => {
     });
   });
 });
+/* eslint-enable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/require-await */
