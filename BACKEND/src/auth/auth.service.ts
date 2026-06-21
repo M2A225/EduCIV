@@ -274,9 +274,9 @@ export class AuthService {
     });
     if (!stored) throw new UnauthorizedException('Invalid refresh token');
     try {
-      const decoded = this.jwtService.verify(refreshToken, {
+      const decoded: { sub: number } = this.jwtService.verify(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET,
-      }) as { sub: number };
+      });
       const user = await this.usersService.findById(decoded.sub);
       if (!user) throw new UnauthorizedException('Invalid token user');
 

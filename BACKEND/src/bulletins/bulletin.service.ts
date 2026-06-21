@@ -381,7 +381,7 @@ export class BulletinService {
     const pdfDoc = pdfMake.createPdf(docDefinition);
     const blob = await pdfDoc.getBlob();
     const arrayBuffer = await blob.arrayBuffer();
-    const pdfBuffer = Buffer.from(arrayBuffer);
+    const pdfBuffer: Buffer<ArrayBufferLike> = Buffer.from(arrayBuffer);
 
     const path = `bulletins/${student.school.school_id}/${period.name}/${period.id}/student_${student.id}.pdf`;
     await this.storage.uploadFile(
@@ -394,7 +394,7 @@ export class BulletinService {
     return await this.storage.getSignedUrl('documents', path);
   }
 
-  private groupGradesBySubject(grades: any[]) {
+  private groupGradesBySubject(grades: (GradeWithSubject & { subject: Subject })[]) {
     const subjects = new Map<
       number,
       { name: string; coef: number; sum: number; count: number }

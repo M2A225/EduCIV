@@ -3,13 +3,14 @@ import { REQUEST } from '@nestjs/core';
 import { User } from '@prisma/client';
 import { BaseRepository } from '../core/base.repository';
 import { PrismaService } from '../core/prisma.service';
+import { RequestWithUser } from '../auth/types';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UsersRepository extends BaseRepository<User> {
   constructor(
     private readonly prisma: PrismaService,
     @Inject(REQUEST)
-    request: any,
+    request: RequestWithUser,
   ) {
     super(prisma.user, request);
   }

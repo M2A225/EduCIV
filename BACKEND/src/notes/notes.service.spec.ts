@@ -87,7 +87,7 @@ describe('NotesService', () => {
 
     it('should throw NotFoundException for missing grade', async () => {
       mockNotesRepo.findOne.mockResolvedValue(null);
-      await expect(service.updateGrade(999, {} as UpdateGradeDto)).rejects.toThrow(
+      await expect(service.updateGrade(999, {} as unknown as UpdateGradeDto)).rejects.toThrow(
         'Note introuvable',
       );
     });
