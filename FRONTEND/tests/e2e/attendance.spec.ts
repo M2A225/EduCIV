@@ -1,10 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-const skipPageNav = (route: any) => {
+const skipPageNav = (route: any): boolean => {
   const rt = route.request().resourceType();
-  if (rt === 'document' || rt === 'stylesheet' || rt === 'script' || rt === 'image') {
-    return route.fallback();
-  }
+  return rt === 'document' || rt === 'stylesheet' || rt === 'script' || rt === 'image';
 };
 
 test.describe('Attendance & Offline Sync Management', () => {
@@ -23,7 +21,8 @@ test.describe('Attendance & Offline Sync Management', () => {
     });
 
     await page.route('**/auth/refresh', async route => {
-      skipPageNav(route) || await route.fulfill({
+      if (skipPageNav(route)) return route.fallback();
+      await route.fulfill({
         json: {
           success: true,
           data: {
@@ -44,19 +43,22 @@ test.describe('Attendance & Offline Sync Management', () => {
     });
 
     await page.route('**/schools/me**', async route => {
-      skipPageNav(route) || await route.fulfill({
+      if (skipPageNav(route)) return route.fallback();
+      await route.fulfill({
         json: { success: true, data: { id: 1, name: 'EduCIV Test', school_type: 'SECONDAIRE', setup_complete: true } },
       });
     });
 
     await page.route('**/schools/setup-status**', async route => {
-      skipPageNav(route) || await route.fulfill({
+      if (skipPageNav(route)) return route.fallback();
+      await route.fulfill({
         json: { success: true, data: { setup_complete: true, school_type: 'SECONDAIRE' } },
       });
     });
 
     await page.route('**/classes**', async route => {
-      skipPageNav(route) || await route.fulfill({
+      if (skipPageNav(route)) return route.fallback();
+      await route.fulfill({
         json: {
           success: true,
           data: [
@@ -67,7 +69,8 @@ test.describe('Attendance & Offline Sync Management', () => {
     });
 
     await page.route('**/subjects**', async route => {
-      skipPageNav(route) || await route.fulfill({
+      if (skipPageNav(route)) return route.fallback();
+      await route.fulfill({
         json: {
           success: true,
           data: [
@@ -78,7 +81,8 @@ test.describe('Attendance & Offline Sync Management', () => {
     });
 
     await page.route('**/attendance/sessions**', async route => {
-      skipPageNav(route) || await route.fulfill({
+      if (skipPageNav(route)) return route.fallback();
+      await route.fulfill({
         json: {
           success: true,
           data: [
@@ -99,7 +103,8 @@ test.describe('Attendance & Offline Sync Management', () => {
     });
 
     await page.route('**/attendance*', async route => {
-      skipPageNav(route) || await route.fulfill({
+      if (skipPageNav(route)) return route.fallback();
+      await route.fulfill({
         json: {
           success: true,
           data: [],
@@ -109,7 +114,8 @@ test.describe('Attendance & Offline Sync Management', () => {
     });
 
     await page.route('**/timetables**', async route => {
-      skipPageNav(route) || await route.fulfill({
+      if (skipPageNav(route)) return route.fallback();
+      await route.fulfill({
         json: {
           success: true,
           data: []
@@ -118,7 +124,8 @@ test.describe('Attendance & Offline Sync Management', () => {
     });
 
     await page.route('**/students**', async route => {
-      skipPageNav(route) || await route.fulfill({
+      if (skipPageNav(route)) return route.fallback();
+      await route.fulfill({
         json: {
           success: true,
           data: [
