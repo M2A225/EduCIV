@@ -6,6 +6,14 @@ import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    host: '127.0.0.1',
+    port: 5173,
+  },
+  preview: {
+    host: '127.0.0.1',
+    port: 4173,
+  },
   plugins: [
     react(),
     visualizer({ open: false, gzipSize: true, filename: 'stats.html' }),
