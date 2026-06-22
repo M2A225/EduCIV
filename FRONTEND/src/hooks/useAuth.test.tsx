@@ -53,7 +53,7 @@ describe('useAuth', () => {
       roles: ['DIRECTOR'],
     };
     vi.mocked(authService.refresh).mockResolvedValue({
-      data: { data: { accessToken: 'mock-token', user: mockUser } },
+      data: { accessToken: 'mock-token', user: mockUser },
     } as never);
 
     const { result } = renderHook(() => useAuth(), { wrapper });

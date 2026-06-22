@@ -2,20 +2,43 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Notes & Evaluations Management', () => {
   test.beforeEach(async ({ page }) => {
-    // Setup mock authentication states via localstorage
+    const userData = {
+      id: 1,
+      name: 'Directeur Test',
+      email: 'director@educiv.com',
+      role: 'DIRECTOR',
+      school_id: 1,
+      school_ids: [1],
+      roles: ['DIRECTOR'],
+      primary_school_id: 1,
+    };
+
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-token');
       window.localStorage.setItem('refreshToken', 'mock-refresh-token');
-      window.localStorage.setItem('user', JSON.stringify({
-        id: 1,
-        name: 'Directeur Test',
-        role: 'DIRECTOR',
-        school_id: 1
-      }));
+      window.localStorage.setItem('currentSchoolId', '1');
+      window.localStorage.setItem('user', JSON.stringify(userData));
     });
 
-    // Mock general API calls
-    await page.route('**/classes*', async route => {
+    await page.route('**/api/auth/refresh', async route => {
+      await route.fulfill({
+        json: { success: true, data: { accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token', user: userData }, error: null },
+      });
+    });
+
+    await page.route('**/api/schools/me**', async route => {
+      await route.fulfill({ json: { success: true, data: { id: 1, name: 'EduCIV Test', school_type: 'SECONDAIRE', setup_complete: true } } });
+    });
+
+    await page.route('**/api/schools/setup-status**', async route => {
+      await route.fulfill({ json: { success: true, data: { setup_complete: true, director_completed: true, accountant_completed: true, school_type: 'SECONDAIRE' } } });
+    });
+
+    await page.route('**/api/schools/stats**', async route => {
+      await route.fulfill({ json: { success: true, data: { totalStudents: 120, totalClasses: 8, todayPayments: 5, attendanceRate: 92, alerts: [] } } });
+    });
+
+    await page.route('**/api/classes**', async route => {
       await route.fulfill({
         json: {
           success: true,
@@ -27,7 +50,7 @@ test.describe('Notes & Evaluations Management', () => {
       });
     });
 
-    await page.route('**/periods*', async route => {
+    await page.route('**/api/periods**', async route => {
       await route.fulfill({
         json: {
           success: true,
@@ -38,11 +61,22 @@ test.describe('Notes & Evaluations Management', () => {
         }
       });
     });
+
+    await page.route('**/api/notes/pending**', async route => {
+      await route.fulfill({
+        json: { success: true, data: [] }
+      });
+    });
+
+    await page.route(/\/api\/schools$/, async route => {
+      await route.fulfill({
+        json: { success: true, data: { id: 1, name: 'EduCIV Test', school_type: 'SECONDAIRE', setup_complete: true } }
+      });
+    });
   });
 
   test('should load note grid and submit bulk grades successfully', async ({ page }) => {
-    // Mock the grid fetch API
-    await page.route('**/notes/class/1/period/1', async route => {
+    await page.route('**/api/notes/class/1/period/1', async route => {
       await route.fulfill({
         json: {
           success: true,
@@ -65,9 +99,8 @@ test.describe('Notes & Evaluations Management', () => {
       });
     });
 
-    // Mock bulk notes save API
     let bulkSaveCalled = false;
-    await page.route('**/notes/bulk', async route => {
+    await page.route('**/api/notes/bulk', async route => {
       bulkSaveCalled = true;
       await route.fulfill({
         json: {
@@ -79,39 +112,33 @@ test.describe('Notes & Evaluations Management', () => {
     });
 
     await page.goto('/notes');
-    await expect(page.locator('h1')).toContainText('Saisie des notes');
+    await expect(page.locator('h1')).toContainText('Saisie des notes', { timeout: 15000 });
 
-    // Select Class and Period
-    await page.selectOption('select[label="Classe"]', '1');
-    await page.selectOption('select[label="Période"]', '1');
+    const classeSelect = page.locator('label', { hasText: 'Classe' }).locator('..').locator('select');
+    const periodeSelect = page.locator('label', { hasText: 'Période' }).locator('..').locator('select');
+    await classeSelect.selectOption('1');
+    await periodeSelect.selectOption('1');
 
-    // Click on load notes
     await page.click('button:has-text("Charger")');
 
-    // Check if table contains students and grades
     await expect(page.locator('tbody tr')).toHaveCount(2);
     await expect(page.locator('tbody tr:first-child td:first-child')).toContainText('Koffi Yao');
 
-    // Change a grade value
     const inputs = page.locator('input[type="number"]');
     await expect(inputs).toHaveCount(4);
-    await inputs.nth(2).fill('16'); // Change Amina's Math grade to 16
+    await inputs.nth(2).fill('16');
 
-    // Change an appreciation comment
     const commentTextareas = page.locator('textarea[placeholder="..."]');
     await expect(commentTextareas).toHaveCount(2);
     await commentTextareas.nth(1).fill('Excellent trimestre');
 
-    // Click "Enregistrer tout"
     await page.click('button:has-text("Enregistrer tout")');
 
-    // Check if save API was called
     expect(bulkSaveCalled).toBe(true);
   });
 
   test('should display and validate pending notes successfully', async ({ page }) => {
-    // Mock the pending grades API
-    await page.route('**/notes/pending*', async route => {
+    await page.route('**/api/notes/pending**', async route => {
       await route.fulfill({
         json: {
           success: true,
@@ -134,7 +161,7 @@ test.describe('Notes & Evaluations Management', () => {
     });
 
     let validateCalled = false;
-    await page.route('**/notes/99/validate', async route => {
+    await page.route('**/api/notes/99/validate', async route => {
       validateCalled = true;
       await route.fulfill({
         json: {
@@ -147,21 +174,17 @@ test.describe('Notes & Evaluations Management', () => {
 
     await page.goto('/notes');
 
-    // Verify the pending card shows the pending grade
     await expect(page.locator('text=Notes en attente de validation')).toBeVisible();
     await expect(page.locator('text=Koffi Yao - Mathématiques')).toBeVisible();
     await expect(page.locator('text=Note: 17/20')).toBeVisible();
 
-    // Click validate button
     await page.click('button:has-text("Valider")');
 
-    // Verify validation API was called
     expect(validateCalled).toBe(true);
   });
 
   test('should display and reject pending notes with feedback', async ({ page }) => {
-    // Mock the pending grades API
-    await page.route('**/notes/pending*', async route => {
+    await page.route('**/api/notes/pending**', async route => {
       await route.fulfill({
         json: {
           success: true,
@@ -184,7 +207,7 @@ test.describe('Notes & Evaluations Management', () => {
     });
 
     let rejectReasonSent: string | undefined = undefined;
-    await page.route('**/notes/99/reject', async route => {
+    await page.route('**/api/notes/99/reject', async route => {
       const body = route.request().postDataJSON();
       rejectReasonSent = body.rejection_reason;
       await route.fulfill({
@@ -198,19 +221,14 @@ test.describe('Notes & Evaluations Management', () => {
 
     await page.goto('/notes');
 
-    // Click reject button
     await page.click('button:has-text("Rejeter")');
 
-    // Check that reject modal is displayed
     await expect(page.locator('text=Rejeter la note')).toBeVisible();
 
-    // Fill reject reason
     await page.fill('textarea[placeholder="Motif du rejet..."]', 'Copie non conforme');
 
-    // Click confirm reject
     await page.click('button:has-text("Confirmer le rejet")');
 
-    // Verify reject API was called and correct payload was sent
     expect(rejectReasonSent).toBe('Copie non conforme');
   });
 });

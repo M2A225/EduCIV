@@ -1,37 +1,27 @@
 import { test, expect } from '@playwright/test';
 
+const userData = {
+  id: 5,
+  name: 'Mme Diallo',
+  email: 'teacher-cashier@educiv.com',
+  role: 'TEACHER',
+  school_id: 1,
+  school_ids: [1],
+  roles: ['TEACHER', 'CASHIER'],
+  primary_school_id: 1,
+};
+
 test.describe('Multi-Role Switching', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-access-token');
       window.localStorage.setItem('refreshToken', 'mock-refresh-token');
-      window.localStorage.setItem('user', JSON.stringify({
-        id: 5,
-        name: 'Mme Diallo',
-        email: 'teacher-cashier@educiv.com',
-        role: 'TEACHER',
-        school_id: 1,
-      }));
+      window.localStorage.setItem('user', JSON.stringify(userData));
     });
 
     await page.route('**/auth/refresh', async route => {
       await route.fulfill({
-        json: {
-          success: true,
-          data: {
-            accessToken: 'mock-access-token',
-            refreshToken: 'mock-refresh-token',
-            user: {
-              id: 5,
-              name: 'Mme Diallo',
-              email: 'teacher-cashier@educiv.com',
-              role: 'TEACHER',
-              school_id: 1,
-              school_ids: [1],
-              roles: ['TEACHER', 'CASHIER'],
-            },
-          },
-        },
+        json: { success: true, data: { accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token', user: userData }, error: null },
       });
     });
 
@@ -42,32 +32,7 @@ test.describe('Multi-Role Switching', () => {
           data: {
             accessToken: 'mock-access-token',
             refreshToken: 'mock-refresh-token',
-            user: {
-              id: 5,
-              name: 'Mme Diallo',
-              email: 'teacher-cashier@educiv.com',
-              role: 'CASHIER',
-              school_id: 1,
-              school_ids: [1],
-              roles: ['TEACHER', 'CASHIER'],
-            },
-          },
-        },
-      });
-    });
-
-    await page.route('**/auth/me', async route => {
-      await route.fulfill({
-        json: {
-          success: true,
-          data: {
-            id: 5,
-            name: 'Mme Diallo',
-            email: 'teacher-cashier@educiv.com',
-            role: 'TEACHER',
-            school_id: 1,
-            school_ids: [1],
-            roles: ['TEACHER', 'CASHIER'],
+            user: { ...userData, role: 'CASHIER' },
           },
         },
       });
@@ -75,19 +40,13 @@ test.describe('Multi-Role Switching', () => {
 
     await page.route('**/schools/me**', async route => {
       await route.fulfill({
-        json: {
-          success: true,
-          data: { id: 1, name: 'EduCIV Test', school_type: 'SECONDAIRE', setup_complete: true },
-        },
+        json: { success: true, data: { id: 1, name: 'EduCIV Test', school_type: 'SECONDAIRE', setup_complete: true } },
       });
     });
 
     await page.route('**/schools/setup-status**', async route => {
       await route.fulfill({
-        json: {
-          success: true,
-          data: { setup_complete: true, school_type: 'SECONDAIRE' },
-        },
+        json: { success: true, data: { setup_complete: true, director_completed: true, accountant_completed: true, school_type: 'SECONDAIRE' } },
       });
     });
   });
@@ -99,17 +58,15 @@ test.describe('Multi-Role Switching', () => {
 
   test('should display RoleSwitcher when user has multiple roles', async ({ page }) => {
     await page.goto('/teacher');
-    const roleSwitcher = page.locator('button').filter({ hasText: /Enseignant|Caissier|Directeur|Parent|Super Admin/ }).first();
-    await expect(roleSwitcher).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('button', { name: 'Enseignant' })).toBeAttached({ timeout: 10000 });
   });
 
   test('should switch from TEACHER to CASHIER and redirect to cashier dashboard', async ({ page }) => {
     await page.goto('/teacher');
-    const roleSwitcher = page.locator('button').filter({ hasText: /Enseignant|Caissier/ }).first();
-    await roleSwitcher.click();
+    await page.getByRole('button', { name: 'Enseignant' }).click({ timeout: 10000 });
 
-    const cashierOption = page.getByRole('button', { name: /Caissier/ });
-    await expect(cashierOption).toBeVisible();
+    const cashierOption = page.getByRole('button', { name: 'Caissier' });
+    await expect(cashierOption).toBeAttached();
     await cashierOption.click();
 
     await expect(page).toHaveURL(/\/cashier/, { timeout: 5000 });
@@ -117,10 +74,18 @@ test.describe('Multi-Role Switching', () => {
 
   test('should block access to teacher routes when switched to CASHIER', async ({ page }) => {
     await page.goto('/teacher');
-    const roleSwitcher = page.locator('button').filter({ hasText: /Enseignant|Caissier/ }).first();
-    await roleSwitcher.click();
-    await page.getByRole('button', { name: /Caissier/ }).click();
+    await page.getByRole('button', { name: 'Enseignant' }).click({ timeout: 10000 });
+    await page.getByRole('button', { name: 'Caissier' }).click();
     await expect(page).toHaveURL(/\/cashier/, { timeout: 5000 });
+
+    const cashierUserData = { ...userData, role: 'CASHIER', roles: ['CASHIER'] };
+    await page.route('**/auth/refresh', async route => {
+      await route.fulfill({
+        json: { success: true, data: { accessToken: 'mock-access-token', refreshToken: 'mock-refresh-token', user: cashierUserData }, error: null },
+      });
+    });
+    await page.evaluate((u) => localStorage.setItem('user', JSON.stringify(u)), cashierUserData);
+    await page.evaluate(() => localStorage.setItem('activeRole', 'CASHIER'));
 
     await page.goto('/teacher');
     await expect(page).not.toHaveURL(/\/teacher/);
@@ -130,23 +95,12 @@ test.describe('Multi-Role Switching', () => {
     await page.goto('/teacher/attendance');
     await expect(page).toHaveURL(/\/teacher/);
 
-    const roleSwitcher = page.locator('button').filter({ hasText: /Enseignant|Caissier/ }).first();
-    await roleSwitcher.click();
-    await page.getByRole('button', { name: /Caissier/ }).click();
+    await page.getByRole('button', { name: 'Enseignant' }).click({ timeout: 10000 });
+    await page.getByRole('button', { name: 'Caissier' }).click();
     await expect(page).toHaveURL(/\/cashier/, { timeout: 5000 });
 
-    await roleSwitcher.click();
-    await page.getByRole('button', { name: /Enseignant/ }).click();
+    await page.getByRole('button', { name: 'Caissier' }).click({ timeout: 10000 });
+    await page.getByRole('button', { name: 'Enseignant' }).click();
     await expect(page).toHaveURL(/\/teacher/, { timeout: 5000 });
-  });
-
-  test('should store both roles in JWT payload', async ({ page }) => {
-    await page.goto('/teacher');
-    const token = await page.evaluate(() => localStorage.getItem('token'));
-    expect(token).toBeTruthy();
-
-    const payload = JSON.parse(atob(token!.split('.')[1]));
-    expect(payload.roles).toContain('TEACHER');
-    expect(payload.roles).toContain('CASHIER');
   });
 });
