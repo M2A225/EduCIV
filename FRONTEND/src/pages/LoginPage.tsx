@@ -41,7 +41,7 @@ export const LoginPage = () => {
   const loginMutation = useMutation({
     mutationFn: (data: LoginDto) => authService.login(data),
     onSuccess: (response) => {
-      const { accessToken, user } = response.data.data;
+      const { accessToken, user } = response.data;
       login(accessToken, user);
       const roles = user?.roles || [user?.role];
       const targetRole = roles[0];
