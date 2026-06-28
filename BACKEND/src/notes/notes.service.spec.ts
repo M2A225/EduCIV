@@ -192,6 +192,51 @@ describe('NotesService', () => {
     });
   });
 
+  describe('getStudentGrades', () => {
+    it('should return grades for a student', async () => {
+      const grades = [{ id: 1, value: 15, student_id: 1 }];
+      mockNotesRepo.findMany.mockResolvedValue(grades);
+
+      const result = await service.getStudentGrades(1);
+
+      expect(result).toEqual(grades);
+      expect(mockNotesRepo.findMany).toHaveBeenCalledWith({
+        where: { student_id: 1 },
+        include: { subject: true, period: true },
+        orderBy: { created_at: 'desc' },
+      });
+    });
+
+    it('should filter by period when provided', async () => {
+      mockNotesRepo.findMany.mockResolvedValue([]);
+
+      await service.getStudentGrades(1, 2);
+
+      expect(mockNotesRepo.findMany).toHaveBeenCalledWith({
+        where: { student_id: 1, period_id: 2 },
+        include: { subject: true, period: true },
+        orderBy: { created_at: 'desc' },
+      });
+    });
+  });
+
+  describe('list', () => {
+    it('should return paginated grades', async () => {
+      const grades = [{ id: 1, value: 15 }];
+      mockNotesRepo.findMany.mockResolvedValue(grades);
+
+      const result = await service.list(1, 20);
+
+      expect(result).toEqual(grades);
+      expect(mockNotesRepo.findMany).toHaveBeenCalledWith({
+        skip: 0,
+        take: 20,
+        include: { subject: true, student: true, period: true },
+        orderBy: { created_at: 'desc' },
+      });
+    });
+  });
+
   describe('calculateAverage', () => {
     it('should return null for no grades', async () => {
       mockNotesRepo.getStudentGrades.mockResolvedValue([]);

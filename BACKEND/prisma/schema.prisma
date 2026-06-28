@@ -211,6 +211,7 @@ model School {
 
   users      User[]
   userSchools UserSchool[]
+  notifications Notification[]
   students   Student[]
   classes    Class[]
   teachers   Teacher[]
@@ -251,6 +252,7 @@ model User {
   students    Student[]  @relation("user_student_link")
   refreshTokens RefreshToken[]
   passwordResetTokens PasswordResetToken[]
+  notifications Notification[]
 
   @@index([school_id])
   @@map("users")
@@ -856,4 +858,24 @@ model StudentProgression {
   @@index([next_class_id])
   @@index([applied_at])
   @@map("student_progressions")
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  school_id Int
+  title     String
+  body      String
+  type      String   @default("info")
+  read_at   DateTime?
+  link      String?
+  created_at DateTime @default(now())
+
+  user   User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  school School @relation(fields: [school_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id, school_id])
+  @@index([user_id, read_at])
+  @@index([school_id])
+  @@map("notifications")
 }
