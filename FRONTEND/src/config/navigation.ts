@@ -26,4 +26,11 @@ export const NAV_CONFIG: NavItem[] = [
   { label: 'Écoles', path: '/backoffice/schools', roles: ['BACKOFFICE'], icon: 'Building' },
   { label: 'Groupes scolaires', path: '/backoffice/school-groups', roles: ['BACKOFFICE'], icon: 'Building' },
   { label: 'Audit', path: '/backoffice/audit', roles: ['BACKOFFICE'], icon: 'ClipboardCheck' },
+  { label: 'Dashboard', path: '/student', roles: ['STUDENT'], icon: 'LayoutDashboard' },
+  { label: 'Mes notes', path: '/student/notes', roles: ['STUDENT'], icon: 'FileText' },
+  { label: 'Mes présences', path: '/student/attendance', roles: ['STUDENT'], icon: 'UserX' },
+  { label: 'Mes paiements', path: '/student/payments', roles: ['STUDENT'], icon: 'CreditCard' },
+  { label: 'Emploi du temps', path: '/student/timetable', roles: ['STUDENT'], icon: 'Calendar' },
+  { label: 'Mon profil', path: '/profile', roles: ['DIRECTOR', 'TEACHER', 'ACCOUNTANT', 'CASHIER', 'EDUCATOR', 'PARENT', 'STUDENT'], icon: 'User' },
+  { label: 'Paramètres', path: '/user-settings', roles: ['DIRECTOR', 'TEACHER', 'ACCOUNTANT', 'CASHIER', 'EDUCATOR', 'PARENT', 'STUDENT'], icon: 'Settings' },
 ];

@@ -67,6 +67,13 @@ const CashierSearchPage = lazyLoad(() => import('./pages/cashier/CashierSearchPa
 const EducatorDashboard = lazyLoad(() => import('./pages/educator/EducatorDashboard'), 'EducatorDashboard');
 const EducatorAttendancePage = lazyLoad(() => import('./pages/educator/EducatorAttendancePage'), 'EducatorAttendancePage');
 const EducatorIncidentsPage = lazyLoad(() => import('./pages/educator/EducatorIncidentsPage'), 'EducatorIncidentsPage');
+const StudentDashboard = lazyLoad(() => import('./pages/student/StudentDashboard'), 'StudentDashboard');
+const StudentNotesPage = lazyLoad(() => import('./pages/student/StudentNotesPage'), 'StudentNotesPage');
+const StudentAttendancePage = lazyLoad(() => import('./pages/student/StudentAttendancePage'), 'StudentAttendancePage');
+const StudentPaymentsPage = lazyLoad(() => import('./pages/student/StudentPaymentsPage'), 'StudentPaymentsPage');
+const StudentTimetablePage = lazyLoad(() => import('./pages/student/StudentTimetablePage'), 'StudentTimetablePage');
+const ProfilePage = lazyLoad(() => import('./pages/settings/ProfilePage'), 'ProfilePage');
+const UserSettingsPage = lazyLoad(() => import('./pages/settings/SettingsPage'), 'SettingsPage');
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { token } = useAuth();
@@ -78,7 +85,7 @@ const RoleIndexRedirect = () => {
   const { user } = useAuth();
   const roleRedirects: Record<string, string> = {
     BACKOFFICE: '/backoffice', TEACHER: '/teacher',
-    PARENT: '/parent',
+    PARENT: '/parent', STUDENT: '/student',
     ACCOUNTANT: '/accountant', CASHIER: '/cashier', EDUCATOR: '/educator',
   };
   if (user && roleRedirects[user.role]) return <Navigate to={roleRedirects[user.role]} replace />;
@@ -171,6 +178,15 @@ export const AppRouter = () => {
                 <Route path="timetable" element={<Suspense fallback={<LoadingState />}><ParentTimetablePage /></Suspense>} />
                 </Route>
 
+                {/* Student routes */}
+                <Route path="student" element={<ProtectedRoute allowedRoles={['STUDENT']} />}>
+                  <Route index element={<Suspense fallback={<LoadingState type="card" count={3} />}><StudentDashboard /></Suspense>} />
+                  <Route path="notes" element={<Suspense fallback={<LoadingState />}><StudentNotesPage /></Suspense>} />
+                  <Route path="attendance" element={<Suspense fallback={<LoadingState />}><StudentAttendancePage /></Suspense>} />
+                  <Route path="payments" element={<Suspense fallback={<LoadingState />}><StudentPaymentsPage /></Suspense>} />
+                  <Route path="timetable" element={<Suspense fallback={<LoadingState />}><StudentTimetablePage /></Suspense>} />
+                </Route>
+
 
 
                 {/* Accountant routes */}
@@ -193,6 +209,10 @@ export const AppRouter = () => {
                   <Route path="attendance" element={<Suspense fallback={<LoadingState />}><EducatorAttendancePage /></Suspense>} />
                   <Route path="incidents" element={<Suspense fallback={<LoadingState />}><EducatorIncidentsPage /></Suspense>} />
                 </Route>
+
+                {/* User settings routes — accessible to all roles */}
+                <Route path="profile" element={<Suspense fallback={<LoadingState />}><ProfilePage /></Suspense>} />
+                <Route path="user-settings" element={<Suspense fallback={<LoadingState />}><UserSettingsPage /></Suspense>} />
 
                 {/* Backoffice routes */}
                 <Route path="backoffice" element={<ProtectedRoute allowedRoles={['BACKOFFICE']} />}>
