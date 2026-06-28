@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Command } from 'cmdk';
-import { Search, Users, School, CreditCard, FileText, BarChart3, Settings, User, LogOut } from 'lucide-react';
+import { Search, Users, School, CreditCard, FileText, BarChart3, Settings, User } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 interface CommandPaletteProps {
@@ -38,7 +38,7 @@ const allCommands = [
 
 export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const navigate = useNavigate();
-  const { activeRole, user, logout } = useAuth();
+  const { activeRole, user } = useAuth();
 
   const commands = useMemo(() => {
     const role = activeRole || user?.role;
