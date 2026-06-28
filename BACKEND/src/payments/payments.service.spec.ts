@@ -27,7 +27,7 @@ describe('PaymentsService', () => {
   };
 
   const mockPrismaService = {
-    $transaction: jest.fn().mockImplementation((cb: Function) => cb(mockTx)),
+    $transaction: jest.fn().mockImplementation((cb: (tx: typeof mockTx) => Promise<unknown>) => cb(mockTx)),
     payment: {
       findMany: jest.fn(),
       groupBy: jest.fn(),
