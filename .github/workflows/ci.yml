@@ -235,10 +235,156 @@ jobs:
           path: FRONTEND/dist
           retention-days: 7
 
+  test-desktop:
+    name: Test Desktop
+    runs-on: windows-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Desktop dependencies
+        run: dotnet restore
+        working-directory: ./DESKTOP/src
+
+      - name: Build Desktop
+        run: dotnet build --no-restore --configuration Release
+        working-directory: ./DESKTOP/src
+
+      - name: Run Desktop tests
+        run: dotnet test --no-build --configuration Release --verbosity normal
+        working-directory: ./DESKTOP/src
+
+  test-mobile:
+    name: Test Mobile
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Install Mobile dependencies
+        run: flutter pub get
+        working-directory: ./educiv_mobile
+
+      - name: Analyze Mobile code
+        run: flutter analyze --no-pub
+        working-directory: ./educiv_mobile
+
+      - name: Run Mobile tests
+        run: flutter test
+        working-directory: ./educiv_mobile
+
+  build-desktop:
+    name: Build Desktop
+    runs-on: windows-latest
+    needs: test-desktop
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Desktop dependencies
+        run: dotnet restore
+        working-directory: ./DESKTOP/src
+
+      - name: Publish Desktop (win-x64)
+        run: dotnet publish EduCIV.App/EduCIV.App.csproj -c Release -r win-x64 --self-contained false -o ./publish
+        working-directory: ./DESKTOP/src
+
+      - name: Upload Desktop build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-win-x64
+          path: DESKTOP/src/publish
+          retention-days: 7
+
+  build-mobile-android:
+    name: Build Mobile Android
+    runs-on: ubuntu-latest
+    needs: test-mobile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Mobile dependencies
+        run: flutter pub get
+        working-directory: ./educiv_mobile
+
+      - name: Build Android APK (release)
+        run: flutter build apk --release
+        working-directory: ./educiv_mobile
+
+      - name: Upload Android APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-android-apk
+          path: educiv_mobile/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
+
+  build-mobile-ios:
+    name: Build Mobile iOS
+    runs-on: macos-latest
+    needs: test-mobile
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.6'
+          channel: 'stable'
+          cache: true
+
+      - name: Install Mobile dependencies
+        run: flutter pub get
+        working-directory: ./educiv_mobile
+
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign
+        working-directory: ./educiv_mobile
+
+      - name: Upload iOS build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-ios-build
+          path: educiv_mobile/build/ios/iphoneos/Runner.app
+          retention-days: 7
+
   deploy-staging:
     name: Deploy Staging
     runs-on: ubuntu-latest
-    needs: [build-backend, build-frontend, test-e2e]
+    needs: [build-backend, build-frontend, build-desktop, build-mobile-android, build-mobile-ios, test-e2e]
     environment: staging
     if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
     steps:
