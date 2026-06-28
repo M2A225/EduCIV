@@ -250,15 +250,15 @@ jobs:
 
       - name: Restore Desktop dependencies
         run: dotnet restore
-        working-directory: ./DESKTOP/src
+        working-directory: ./DESKTOP
 
       - name: Build Desktop
         run: dotnet build --no-restore --configuration Release
-        working-directory: ./DESKTOP/src
+        working-directory: ./DESKTOP
 
       - name: Run Desktop tests
         run: dotnet test --no-build --configuration Release --verbosity normal
-        working-directory: ./DESKTOP/src
+        working-directory: ./DESKTOP
 
   test-mobile:
     name: Test Mobile
@@ -302,11 +302,11 @@ jobs:
 
       - name: Restore Desktop dependencies
         run: dotnet restore
-        working-directory: ./DESKTOP/src
+        working-directory: ./DESKTOP
 
       - name: Publish Desktop (win-x64)
-        run: dotnet publish EduCIV.App/EduCIV.App.csproj -c Release -r win-x64 --self-contained false -o ./publish
-        working-directory: ./DESKTOP/src
+        run: dotnet publish src/EduCIV.App/EduCIV.App.csproj -c Release -r win-x64 --self-contained false -o ./publish
+        working-directory: ./DESKTOP
 
       - name: Upload Desktop build artifact
         uses: actions/upload-artifact@v4

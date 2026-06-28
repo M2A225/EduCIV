@@ -6,59 +6,75 @@ void main() {
     test('should create with required fields', () {
       final notification = AppNotification(
         id: 1,
+        userId: 10,
+        schoolId: 1,
         title: 'Test',
-        message: 'Body',
+        body: 'Body content',
         createdAt: DateTime.now(),
       );
       expect(notification.id, 1);
       expect(notification.title, 'Test');
-      expect(notification.read, false);
+      expect(notification.body, 'Body content');
+      expect(notification.isRead, false);
     });
 
     test('should serialize to JSON', () {
       final now = DateTime(2024, 1, 15, 10, 30);
       final notification = AppNotification(
         id: 1,
+        userId: 10,
+        schoolId: 1,
         title: 'Test',
-        message: 'Body',
+        body: 'Body',
         createdAt: now,
-        read: true,
+        readAt: now,
       );
       final json = notification.toJson();
       expect(json['id'], 1);
       expect(json['title'], 'Test');
-      expect(json['read'], true);
+      expect(json['readAt'], isNotNull);
     });
 
     test('should deserialize from JSON', () {
       final json = {
         'id': 2,
+        'userId': 10,
+        'schoolId': 1,
         'title': 'Alert',
-        'message': 'Important',
+        'body': 'Important message',
         'createdAt': '2024-01-15T10:30:00.000',
-        'read': false,
         'type': 'PAYMENT',
       };
       final notification = AppNotification.fromJson(json);
       expect(notification.id, 2);
-      expect(notification.type, NotificationType.PAYMENT);
-      expect(notification.read, false);
+      expect(notification.type, 'PAYMENT');
+      expect(notification.isRead, false);
     });
 
     test('should support copyWith', () {
       final notification = AppNotification(
         id: 1,
+        userId: 10,
+        schoolId: 1,
         title: 'Test',
-        message: 'Body',
+        body: 'Body',
         createdAt: DateTime.now(),
       );
-      final updated = notification.copyWith(read: true);
-      expect(updated.read, true);
+      final updated = notification.copyWith(readAt: DateTime.now());
+      expect(updated.isRead, true);
       expect(updated.id, 1);
     });
 
-    test('should handle all notification types', () {
-      expect(NotificationType.values.length, greaterThanOrEqualTo(1));
+    test('should default type to info', () {
+      final notification = AppNotification(
+        id: 1,
+        userId: 10,
+        schoolId: 1,
+        title: 'Test',
+        body: 'Body',
+        createdAt: DateTime.now(),
+      );
+      expect(notification.type, 'info');
     });
   });
 }

@@ -7,14 +7,23 @@ import '../../core/utils/storage.dart';
 
 enum AuthState { initial, authenticated, unauthenticated, loading }
 
-class AuthNotifier extends StateNotifier<AuthState> {
-  final AuthRepository _authRepository;
-  final LocalStorage _localStorage;
-
-  AuthNotifier(this._authRepository, this._localStorage) : super(AuthState.initial);
+class AuthNotifier extends Notifier<AuthState> {
+  late final AuthRepository _authRepository;
+  late final LocalStorage _localStorage;
 
   User? _user;
   User? get user => _user;
+
+  @override
+  AuthState build() {
+    final dio = ref.watch(dioProvider);
+    _authRepository = AuthRepository(dio);
+    return AuthState.initial;
+  }
+
+  void setLocalStorage(LocalStorage localStorage) {
+    _localStorage = localStorage;
+  }
 
   Future<void> init() async {
     try {
@@ -55,11 +64,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 }
 
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  final dio = ref.watch(dioProvider);
-  final localStorage = ref.watch(localStorageProvider.future);
-  return AuthNotifier(AuthRepository(dio), localStorage as LocalStorage);
-});
+final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
 
 final currentUserProvider = Provider<User?>((ref) {
   final auth = ref.watch(authProvider.notifier);
