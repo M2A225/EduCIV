@@ -1,5 +1,6 @@
 using EduCIV.Domain.Entities;
 using FluentAssertions;
+using Xunit;
 using static EduCIV.Domain.Enums.AllEnums;
 
 namespace EduCIV.Tests.Domain;

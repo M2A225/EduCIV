@@ -4,7 +4,9 @@ using EduCIV.Domain.Entities;
 using EduCIV.Sync;
 using EduCIV.Sync.Models;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using Xunit;
 using static EduCIV.Domain.Enums.AllEnums;
 
 namespace EduCIV.Tests.Sync;

@@ -1,6 +1,7 @@
 using EduCIV.Api;
 using EduCIV.Api.Models;
 using FluentAssertions;
+using Xunit;
 
 namespace EduCIV.Tests.Api;
 

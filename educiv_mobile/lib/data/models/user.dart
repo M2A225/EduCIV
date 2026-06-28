@@ -160,4 +160,11 @@ class AuthResponse {
       data: AuthData.fromJson(json['data'] as Map<String, dynamic>),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      'data': data.toJson(),
+    };
+  }
 }

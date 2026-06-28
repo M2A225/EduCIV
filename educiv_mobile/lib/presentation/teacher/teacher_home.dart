@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_constants.dart';
 
 class TeacherHome extends StatelessWidget {
   const TeacherHome({super.key});

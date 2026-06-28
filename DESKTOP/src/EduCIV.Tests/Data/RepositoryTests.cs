@@ -3,6 +3,7 @@ using EduCIV.Data.Repositories;
 using EduCIV.Domain.Entities;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace EduCIV.Tests.Data;
 
