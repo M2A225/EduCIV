@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 import { PeriodsService } from './periods.service';
 import { PeriodsRepository } from './periods.repository';
 
@@ -22,6 +23,7 @@ describe('PeriodsService', () => {
     }).compile();
 
     service = module.get<PeriodsService>(PeriodsService);
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -30,11 +32,7 @@ describe('PeriodsService', () => {
 
   describe('create', () => {
     it('should create a period', async () => {
-      const dto = {
-        name: 'Trimestre 1',
-        start_date: '2025-09-15',
-        end_date: '2025-12-20',
-      };
+      const dto = { name: 'Trimestre 1', start_date: '2025-09-15', end_date: '2025-12-20' };
       mockRepo.create.mockResolvedValue({ id: 1, ...dto });
 
       const result = await service.create(dto);
@@ -52,10 +50,7 @@ describe('PeriodsService', () => {
       const result = await service.list(1, 20);
 
       expect(mockRepo.findMany).toHaveBeenCalledWith({
-        skip: 0,
-        take: 20,
-        orderBy: { start_date: 'asc' },
-        include: { school_year: true },
+        skip: 0, take: 20, orderBy: { start_date: 'asc' }, include: { school_year: true },
       });
       expect(result).toEqual(periods);
     });
@@ -75,6 +70,42 @@ describe('PeriodsService', () => {
       mockRepo.findOne.mockResolvedValue(null);
 
       await expect(service.getById(999)).rejects.toThrow('Période introuvable');
+    });
+  });
+
+  describe('update', () => {
+    it('should update a period', async () => {
+      mockRepo.findOne.mockResolvedValue({ id: 1, name: 'T1' });
+      mockRepo.update.mockResolvedValue({ id: 1, name: 'T1 Updated' });
+
+      const result = await service.update(1, { name: 'T1 Updated' });
+
+      expect(mockRepo.update).toHaveBeenCalledWith(1, { name: 'T1 Updated' });
+      expect(result.name).toBe('T1 Updated');
+    });
+
+    it('should throw NotFoundException if not found', async () => {
+      mockRepo.findOne.mockResolvedValue(null);
+
+      await expect(service.update(999, { name: 'Test' })).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('remove', () => {
+    it('should delete a period', async () => {
+      mockRepo.findOne.mockResolvedValue({ id: 1 });
+      mockRepo.delete.mockResolvedValue({ id: 1 });
+
+      const result = await service.remove(1);
+
+      expect(mockRepo.delete).toHaveBeenCalledWith(1);
+      expect(result).toBeDefined();
+    });
+
+    it('should throw NotFoundException if not found', async () => {
+      mockRepo.findOne.mockResolvedValue(null);
+
+      await expect(service.remove(999)).rejects.toThrow(NotFoundException);
     });
   });
 });

@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { createElement, type ReactNode } from 'react';
 import { AuthProvider, useAuth } from './useAuth';
 import { authService } from '../services/auth';
@@ -58,11 +58,10 @@ describe('useAuth', () => {
 
     const { result } = renderHook(() => useAuth(), { wrapper });
 
-    await act(async () => {
-      await new Promise(r => setTimeout(r, 0));
+    await waitFor(() => {
+      expect(result.current.token).toBe('mock-token');
     });
 
-    expect(result.current.token).toBe('mock-token');
     expect(result.current.user?.name).toBe('Test User');
   });
 

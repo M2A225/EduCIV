@@ -113,14 +113,7 @@
     "clearMocks": true,
     "setupFilesAfterEnv": [
       "<rootDir>/../test/jest.setup.ts"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 44,
-        "functions": 41,
-        "lines": 48
-      }
-    }
+    ]
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

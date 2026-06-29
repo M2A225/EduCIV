@@ -3,8 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { NAV_CONFIG } from '../../config/navigation';
+import { NotificationBell } from './NotificationBell';
+import { CommandPalette } from './CommandPalette';
 import {
-  Search, Bell, Sun, Moon, Monitor, ChevronDown, LogOut, User,
+  Search, Sun, Moon, Monitor, ChevronDown, LogOut, User,
   Settings,
 } from 'lucide-react';
 
@@ -124,13 +126,7 @@ export function TopBar({ onToggleSidebar, collapsed }: TopBarProps) {
           </button>
 
           {/* Notifications */}
-          <button
-            className="relative w-9 h-9 flex items-center justify-center text-text-muted hover:text-text rounded-lg hover:bg-surface transition-colors"
-            aria-label="Notifications"
-          >
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-cta rounded-full" />
-          </button>
+          <NotificationBell />
 
           {/* Theme toggle */}
           <div className="relative">
@@ -223,25 +219,8 @@ export function TopBar({ onToggleSidebar, collapsed }: TopBarProps) {
         </div>
       </div>
 
-      {/* Command palette modal — placeholder */}
-      {cmdPaletteOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh]">
-          <div className="fixed inset-0 bg-black/40" onClick={() => setCmdPaletteOpen(false)} />
-          <div className="relative w-full max-w-lg bg-bg-elevated rounded-2xl border border-border shadow-4 overflow-hidden animate-scale-in">
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
-              <Search className="w-5 h-5 text-text-muted" />
-              <input
-                autoFocus
-                placeholder="Rechercher une page..."
-                className="flex-1 bg-transparent border-none outline-none text-text text-sm placeholder:text-text-muted"
-              />
-            </div>
-            <div className="p-2">
-              <p className="text-xs text-text-muted text-center py-8">Tapez pour rechercher...</p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Command palette */}
+      <CommandPalette open={cmdPaletteOpen} onClose={() => setCmdPaletteOpen(false)} />
     </header>
   );
 }

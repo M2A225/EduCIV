@@ -32,6 +32,7 @@ import { PaymentPlansModule } from './payment-plans/payment-plans.module';
 import { TeacherSubjectsModule } from './teacher-subjects/teacher-subjects.module';
 import { BulkImportModule } from './bulk-import/bulk-import.module';
 import { ProgressionModule } from './progression/progression.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { QueueModule } from './jobs/queue.module';
 import { StorageModule } from './storage/storage.module';
 import { PrismaService } from './core/prisma.service';
@@ -89,6 +90,7 @@ import { PrismaService } from './core/prisma.service';
     InvitationsModule,
     BulkImportModule,
     ProgressionModule,
+    NotificationsModule,
     HealthModule,
   ],
   controllers: [AppController],

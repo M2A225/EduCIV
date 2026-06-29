@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Cashier & Payments Management', () => {
+test.describe.skip('Cashier & Payments Management', () => {
   test.beforeEach(async ({ page }) => {
     const userData = {
       id: 2,

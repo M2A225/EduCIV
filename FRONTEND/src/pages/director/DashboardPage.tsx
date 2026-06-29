@@ -7,6 +7,10 @@ import { PageHeader } from '../../components/ui/PageHeader';
 import { useSchoolStats } from '../../hooks/useSchools';
 import { useAuth } from '../../hooks/useAuth';
 import { AddStudentModal } from '../../components/director/AddStudentModal';
+import { PaymentChart } from '../../components/charts/PaymentChart';
+import { AttendanceChart } from '../../components/charts/AttendanceChart';
+import { GradesChart } from '../../components/charts/GradesChart';
+import { StudentsChart } from '../../components/charts/StudentsChart';
 import {
   Users, School, CreditCard, Activity, AlertTriangle,
   FileText, TrendingUp, UserPlus, ArrowUpRight,
@@ -17,6 +21,40 @@ const statConfig = [
   { label: 'Classes', key: 'totalClasses', icon: School, gradient: 'from-purple-500/20 to-purple-500/5', iconBg: 'bg-purple-500', format: (v: number) => v.toLocaleString() },
   { label: "Paiements Aujourd'hui", key: 'todayPayments', icon: CreditCard, gradient: 'from-cta/20 to-cta/5', iconBg: 'bg-cta', format: (v: number) => `${v.toLocaleString()} FCFA` },
   { label: 'Taux Présence', key: 'attendanceRate', icon: Activity, gradient: 'from-emerald-500/20 to-emerald-500/5', iconBg: 'bg-emerald-500', format: (v: number) => `${v}%` },
+];
+
+const mockPaymentData = [
+  { month: 'Jan', amount: 2500000 },
+  { month: 'Fév', amount: 3200000 },
+  { month: 'Mar', amount: 2800000 },
+  { month: 'Avr', amount: 3500000 },
+  { month: 'Mai', amount: 4100000 },
+  { month: 'Jun', amount: 3800000 },
+];
+
+const mockAttendanceData = [
+  { date: '01/06', rate: 92 },
+  { date: '02/06', rate: 88 },
+  { date: '03/06', rate: 95 },
+  { date: '04/06', rate: 91 },
+  { date: '05/06', rate: 94 },
+  { date: '06/06', rate: 89 },
+  { date: '07/06', rate: 93 },
+];
+
+const mockGradesData = [
+  { subject: 'Maths', average: 13.5 },
+  { subject: 'Français', average: 12.8 },
+  { subject: 'Anglais', average: 14.2 },
+  { subject: 'SVT', average: 11.9 },
+  { subject: 'Histoire', average: 13.1 },
+];
+
+const mockStudentsData = [
+  { name: '6ème', value: 45 },
+  { name: '5ème', value: 38 },
+  { name: '4ème', value: 42 },
+  { name: '3ème', value: 35 },
 ];
 
 export const DashboardPage = () => {
@@ -69,28 +107,20 @@ export const DashboardPage = () => {
 
       {/* Charts + Alerts row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart placeholder */}
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>Activité récente</span>
+              <span>Paiements mensuels</span>
               <Button variant="ghost" size="sm">
                 Voir tout <ArrowUpRight className="w-3.5 h-3.5" />
               </Button>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 flex items-center justify-center border-2 border-dashed border-border rounded-xl">
-              <div className="text-center">
-                <Activity className="w-10 h-10 text-text-muted/50 mx-auto mb-3" />
-                <p className="text-sm text-text-muted">Graphique d'activité</p>
-                <p className="text-xs text-text-muted/60">Données à venir</p>
-              </div>
-            </div>
+            <PaymentChart data={mockPaymentData} />
           </CardContent>
         </Card>
 
-        {/* Alerts */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -117,6 +147,39 @@ export const DashboardPage = () => {
                 </div>
               )}
             </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Second row charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Présence cette semaine</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AttendanceChart data={mockAttendanceData} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Moyennes par matière</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <GradesChart data={mockGradesData} />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Third row charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Répartition des élèves par niveau</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <StudentsChart data={mockStudentsData} />
           </CardContent>
         </Card>
       </div>
