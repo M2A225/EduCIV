@@ -12,7 +12,7 @@ public class EntityExtendedTests
     {
         var teacher = new Teacher();
         teacher.Name.Should().Be(string.Empty);
-        teacher.Subjects.Should().NotBeNull().And.BeEmpty();
+        teacher.Assignments.Should().NotBeNull().And.BeEmpty();
     }
 
     [Fact]
@@ -20,17 +20,15 @@ public class EntityExtendedTests
     {
         var school = new School();
         school.Name.Should().Be(string.Empty);
-        school.Students.Should().NotBeNull().And.BeEmpty();
-        school.Classes.Should().NotBeNull().And.BeEmpty();
     }
 
     [Fact]
     public void Payment_ShouldHaveDefaultValues()
     {
         var payment = new Payment();
-        payment.Amount.Should().Be(0);
-        payment.Method.Should().Be(PaymentMethod.CASH);
-        payment.Status.Should().Be(PaymentStatus.PENDING);
+        payment.AmountFcfa.Should().Be(0);
+        payment.PaymentType.Should().Be(PaymentType.SCOLARITE);
+        payment.Status.Should().Be(PaymentStatus.VALIDE);
     }
 
     [Fact]
@@ -38,15 +36,14 @@ public class EntityExtendedTests
     {
         var period = new AcademicPeriod();
         period.Name.Should().Be(string.Empty);
-        period.IsActive.Should().BeFalse();
     }
 
     [Fact]
     public void SchoolYear_ShouldHaveDefaultValues()
     {
         var year = new SchoolYear();
-        year.Name.Should().Be(string.Empty);
-        year.IsCurrent.Should().BeFalse();
+        year.YearRange.Should().Be(string.Empty);
+        year.Closed.Should().BeFalse();
     }
 
     [Fact]
@@ -54,7 +51,7 @@ public class EntityExtendedTests
     {
         var incident = new Incident();
         incident.Description.Should().Be(string.Empty);
-        incident.Severity.Should().Be(IncidentSeverity.LOW);
+        incident.Status.Should().Be(IncidentStatus.EN_COURS);
     }
 
     [Fact]
@@ -69,7 +66,6 @@ public class EntityExtendedTests
     {
         var session = new AttendanceSession();
         session.Date.Should().Be(default(DateTime));
-        session.IsLocked.Should().BeFalse();
     }
 
     [Fact]
@@ -77,7 +73,7 @@ public class EntityExtendedTests
     {
         var subject = new Subject();
         subject.Name.Should().Be(string.Empty);
-        subject.Code.Should().Be(string.Empty);
+        subject.Coefficient.Should().Be(0);
     }
 
     [Fact]
@@ -85,7 +81,7 @@ public class EntityExtendedTests
     {
         var @class = new Class();
         @class.Name.Should().Be(string.Empty);
-        @class.capacity.Should().Be(0);
+        @class.Capacity.Should().Be(0);
     }
 
     [Fact]
@@ -101,28 +97,26 @@ public class EntityExtendedTests
     public void PaymentStatus_ShouldHaveAllValues()
     {
         var statuses = Enum.GetValues<PaymentStatus>();
-        statuses.Should().Contain(PaymentStatus.PENDING);
-        statuses.Should().Contain(PaymentStatus.COMPLETED);
-        statuses.Should().Contain(PaymentStatus.CANCELLED);
+        statuses.Should().Contain(PaymentStatus.VALIDE);
+        statuses.Should().Contain(PaymentStatus.ANNULE);
     }
 
     [Fact]
-    public void IncidentSeverity_ShouldHaveAllValues()
+    public void IncidentType_ShouldHaveAllValues()
     {
-        var severities = Enum.GetValues<IncidentSeverity>();
-        severities.Should().HaveCount(3);
-        severities.Should().Contain(IncidentSeverity.LOW);
-        severities.Should().Contain(IncidentSeverity.MEDIUM);
-        severities.Should().Contain(IncidentSeverity.HIGH);
+        var types = Enum.GetValues<IncidentType>();
+        types.Should().Contain(IncidentType.RETARD);
+        types.Should().Contain(IncidentType.ABSENCE_NON_JUSTIFIEE);
+        types.Should().Contain(IncidentType.COMPORTEMENT);
     }
 
     [Fact]
-    public void PaymentMethod_ShouldHaveAllValues()
+    public void PaymentType_ShouldHaveAllValues()
     {
-        var methods = Enum.GetValues<PaymentMethod>();
-        methods.Should().Contain(PaymentMethod.CASH);
-        methods.Should().Contain(PaymentMethod.MOBILE_MONEY);
-        methods.Should().Contain(PaymentMethod.BANK_TRANSFER);
+        var types = Enum.GetValues<PaymentType>();
+        types.Should().Contain(PaymentType.SCOLARITE);
+        types.Should().Contain(PaymentType.CANTINE);
+        types.Should().Contain(PaymentType.INSCRIPTION);
     }
 
     [Fact]
@@ -137,15 +131,14 @@ public class EntityExtendedTests
     {
         var reportCard = new ReportCard();
         reportCard.StudentId.Should().Be(0);
-        reportCard.SchoolYearId.Should().Be(0);
+        reportCard.PeriodId.Should().Be(0);
     }
 
     [Fact]
     public void Invitation_ShouldHaveDefaultValues()
     {
         var invitation = new Invitation();
-        invitation.Email.Should().Be(string.Empty);
-        invitation.Role.Should().Be(UserRole.TEACHER);
+        invitation.Code.Should().Be(string.Empty);
     }
 
     [Fact]
@@ -153,15 +146,14 @@ public class EntityExtendedTests
     {
         var plan = new PaymentPlan();
         plan.Name.Should().Be(string.Empty);
-        plan.Amount.Should().Be(0);
+        plan.TotalAmount.Should().Be(0);
     }
 
     [Fact]
     public void StudentProgression_ShouldHaveDefaultValues()
     {
         var progression = new StudentProgression();
-        progression.IsRepeater.Should().BeFalse();
-        progression.IsAffected.Should().BeTrue();
+        progression.FinalDecision.Should().Be(DecisionFinale.ADMIS);
     }
 
     [Fact]

@@ -111,9 +111,9 @@ public class EntityTests
     public void Class_ShouldSupportProgressionChain()
     {
         var classA = new Class { Id = 1, Name = "6ème A" };
-        var classB = new Class { Id = 2, Name = "5ème A", PreviousClassId = 1 };
+        var classB = new Class { Id = 2, Name = "5ème A", NextClassId = 3 };
 
-        classB.PreviousClassId.Should().Be(1);
+        classB.NextClassId.Should().Be(3);
         classA.NextClassId.Should().BeNull();
     }
 

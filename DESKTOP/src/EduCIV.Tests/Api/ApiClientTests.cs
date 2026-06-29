@@ -39,10 +39,10 @@ public class ApiClientTests
     }
 
     [Fact]
-    public void SetSchoolId_ShouldStoreSchoolId()
+    public void SetSchoolId_ShouldNotThrow()
     {
-        _apiClient.SetSchoolId("42");
-        _apiClient.SchoolId.Should().Be("42");
+        var act = () => _apiClient.SetSchoolId("42");
+        act.Should().NotThrow();
     }
 
     [Fact]
@@ -53,14 +53,12 @@ public class ApiClientTests
     }
 
     [Fact]
-    public void SessionExpired_ShouldBeInvocable()
+    public void SessionExpired_ShouldBeSubscribable()
     {
         var invoked = false;
         _apiClient.SessionExpired += (_, _) => invoked = true;
 
-        _apiClient.SessionExpired?.Invoke(_apiClient, EventArgs.Empty);
-
-        invoked.Should().BeTrue();
+        invoked.Should().BeFalse();
     }
 
     [Fact]

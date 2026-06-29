@@ -4,7 +4,6 @@ using EduCIV.Domain.Entities;
 using EduCIV.Sync;
 using EduCIV.Sync.Models;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 using static EduCIV.Domain.Enums.AllEnums;
@@ -13,17 +12,17 @@ namespace EduCIV.Tests.Sync;
 
 public class SyncEngineTests : IDisposable
 {
-    private readonly Mock<ApiClient> _mockApiClient;
+    private readonly ApiClient _apiClient;
     private readonly DbContextOptions<EduCIVContext> _dbOptions;
     private readonly SyncEngine _syncEngine;
 
     public SyncEngineTests()
     {
-        _mockApiClient = new Mock<ApiClient>(MockBehavior.Loose, null, null, null, null);
+        _apiClient = new ApiClient(new HttpClient());
         _dbOptions = new DbContextOptionsBuilder<EduCIVContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
-        _syncEngine = new SyncEngine(_mockApiClient.Object, _dbOptions);
+        _syncEngine = new SyncEngine(_apiClient, _dbOptions);
     }
 
     public void Dispose()
@@ -79,7 +78,7 @@ public class SyncEngineTests : IDisposable
     {
         var operation = new SyncOperation
         {
-            ClientOperationId = Guid.NewGuid(),
+            ClientOperationId = Guid.NewGuid().ToString(),
             Entity = SyncEntity.STUDENT,
             Action = "CREATE",
             Payload = "{}",
@@ -98,7 +97,7 @@ public class SyncEngineTests : IDisposable
     {
         var operations = Enumerable.Range(1, 5).Select(i => new SyncOperation
         {
-            ClientOperationId = Guid.NewGuid(),
+            ClientOperationId = Guid.NewGuid().ToString(),
             Entity = SyncEntity.GRADE,
             Action = "UPDATE",
             Payload = $"{{\"id\":{i}}}",
@@ -120,7 +119,7 @@ public class SyncEngineTests : IDisposable
 
         var operation = new SyncOperation
         {
-            ClientOperationId = Guid.NewGuid(),
+            ClientOperationId = Guid.NewGuid().ToString(),
             Entity = SyncEntity.STUDENT,
             Action = "CREATE",
             Payload = "{}",
