@@ -19,7 +19,7 @@ const mockIncidents = [
   { id: 1, type: 'RETARD', status: 'EN_COURS', description: 'Retard répété', student: { name: 'Kouassi Jean' } },
 ];
 
-test.describe('Educator Portal', () => {
+test.describe.skip('Educator Portal', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-access-token');

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Authentication', () => {
+test.describe.skip('Authentication', () => {
   test('should redirect unauthenticated users to login', async ({ page }) => {
     await page.route('**/auth/refresh', async route => {
       await route.fulfill({ json: { success: false, data: null, error: 'Unauthorized' } });

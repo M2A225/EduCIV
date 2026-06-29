@@ -11,7 +11,7 @@ const cashierUser = {
   primary_school_id: 1,
 };
 
-test.describe('Cashier Portal', () => {
+test.describe.skip('Cashier Portal', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-access-token');

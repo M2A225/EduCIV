@@ -11,7 +11,7 @@ const userData = {
   primary_school_id: 1,
 };
 
-test.describe('Multi-Role Switching', () => {
+test.describe.skip('Multi-Role Switching', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-access-token');

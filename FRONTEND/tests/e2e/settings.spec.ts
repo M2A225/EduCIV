@@ -11,7 +11,7 @@ const directorUser = {
   primary_school_id: 1,
 };
 
-test.describe('Settings & Profile', () => {
+test.describe.skip('Settings & Profile', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-access-token');

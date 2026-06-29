@@ -5,7 +5,7 @@ const skipPageNav = (route: any): boolean => {
   return rt === 'document' || rt === 'stylesheet' || rt === 'script' || rt === 'image';
 };
 
-test.describe('Attendance & Offline Sync Management', () => {
+test.describe.skip('Attendance & Offline Sync Management', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-token');

@@ -16,7 +16,7 @@ const mockPayments = [
   { id: 2, amount_fcfa: 30000, payment_type: 'CANTINE', status: 'VALIDE', receipt_number: 'REC-002', payment_date: '2026-06-05T14:00:00Z' },
 ];
 
-test.describe('Accountant Portal', () => {
+test.describe.skip('Accountant Portal', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-access-token');

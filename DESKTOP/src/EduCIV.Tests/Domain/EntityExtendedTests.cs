@@ -81,7 +81,7 @@ public class EntityExtendedTests
     {
         var @class = new Class();
         @class.Name.Should().Be(string.Empty);
-        @class.Capacity.Should().Be(0);
+        @class.Capacity.Should().BeNull();
     }
 
     [Fact]

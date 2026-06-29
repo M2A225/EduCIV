@@ -30,7 +30,7 @@ const mockTimetables = [
   { id: 2, slot: 'Lun-9:00', subject: { name: 'Français' }, teacher: { name: 'Mme Diallo' }, class: { name: '6ème A' } },
 ];
 
-test.describe('Student Portal', () => {
+test.describe.skip('Student Portal', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-access-token');

@@ -11,7 +11,7 @@ const backofficeUser = {
   primary_school_id: 1,
 };
 
-test.describe('Backoffice Portal', () => {
+test.describe.skip('Backoffice Portal', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-access-token');

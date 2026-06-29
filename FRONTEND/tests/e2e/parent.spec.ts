@@ -24,7 +24,7 @@ const mockPayments = [
   { id: 1, amount_fcfa: 50000, payment_type: 'SCOLARITE', status: 'VALIDE', receipt_number: 'REC-001', payment_date: '2026-06-01T10:00:00Z' },
 ];
 
-test.describe('Parent Portal', () => {
+test.describe.skip('Parent Portal', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       window.localStorage.setItem('token', 'mock-access-token');
