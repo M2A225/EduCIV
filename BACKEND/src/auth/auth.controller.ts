@@ -25,8 +25,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 const REFRESH_COOKIE = 'refresh_token';
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  sameSite: 'strict' as const,
-  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'none' as const,
+  secure: true,
   path: '/api/auth',
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };

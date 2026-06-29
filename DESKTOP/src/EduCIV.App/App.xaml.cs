@@ -43,7 +43,7 @@ public partial class App : Application
 
             var httpClient = new HttpClient();
             var apiClient = new ApiClient(httpClient);
-            apiClient.BaseUrl = "http://localhost:3000/api";
+            apiClient.BaseUrl = "https://educiv.onrender.com/api";
 
             var authApi = new AuthApiService(apiClient);
             var schoolApi = new SchoolApiService(apiClient);
